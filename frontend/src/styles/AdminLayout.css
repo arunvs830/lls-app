@@ -1,0 +1,18 @@
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 260px;
+    /* Match sidebar width */
+    display: flex;
+    flex-direction: column;
+}
+
+.content-area {
+    padding: 2rem;
+    flex: 1;
+    overflow-y: auto;
+}

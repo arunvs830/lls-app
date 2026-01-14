@@ -1,0 +1,58 @@
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-sections {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.card h3 {
+    margin-bottom: 1.25rem;
+    color: var(--text-main);
+    font-size: 1.125rem;
+}
+
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.activity-list li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+}
+
+.activity-list li:last-child {
+    border-bottom: none;
+}
+
+.activity-list strong {
+    color: var(--text-main);
+}
+
+.time {
+    float: right;
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
