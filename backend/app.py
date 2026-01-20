@@ -3,6 +3,7 @@ from flask_cors import CORS
 from config import Config
 from models import db
 from routes import register_routes
+import os
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -23,5 +24,6 @@ def create_app(config_class=Config):
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True, port=5001)
+    port = int(os.environ.get('PORT', 6000))
+    app.run(debug=True, port=port)
 

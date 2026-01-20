@@ -7,7 +7,7 @@ const CourseList = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const studentId = localStorage.getItem('userId') || 1;
+    const studentId = localStorage.getItem('userId') || JSON.parse(localStorage.getItem('user'))?.id || 1;
 
     useEffect(() => {
         loadCourses();
@@ -119,7 +119,7 @@ const styles = {
     },
     loadingText: {
         marginTop: '16px',
-        color: 'rgba(255,255,255,0.6)',
+        color: '#5C6873',
     },
 
     header: {
@@ -128,11 +128,11 @@ const styles = {
     title: {
         fontSize: '2rem',
         fontWeight: '700',
-        color: 'white',
+        color: '#21272A',
         margin: 0,
     },
     subtitle: {
-        color: 'rgba(255,255,255,0.5)',
+        color: '#5C6873',
         marginTop: '8px',
     },
 
@@ -142,12 +142,13 @@ const styles = {
         gap: '24px',
     },
     courseCard: {
-        background: 'rgba(255,255,255,0.03)',
+        background: '#FFFFFF',
         borderRadius: '20px',
         padding: '24px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
         cursor: 'pointer',
         transition: 'all 0.3s ease',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
     courseHeader: {
         display: 'flex',
@@ -160,7 +161,7 @@ const styles = {
     },
     courseCode: {
         background: 'rgba(139, 92, 246, 0.15)',
-        color: '#8b5cf6',
+        color: '#7c3aed',
         padding: '6px 12px',
         borderRadius: '8px',
         fontSize: '0.8rem',
@@ -168,7 +169,7 @@ const styles = {
         letterSpacing: '0.05em',
     },
     courseName: {
-        color: 'white',
+        color: '#21272A',
         fontSize: '1.3rem',
         fontWeight: '600',
         margin: '0 0 16px 0',
@@ -183,14 +184,14 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        color: 'rgba(255,255,255,0.5)',
+        color: '#5C6873',
         fontSize: '0.9rem',
     },
     metaIcon: {
         fontSize: '1rem',
     },
     courseFooter: {
-        borderTop: '1px solid rgba(255,255,255,0.06)',
+        borderTop: '1px solid #E3E5E8',
         paddingTop: '16px',
     },
     viewBtn: {
@@ -209,9 +210,10 @@ const styles = {
     emptyState: {
         textAlign: 'center',
         padding: '80px 20px',
-        background: 'rgba(255,255,255,0.02)',
+        background: '#FFFFFF',
         borderRadius: '20px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
     emptyIcon: {
         fontSize: '4rem',
@@ -219,12 +221,12 @@ const styles = {
         marginBottom: '16px',
     },
     emptyTitle: {
-        color: 'white',
+        color: '#21272A',
         fontSize: '1.5rem',
         margin: '0 0 8px 0',
     },
     emptyText: {
-        color: 'rgba(255,255,255,0.4)',
+        color: '#5C6873',
     },
 };
 

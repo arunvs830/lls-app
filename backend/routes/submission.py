@@ -1,8 +1,14 @@
 import os
+import sys
 from flask import Blueprint, request, jsonify, current_app, send_from_directory
 from werkzeug.utils import secure_filename
-from models import db, Submission, Assignment, Evaluation
+from models import db, Submission, Assignment, Evaluation, Student
 from datetime import datetime
+from sqlalchemy.orm import joinedload
+
+# Add parent directory to path to import services
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from services.notification_service import NotificationService
 
 submission_bp = Blueprint('submission', __name__)
 
@@ -44,24 +50,61 @@ def create():
     )
     db.session.add(submission)
     db.session.commit()
+    
+    # Send notification for successful submission
+    try:
+        NotificationService.notify_assignment_submitted(submission)
+    except Exception as e:
+        print(f"Error sending submission notification: {e}")
+    
     return jsonify({'id': submission.id, 'message': 'Submitted successfully'}), 201
 
 @submission_bp.route('/api/submissions', methods=['GET'])
 def get_all():
     assignment_id = request.args.get('assignment_id')
     student_id = request.args.get('student_id')
+    staff_id = request.args.get('staff_id')
+    course_id = request.args.get('course_id')
     
-    query = Submission.query
+    query = Submission.query.options(
+        joinedload(Submission.evaluation),
+        joinedload(Submission.assignment).joinedload(Assignment.course),
+        joinedload(Submission.student),
+    )
     if assignment_id:
         query = query.filter_by(assignment_id=assignment_id)
     if student_id:
         query = query.filter_by(student_id=student_id)
+
+    # Optional staff/course filtering (used by staff UI)
+    if staff_id or course_id:
+        query = query.join(Assignment, Submission.assignment_id == Assignment.id)
+        if staff_id:
+            query = query.filter(Assignment.staff_id == int(staff_id))
+        if course_id:
+            query = query.filter(Assignment.course_id == int(course_id))
         
     submissions = query.all()
     return jsonify([{
         'id': s.id,
         'assignment_id': s.assignment_id,
         'student_id': s.student_id,
+        'student': {
+            'id': s.student.id,
+            'student_code': s.student.student_code,
+            'full_name': s.student.full_name,
+            'username': s.student.username,
+        } if getattr(s, 'student', None) else None,
+        'assignment': {
+            'id': s.assignment.id,
+            'title': s.assignment.title,
+            'course_id': s.assignment.course_id,
+        } if getattr(s, 'assignment', None) else None,
+        'course': {
+            'id': s.assignment.course.id,
+            'course_code': s.assignment.course.course_code,
+            'course_name': s.assignment.course.course_name,
+        } if getattr(s, 'assignment', None) and getattr(s.assignment, 'course', None) else None,
         'submission_text': s.submission_text,
         'file_path': s.file_path,
         'submitted_at': s.submitted_at.isoformat(),
@@ -93,4 +136,11 @@ def evaluate(id):
     
     submission.status = 'evaluated'
     db.session.commit()
+    
+    # Send notification for graded assignment
+    try:
+        NotificationService.notify_assignment_graded(evaluation)
+    except Exception as e:
+        print(f"Error sending evaluation notification: {e}")
+    
     return jsonify({'message': 'Evaluated successfully'})

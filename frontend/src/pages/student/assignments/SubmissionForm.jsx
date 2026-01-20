@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../../services/api';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import InputField from '../../../components/InputField';
@@ -61,27 +62,67 @@ const SubmissionForm = () => {
     if (loading) return <div className="card"><p>Loading assignment details...</p></div>;
 
     return (
-        <div className="card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <div className="page-header">
-                <h2>Submit Assignment</h2>
+        <div className="card" style={{ maxWidth: '800px', margin: '40px auto', padding: '32px' }}>
+            <div className="page-header" style={{ borderBottom: '1px solid #E5E7EB', paddingBottom: '16px', marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '1.5rem', color: '#111827', fontWeight: 'bold' }}>Submit Assignment</h2>
             </div>
 
             {assignment && (
-                <div style={{ marginBottom: '2rem', padding: '1.5rem', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                    <h3 style={{ color: 'white', marginBottom: '0.5rem' }}>{assignment.title}</h3>
-                    <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1rem', fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)' }}>
-                        <span>📅 Due: {new Date(assignment.due_date).toLocaleString()}</span>
-                        <span>🎯 Marks: {assignment.max_marks}</span>
+                <div style={{ marginBottom: '2.5rem', padding: '24px', backgroundColor: '#F9FAFB', borderRadius: '16px', border: '1px solid #E5E7EB' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                        <h3 style={{ color: '#1F2937', fontSize: '1.25rem', margin: 0, fontWeight: '600' }}>{assignment.title}</h3>
+                        <span style={{
+                            background: '#EFF6FF',
+                            color: '#2563EB',
+                            padding: '4px 12px',
+                            borderRadius: '999px',
+                            fontSize: '0.85rem',
+                            fontWeight: '500'
+                        }}>
+                            {assignment.max_marks} Marks
+                        </span>
                     </div>
+
+                    <div style={{ display: 'flex', gap: '24px', marginBottom: '20px', fontSize: '0.9rem', color: '#6B7280' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span>📅</span>
+                            <span>Due: {new Date(assignment.due_date).toLocaleDateString()} at {new Date(assignment.due_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                    </div>
+
                     {assignment.description && (
-                        <div style={{ padding: '1rem', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '8px', whiteSpace: 'pre-wrap', color: 'rgba(255,255,255,0.8)', fontSize: '0.95rem' }}>
+                        <div style={{
+                            padding: '16px',
+                            backgroundColor: '#FFFFFF',
+                            borderRadius: '12px',
+                            whiteSpace: 'pre-wrap',
+                            color: '#374151',
+                            fontSize: '0.95rem',
+                            border: '1px solid #E5E7EB',
+                            lineHeight: '1.6'
+                        }}>
+                            <strong style={{ display: 'block', marginBottom: '8px', color: '#111827' }}>Instructions:</strong>
                             {assignment.description}
                         </div>
                     )}
+
                     {assignment.file_path && (
-                        <div style={{ marginTop: '1rem' }}>
-                            <a href={`http://localhost:5001${assignment.file_path}`} target="_blank" rel="noopener noreferrer"
-                                style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(139, 92, 246, 0.15)', color: '#8b5cf6', borderRadius: '8px', textDecoration: 'none', border: '1px solid rgba(139, 92, 246, 0.3)' }}>
+                        <div style={{ marginTop: '16px' }}>
+                            <a href={`${API_ORIGIN}${assignment.file_path}`} target="_blank" rel="noopener noreferrer"
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    padding: '10px 16px',
+                                    background: '#FFFFFF',
+                                    color: '#7C3AED',
+                                    borderRadius: '8px',
+                                    textDecoration: 'none',
+                                    border: '1px solid #DDD6FE',
+                                    fontWeight: '500',
+                                    fontSize: '0.95rem',
+                                    transition: 'all 0.2s'
+                                }}>
                                 📎 Download Question Attachment
                             </a>
                         </div>
@@ -91,33 +132,78 @@ const SubmissionForm = () => {
 
             <form onSubmit={handleSubmit}>
                 <div className="input-field-wrapper">
-                    <label className="input-label">Submission Text / Answer</label>
+                    <label className="input-label" style={{ color: '#374151', fontWeight: 500 }}>Submission Text / Answer</label>
                     <textarea
                         className="input-element"
                         rows="8"
                         value={submissionText}
                         onChange={(e) => setSubmissionText(e.target.value)}
-                        placeholder="Type your answer here or provide additional notes..."
-                        style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '12px' }}
+                        placeholder="Type your answer here..."
+                        style={{
+                            backgroundColor: '#FFFFFF',
+                            color: '#1F2937',
+                            border: '1px solid #D1D5DB',
+                            borderRadius: '10px',
+                            padding: '16px',
+                            resize: 'vertical',
+                            fontSize: '1rem'
+                        }}
                     ></textarea>
                 </div>
 
                 <div className="input-field-wrapper" style={{ marginTop: '1.5rem' }}>
-                    <label className="input-label">Upload Response File (Word, PDF, txt)</label>
-                    <input
-                        type="file"
-                        className="input-element"
-                        onChange={handleFileChange}
-                        style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }}
-                    />
-                    <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.5rem' }}>
-                        Accepted formats: .pdf, .doc, .docx, .txt
-                    </p>
+                    <label className="input-label" style={{ color: '#374151', fontWeight: 500 }}>Upload Response File (Word, PDF, txt)</label>
+
+                    <div style={{
+                        border: '2px dashed #D1D5DB',
+                        borderRadius: '12px',
+                        padding: '2rem',
+                        textAlign: 'center',
+                        background: file ? '#F0FDF4' : '#F9FAFB',
+                        borderColor: file ? '#16A34A' : '#D1D5DB',
+                        transition: 'all 0.2s',
+                        cursor: 'pointer',
+                        position: 'relative'
+                    }}>
+                        <input
+                            type="file"
+                            onChange={handleFileChange}
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0,
+                                cursor: 'pointer'
+                            }}
+                        />
+                        {file ? (
+                            <>
+                                <div style={{ fontSize: '2rem', marginBottom: '0.5rem', color: '#16A34A' }}>✓</div>
+                                <p style={{ color: '#15803D', fontWeight: 600, fontSize: '1.1rem' }}>{file.name}</p>
+                                <p style={{ color: '#6B7280', fontSize: '0.9rem' }}>{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                <p style={{ marginTop: '0.5rem', color: '#DC2626', fontSize: '0.9rem', textDecoration: 'underline' }}>Click to change</p>
+                            </>
+                        ) : (
+                            <>
+                                <div style={{ fontSize: '2rem', marginBottom: '0.5rem', color: '#9CA3AF' }}>📄</div>
+                                <p style={{ color: '#374151', fontWeight: 500, marginBottom: '0.5rem' }}>Drag & drop or <span style={{ color: '#7C3AED' }}>browse</span></p>
+                                <p style={{ fontSize: '0.85rem', color: '#6B7280' }}>
+                                    Accepted formats: .pdf, .doc, .docx, .txt
+                                </p>
+                            </>
+                        )}
+                    </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '2.5rem' }}>
-                    <Button type="submit" disabled={submitting}>{submitting ? 'Submitting...' : 'Submit Assignment'}</Button>
-                    <Button variant="secondary" onClick={() => navigate('/student/assignments')}>Cancel</Button>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid #E5E7EB' }}>
+                    <Button type="submit" disabled={submitting} style={{ width: '100%', justifyContent: 'center' }}>
+                        {submitting ? 'Submitting...' : 'Submit Assignment'}
+                    </Button>
+                    <Button variant="secondary" type="button" onClick={() => navigate('/student/assignments')} style={{ width: '100%', justifyContent: 'center' }}>
+                        Cancel
+                    </Button>
                 </div>
             </form>
         </div>

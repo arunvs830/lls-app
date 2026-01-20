@@ -1,4 +1,9 @@
-const API_BASE = 'http://localhost:5001/api';
+const DEFAULT_BACKEND_ORIGIN = import.meta.env.VITE_API_ORIGIN || 'http://127.0.0.1:6000';
+
+// In dev, call the Vite dev server (6001) and let it proxy /api to the backend.
+// This avoids browser restrictions on port 6000 (ERR_UNSAFE_PORT).
+export const API_ORIGIN = import.meta.env.DEV ? '' : DEFAULT_BACKEND_ORIGIN;
+export const API_BASE = import.meta.env.DEV ? '/api' : `${API_ORIGIN}/api`;
 
 // Generic API helper
 async function apiRequest(endpoint, options = {}) {
@@ -112,6 +117,8 @@ export const assignmentApi = {
 export const submissionApi = {
     getAll: (assignmentId) => apiRequest(`/submissions?assignment_id=${assignmentId}`),
     getByStudent: (studentId) => apiRequest(`/submissions?student_id=${studentId}`),
+    getForStaff: (staffId) => apiRequest(`/submissions?staff_id=${staffId}`),
+    getForStaffCourse: (staffId, courseId) => apiRequest(`/submissions?staff_id=${staffId}&course_id=${courseId}`),
     create: (formData) => apiRequest('/submissions', { method: 'POST', body: formData }),
     evaluate: (id, data) => apiRequest(`/submissions/${id}/evaluate`, { method: 'POST', body: JSON.stringify(data) }),
 };
@@ -122,6 +129,8 @@ export const studentDashboardApi = {
     getCourses: (studentId) => apiRequest(`/student/${studentId}/courses`),
     getCourseMaterials: (studentId, courseId) => apiRequest(`/student/${studentId}/courses/${courseId}/materials`),
     getResults: (studentId) => apiRequest(`/student/${studentId}/results`),
+    getCourseResults: (studentId) => apiRequest(`/student/${studentId}/course-results`),
+    getCourseResultBreakdown: (studentId, courseId) => apiRequest(`/student/${studentId}/courses/${courseId}/result-breakdown`),
 };
 
 // MCQ / Quiz API
@@ -140,3 +149,57 @@ export const mcqApi = {
     getStudentResults: (studentId) => apiRequest(`/student/${studentId}/quiz-results`),
 };
 
+// Authentication API
+export const authApi = {
+    login: async (email, password, role) => {
+        const response = await fetch(`${API_BASE}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, role })
+        });
+        return response.json();
+    }
+};
+
+// Certificate API
+export const certificateApi = {
+    getAll: () => apiRequest('/certificate-layouts'),
+    getOne: (id) => apiRequest(`/certificate-layouts/${id}`),
+    create: (data) => apiRequest('/certificate-layouts', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => apiRequest(`/certificate-layouts/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    delete: (id) => apiRequest(`/certificate-layouts/${id}`, { method: 'DELETE' }),
+    getByProgram: (programId) => apiRequest(`/programs/${programId}/certificate-layouts`),
+    getDefaultByProgram: (programId) => apiRequest(`/programs/${programId}/default-certificate-layout`),
+};
+
+// Notification API
+export const notificationApi = {
+    getAll: (userType, userId, unreadOnly = false) =>
+        apiRequest(`/notifications/${userType}/${userId}?unread_only=${unreadOnly}`),
+    getUnreadCount: (userType, userId) =>
+        apiRequest(`/notifications/${userType}/${userId}/count`),
+    markAsRead: (notificationId) =>
+        apiRequest(`/notifications/${notificationId}/read`, { method: 'PUT' }),
+    markAllAsRead: (userType, userId) =>
+        apiRequest(`/notifications/${userType}/${userId}/read-all`, { method: 'PUT' }),
+    delete: (notificationId) =>
+        apiRequest(`/notifications/${notificationId}`, { method: 'DELETE' }),
+};
+
+// Communication/Messages API
+export const communicationApi = {
+    getInbox: (userType, userId) =>
+        apiRequest(`/communications/inbox/${userType}/${userId}`),
+    getSent: (userType, userId) =>
+        apiRequest(`/communications/sent/${userType}/${userId}`),
+    getOne: (id) =>
+        apiRequest(`/communications/${id}`),
+    send: (data) =>
+        apiRequest('/communications', { method: 'POST', body: JSON.stringify(data) }),
+    markAsRead: (id) =>
+        apiRequest(`/communications/${id}/read`, { method: 'PUT' }),
+    delete: (id) =>
+        apiRequest(`/communications/${id}`, { method: 'DELETE' }),
+    getUnreadCount: (userType, userId) =>
+        apiRequest(`/communications/unread-count/${userType}/${userId}`)
+};

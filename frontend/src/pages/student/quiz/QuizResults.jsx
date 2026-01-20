@@ -169,17 +169,18 @@ const styles = {
         borderRadius: '50%',
         animation: 'spin 1s linear infinite',
     },
-    loadingText: { marginTop: '16px', color: 'rgba(255,255,255,0.6)' },
+    loadingText: { marginTop: '16px', color: '#5C6873' },
     header: { marginBottom: '32px', textAlign: 'center' },
-    title: { color: 'white', fontSize: '2rem', fontWeight: '700', margin: 0 },
-    subtitle: { color: 'rgba(255,255,255,0.5)', marginTop: '8px' },
+    title: { color: '#21272A', fontSize: '2rem', fontWeight: '700', margin: 0 },
+    subtitle: { color: '#5C6873', marginTop: '8px' },
 
     overallCard: {
-        background: 'rgba(255,255,255,0.03)',
+        background: '#FFFFFF',
         borderRadius: '24px',
         padding: '32px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
         marginBottom: '32px',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
     mainScore: {
         display: 'flex',
@@ -201,7 +202,7 @@ const styles = {
         fontWeight: '700',
     },
     scoreLabel: {
-        color: 'rgba(255,255,255,0.5)',
+        color: '#5C6873',
         fontSize: '0.9rem',
     },
     statsRow: {
@@ -212,31 +213,32 @@ const styles = {
     statBox: {
         textAlign: 'center',
         padding: '16px',
-        background: 'rgba(255,255,255,0.02)',
+        background: '#F5F7FA',
         borderRadius: '12px',
     },
     statValue: {
         display: 'block',
-        color: 'white',
+        color: '#21272A',
         fontSize: '1.75rem',
         fontWeight: '700',
     },
     statLabel: {
-        color: 'rgba(255,255,255,0.4)',
+        color: '#5C6873',
         fontSize: '0.85rem',
     },
 
     sectionTitle: {
-        color: 'white',
+        color: '#21272A',
         fontSize: '1.25rem',
         marginBottom: '16px',
     },
     emptyState: {
         textAlign: 'center',
         padding: '60px 20px',
-        background: 'rgba(255,255,255,0.02)',
+        background: '#FFFFFF',
         borderRadius: '20px',
-        color: 'rgba(255,255,255,0.5)',
+        color: '#5C6873',
+        border: '1px solid #E3E5E8',
     },
     emptyIcon: { fontSize: '3rem', display: 'block', marginBottom: '12px' },
     actionBtn: {
@@ -256,10 +258,11 @@ const styles = {
         marginBottom: '32px',
     },
     courseCard: {
-        background: 'rgba(255,255,255,0.03)',
+        background: '#FFFFFF',
         borderRadius: '16px',
         padding: '20px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
     courseHeader: {
         display: 'flex',
@@ -268,12 +271,12 @@ const styles = {
         marginBottom: '16px',
     },
     courseCode: {
-        color: '#8b5cf6',
+        color: '#7c3aed',
         fontSize: '0.8rem',
         fontWeight: '600',
     },
     courseName: {
-        color: 'white',
+        color: '#21272A',
         margin: '4px 0 0 0',
         fontSize: '1.1rem',
     },
@@ -294,17 +297,17 @@ const styles = {
     },
     statItemValue: {
         display: 'block',
-        color: 'white',
+        color: '#21272A',
         fontSize: '1.25rem',
         fontWeight: '600',
     },
     statItemLabel: {
-        color: 'rgba(255,255,255,0.4)',
+        color: '#5C6873',
         fontSize: '0.75rem',
     },
     progressBar: {
         height: '6px',
-        background: 'rgba(255,255,255,0.1)',
+        background: '#E3E5E8',
         borderRadius: '3px',
         overflow: 'hidden',
     },
@@ -329,9 +332,9 @@ const styles = {
         fontWeight: '600',
     },
     secondaryBtn: {
-        background: 'rgba(255,255,255,0.05)',
-        border: '1px solid rgba(255,255,255,0.1)',
-        color: 'white',
+        background: '#F5F7FA',
+        border: '1px solid #E3E5E8',
+        color: '#21272A',
         padding: '14px 28px',
         borderRadius: '12px',
         cursor: 'pointer',

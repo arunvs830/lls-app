@@ -13,23 +13,12 @@ const ResultList = () => {
 
     const loadResults = async () => {
         try {
-            const data = await studentDashboardApi.getResults(studentId);
+            const data = await studentDashboardApi.getCourseResults(studentId);
             setResultsData(data);
         } catch (error) {
             console.error('Error loading results:', error);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const getGradeColor = (grade) => {
-        if (!grade) return 'rgba(255,255,255,0.4)';
-        switch (grade.charAt(0).toUpperCase()) {
-            case 'A': return '#10b981';
-            case 'B': return '#3b82f6';
-            case 'C': return '#f59e0b';
-            case 'D': return '#f97316';
-            default: return '#ef4444';
         }
     };
 
@@ -43,11 +32,12 @@ const ResultList = () => {
     }
 
     const student = resultsData?.student;
-    const results = resultsData?.results || [];
+    const courses = resultsData?.courses || [];
 
-    // Calculate overall stats
-    const totalMarks = results.reduce((sum, r) => sum + (r.total_marks || 0), 0);
-    const avgMarks = results.length > 0 ? (totalMarks / results.length).toFixed(1) : 0;
+    const releasedCourses = courses.filter(c => c.final?.released);
+    const avgFinalPct = releasedCourses.length > 0
+        ? (releasedCourses.reduce((sum, c) => sum + (c.final?.percentage || 0), 0) / releasedCourses.length).toFixed(1)
+        : 0;
 
     return (
         <div style={styles.container}>
@@ -65,27 +55,27 @@ const ResultList = () => {
             {/* Stats Summary */}
             <div style={styles.statsRow}>
                 <div style={styles.statCard}>
-                    <span style={styles.statNumber}>{results.length}</span>
-                    <span style={styles.statLabel}>Courses Graded</span>
+                    <span style={styles.statNumber}>{releasedCourses.length}</span>
+                    <span style={styles.statLabel}>Final Results Released</span>
                 </div>
                 <div style={styles.statCard}>
-                    <span style={styles.statNumber}>{avgMarks}</span>
-                    <span style={styles.statLabel}>Average Score</span>
+                    <span style={styles.statNumber}>{avgFinalPct}%</span>
+                    <span style={styles.statLabel}>Average Final %</span>
                 </div>
                 <div style={styles.statCard}>
                     <span style={{ ...styles.statNumber, color: '#10b981' }}>
-                        {results.filter(r => r.grade?.startsWith('A')).length}
+                        {courses.filter(c => c.final?.released).length}
                     </span>
-                    <span style={styles.statLabel}>A Grades</span>
+                    <span style={styles.statLabel}>Courses Completed</span>
                 </div>
             </div>
 
             {/* Results Table */}
-            {results.length === 0 ? (
+            {courses.length === 0 ? (
                 <div style={styles.emptyState}>
                     <span style={styles.emptyIcon}>📊</span>
                     <h3 style={styles.emptyTitle}>No results yet</h3>
-                    <p style={styles.emptyText}>Your grades will appear here once they are released.</p>
+                    <p style={styles.emptyText}>Your courses and results will appear here once you are enrolled.</p>
                 </div>
             ) : (
                 <div style={styles.tableContainer}>
@@ -93,36 +83,52 @@ const ResultList = () => {
                         <thead>
                             <tr>
                                 <th style={styles.th}>Course</th>
-                                <th style={styles.th}>Semester</th>
                                 <th style={styles.th}>Assignments</th>
-                                <th style={styles.th}>MCQ</th>
-                                <th style={styles.th}>Total</th>
-                                <th style={styles.th}>Grade</th>
+                                <th style={styles.th}>Quiz</th>
+                                <th style={styles.th}>Progress %</th>
+                                <th style={styles.th}>Final %</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {results.map(result => (
-                                <tr key={result.id} style={styles.tr}>
+                            {courses.map((row) => (
+                                <tr key={row.course?.id} style={styles.tr}>
                                     <td style={styles.td}>
                                         <div style={styles.courseCell}>
-                                            <span style={styles.courseCode}>{result.course?.course_code}</span>
-                                            <span style={styles.courseName}>{result.course?.course_name}</span>
+                                            <span style={styles.courseCode}>{row.course?.course_code}</span>
+                                            <span style={styles.courseName}>{row.course?.course_name}</span>
                                         </div>
                                     </td>
-                                    <td style={styles.td}>{result.semester?.semester_name || '-'}</td>
-                                    <td style={styles.td}>{result.assignment_marks ?? '-'}</td>
-                                    <td style={styles.td}>{result.mcq_marks ?? '-'}</td>
                                     <td style={styles.td}>
-                                        <span style={styles.totalMarks}>{result.total_marks ?? '-'}</span>
+                                        {row.assignments
+                                            ? `${row.assignments.earned_marks ?? 0}/${row.assignments.total_marks ?? 0}`
+                                            : '-'}
                                     </td>
                                     <td style={styles.td}>
-                                        <span style={{
-                                            ...styles.gradeBadge,
-                                            backgroundColor: `${getGradeColor(result.grade)}20`,
-                                            color: getGradeColor(result.grade)
-                                        }}>
-                                            {result.grade || 'N/A'}
-                                        </span>
+                                        {row.quiz
+                                            ? `${row.quiz.earned_marks ?? 0}/${row.quiz.total_marks ?? 0}`
+                                            : '-'}
+                                    </td>
+                                    <td style={styles.td}>
+                                        <span style={styles.totalMarks}>{row.progress?.percentage ?? 0}%</span>
+                                    </td>
+                                    <td style={styles.td}>
+                                        {row.final?.released ? (
+                                            <span style={{
+                                                ...styles.gradeBadge,
+                                                backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                                                color: '#10b981'
+                                            }}>
+                                                {row.final.percentage}%
+                                            </span>
+                                        ) : (
+                                            <span style={{
+                                                ...styles.gradeBadge,
+                                                backgroundColor: '#E3E5E8',
+                                                color: '#5C6873'
+                                            }}>
+                                                Locked
+                                            </span>
+                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -151,7 +157,7 @@ const styles = {
         borderRadius: '50%',
         animation: 'spin 1s linear infinite',
     },
-    loadingText: { marginTop: '16px', color: 'rgba(255,255,255,0.6)' },
+    loadingText: { marginTop: '16px', color: '#5C6873' },
 
     header: {
         display: 'flex',
@@ -159,15 +165,15 @@ const styles = {
         alignItems: 'center',
         marginBottom: '32px',
     },
-    title: { fontSize: '2rem', fontWeight: '700', color: 'white', margin: 0 },
-    subtitle: { color: 'rgba(255,255,255,0.5)', marginTop: '8px' },
+    title: { fontSize: '2rem', fontWeight: '700', color: '#21272A', margin: 0 },
+    subtitle: { color: '#5C6873', marginTop: '8px' },
     studentInfo: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-end',
     },
-    studentName: { color: 'white', fontWeight: '600' },
-    studentCode: { color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem' },
+    studentName: { color: '#21272A', fontWeight: '600' },
+    studentCode: { color: '#5C6873', fontSize: '0.85rem' },
 
     statsRow: {
         display: 'grid',
@@ -176,30 +182,32 @@ const styles = {
         marginBottom: '32px',
     },
     statCard: {
-        background: 'rgba(255,255,255,0.03)',
+        background: '#FFFFFF',
         borderRadius: '16px',
         padding: '24px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
         textAlign: 'center',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
     statNumber: {
         display: 'block',
         fontSize: '2.5rem',
         fontWeight: '700',
-        color: 'white',
+        color: '#21272A',
     },
     statLabel: {
-        color: 'rgba(255,255,255,0.5)',
+        color: '#5C6873',
         fontSize: '0.9rem',
         marginTop: '8px',
         display: 'block',
     },
 
     tableContainer: {
-        background: 'rgba(255,255,255,0.03)',
+        background: '#FFFFFF',
         borderRadius: '16px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
         overflow: 'hidden',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
     table: {
         width: '100%',
@@ -208,19 +216,20 @@ const styles = {
     th: {
         textAlign: 'left',
         padding: '16px 20px',
-        color: 'rgba(255,255,255,0.5)',
+        color: '#5C6873',
         fontSize: '0.85rem',
         fontWeight: '600',
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        borderBottom: '1px solid #E3E5E8',
+        background: '#F5F7FA',
     },
     tr: {
-        borderBottom: '1px solid rgba(255,255,255,0.04)',
+        borderBottom: '1px solid #E3E5E8',
     },
     td: {
         padding: '20px',
-        color: 'white',
+        color: '#21272A',
         fontSize: '0.95rem',
     },
     courseCell: {
@@ -228,12 +237,12 @@ const styles = {
         flexDirection: 'column',
     },
     courseCode: {
-        color: '#8b5cf6',
+        color: '#7c3aed',
         fontSize: '0.8rem',
         fontWeight: '600',
     },
     courseName: {
-        color: 'white',
+        color: '#21272A',
         marginTop: '4px',
     },
     totalMarks: {
@@ -250,13 +259,14 @@ const styles = {
     emptyState: {
         textAlign: 'center',
         padding: '80px 20px',
-        background: 'rgba(255,255,255,0.02)',
+        background: '#FFFFFF',
         borderRadius: '20px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
     emptyIcon: { fontSize: '4rem', display: 'block', marginBottom: '16px' },
-    emptyTitle: { color: 'white', fontSize: '1.5rem', margin: '0 0 8px 0' },
-    emptyText: { color: 'rgba(255,255,255,0.4)' },
+    emptyTitle: { color: '#21272A', fontSize: '1.5rem', margin: '0 0 8px 0' },
+    emptyText: { color: '#5C6873' },
 };
 
 export default ResultList;

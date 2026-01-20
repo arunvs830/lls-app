@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BookOpen, ClipboardList, CheckCircle, BarChart, Trophy } from 'lucide-react';
 import { studentDashboardApi, assignmentApi } from '../../services/api';
 
 const StudentDashboard = () => {
@@ -8,7 +9,14 @@ const StudentDashboard = () => {
     const [upcomingAssignments, setUpcomingAssignments] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const studentId = localStorage.getItem('userId') || 1;
+    const studentId = localStorage.getItem('userId') || JSON.parse(localStorage.getItem('user') || '{}')?.id;
+
+    // Redirect to login if not authenticated
+    useEffect(() => {
+        if (!studentId) {
+            navigate('/login');
+        }
+    }, [studentId, navigate]);
 
     useEffect(() => {
         loadDashboard();
@@ -60,7 +68,7 @@ const StudentDashboard = () => {
             {/* Welcome Header */}
             <header style={styles.header}>
                 <div style={styles.welcomeSection}>
-                    <h1 style={styles.welcomeTitle}>Welcome back, {student.full_name || 'Student'}! 👋</h1>
+                    <h1 style={styles.welcomeTitle}>Welcome back, {student.full_name || 'Student'}! </h1>
                     <p style={styles.welcomeSubtitle}>
                         {student.program} • {student.semester}
                     </p>
@@ -73,7 +81,7 @@ const StudentDashboard = () => {
             {/* Stats Grid */}
             <section style={styles.statsGrid}>
                 <div style={{ ...styles.statCard, ...styles.statPurple }}>
-                    <div style={styles.statIcon}>📚</div>
+                    <div style={styles.statIcon}><BookOpen size={24} /></div>
                     <div style={styles.statContent}>
                         <span style={styles.statNumber}>{stats.enrolled_courses || 0}</span>
                         <span style={styles.statLabel}>Enrolled Courses</span>
@@ -84,7 +92,7 @@ const StudentDashboard = () => {
                 </div>
 
                 <div style={{ ...styles.statCard, ...styles.statOrange }}>
-                    <div style={styles.statIcon}>📝</div>
+                    <div style={styles.statIcon}><ClipboardList size={24} /></div>
                     <div style={styles.statContent}>
                         <span style={styles.statNumber}>{stats.pending_assignments || 0}</span>
                         <span style={styles.statLabel}>Pending Tasks</span>
@@ -95,7 +103,7 @@ const StudentDashboard = () => {
                 </div>
 
                 <div style={{ ...styles.statCard, ...styles.statGreen }}>
-                    <div style={styles.statIcon}>✅</div>
+                    <div style={styles.statIcon}><CheckCircle size={24} /></div>
                     <div style={styles.statContent}>
                         <span style={styles.statNumber}>{stats.completed_assignments || 0}</span>
                         <span style={styles.statLabel}>Completed</span>
@@ -106,7 +114,7 @@ const StudentDashboard = () => {
                 </div>
 
                 <div style={{ ...styles.statCard, ...styles.statBlue }}>
-                    <div style={styles.statIcon}>📊</div>
+                    <div style={styles.statIcon}><BarChart size={24} /></div>
                     <div style={styles.statContent}>
                         <span style={styles.statNumber}>
                             {stats.total_assignments > 0
@@ -129,7 +137,7 @@ const StudentDashboard = () => {
             </section>
 
             {/* Main Content Grid */}
-            <div style={styles.contentGrid}>
+            <div className="responsive-grid-2-1">
                 {/* Upcoming Assignments */}
                 <section style={styles.contentCard}>
                     <div style={styles.cardHeader}>
@@ -175,11 +183,11 @@ const StudentDashboard = () => {
                             <span>My Courses</span>
                         </button>
                         <button onClick={() => navigate('/student/assignments')} style={styles.actionButton}>
-                            <span style={styles.actionIcon}>📝</span>
+                            <span style={styles.actionIcon}><ClipboardList size={24} /></span>
                             <span>Assignments</span>
                         </button>
                         <button onClick={() => navigate('/student/results')} style={styles.actionButton}>
-                            <span style={styles.actionIcon}>🏆</span>
+                            <span style={styles.actionIcon}><Trophy size={24} /></span>
                             <span>View Results</span>
                         </button>
                     </div>
@@ -211,7 +219,7 @@ const styles = {
     },
     loadingText: {
         marginTop: '16px',
-        color: 'rgba(255,255,255,0.6)',
+        color: '#5C6873',
         fontSize: '1rem',
     },
 
@@ -226,22 +234,22 @@ const styles = {
     welcomeTitle: {
         fontSize: '2rem',
         fontWeight: '700',
-        color: 'white',
+        color: '#21272A',
         margin: 0,
     },
     welcomeSubtitle: {
-        color: 'rgba(255,255,255,0.5)',
+        color: '#5C6873',
         fontSize: '1rem',
         marginTop: '8px',
     },
     studentBadge: {
-        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1))',
+        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.08))',
         border: '1px solid rgba(139, 92, 246, 0.3)',
         borderRadius: '12px',
         padding: '12px 24px',
     },
     studentCode: {
-        color: '#8b5cf6',
+        color: '#7c3aed',
         fontWeight: '600',
         fontSize: '0.9rem',
         letterSpacing: '0.05em',
@@ -255,14 +263,15 @@ const styles = {
         marginBottom: '32px',
     },
     statCard: {
-        background: 'rgba(255,255,255,0.03)',
+        background: '#FFFFFF',
         borderRadius: '20px',
         padding: '24px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
         display: 'flex',
         flexDirection: 'column',
         gap: '16px',
         transition: 'transform 0.2s, box-shadow 0.2s',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
     statPurple: { borderLeft: '4px solid #8b5cf6' },
     statOrange: { borderLeft: '4px solid #f59e0b' },
@@ -270,6 +279,7 @@ const styles = {
     statBlue: { borderLeft: '4px solid #3b82f6' },
     statIcon: {
         fontSize: '2rem',
+        color: '#5C6873',
     },
     statContent: {
         display: 'flex',
@@ -278,25 +288,26 @@ const styles = {
     statNumber: {
         fontSize: '2.5rem',
         fontWeight: '700',
-        color: 'white',
+        color: '#21272A',
     },
     statLabel: {
-        color: 'rgba(255,255,255,0.5)',
+        color: '#5C6873',
         fontSize: '0.9rem',
     },
     statLink: {
         background: 'none',
         border: 'none',
-        color: 'rgba(255,255,255,0.6)',
+        color: '#14BF96',
         cursor: 'pointer',
         padding: 0,
         fontSize: '0.85rem',
         textAlign: 'left',
         transition: 'color 0.2s',
+        fontWeight: '500',
     },
     progressBar: {
         height: '8px',
-        background: 'rgba(255,255,255,0.1)',
+        background: '#E3E5E8',
         borderRadius: '4px',
         overflow: 'hidden',
     },
@@ -314,10 +325,11 @@ const styles = {
         gap: '24px',
     },
     contentCard: {
-        background: 'rgba(255,255,255,0.03)',
+        background: '#FFFFFF',
         borderRadius: '20px',
         padding: '24px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
     cardHeader: {
         display: 'flex',
@@ -326,7 +338,7 @@ const styles = {
         marginBottom: '20px',
     },
     cardTitle: {
-        color: 'white',
+        color: '#21272A',
         fontSize: '1.25rem',
         fontWeight: '600',
         margin: 0,
@@ -334,7 +346,7 @@ const styles = {
     viewAllBtn: {
         background: 'rgba(139, 92, 246, 0.1)',
         border: '1px solid rgba(139, 92, 246, 0.3)',
-        color: '#8b5cf6',
+        color: '#7c3aed',
         padding: '8px 16px',
         borderRadius: '8px',
         cursor: 'pointer',
@@ -353,19 +365,19 @@ const styles = {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '16px',
-        background: 'rgba(255,255,255,0.02)',
+        background: '#F5F7FA',
         borderRadius: '12px',
-        border: '1px solid rgba(255,255,255,0.04)',
+        border: '1px solid #E3E5E8',
     },
     assignmentInfo: {},
     assignmentTitle: {
-        color: 'white',
+        color: '#21272A',
         margin: 0,
         fontSize: '1rem',
         fontWeight: '500',
     },
     assignmentCourse: {
-        color: 'rgba(255,255,255,0.4)',
+        color: '#5C6873',
         fontSize: '0.85rem',
     },
     assignmentMeta: {
@@ -374,7 +386,7 @@ const styles = {
         gap: '16px',
     },
     dueDate: {
-        color: '#f59e0b',
+        color: '#d97706',
         fontSize: '0.85rem',
         fontWeight: '500',
     },
@@ -391,7 +403,7 @@ const styles = {
     emptyState: {
         textAlign: 'center',
         padding: '40px 20px',
-        color: 'rgba(255,255,255,0.4)',
+        color: '#5C6873',
     },
     emptyIcon: {
         fontSize: '3rem',
@@ -411,10 +423,10 @@ const styles = {
         alignItems: 'center',
         gap: '12px',
         padding: '16px',
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: '#F5F7FA',
+        border: '1px solid #E3E5E8',
         borderRadius: '12px',
-        color: 'white',
+        color: '#21272A',
         cursor: 'pointer',
         fontSize: '1rem',
         fontWeight: '500',
@@ -422,6 +434,7 @@ const styles = {
     },
     actionIcon: {
         fontSize: '1.5rem',
+        color: '#5C6873',
     },
 };
 

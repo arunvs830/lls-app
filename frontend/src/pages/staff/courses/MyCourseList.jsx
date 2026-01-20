@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { staffCourseApi, courseApi, studyMaterialApi } from '../../../services/api';
+import { staffCourseApi, courseApi } from '../../../services/api';
 import '../../../styles/VideoLearning.css';
 
 const MyCourseList = () => {
@@ -45,7 +45,7 @@ const MyCourseList = () => {
     if (loading) {
         return (
             <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
-                <p style={{ color: 'rgba(255,255,255,0.6)' }}>Loading courses...</p>
+                <p style={{ color: '#6B7280' }}>Loading courses...</p>
             </div>
         );
     }
@@ -57,12 +57,12 @@ const MyCourseList = () => {
                 <h1 style={{
                     fontSize: '1.75rem',
                     fontWeight: '700',
-                    color: 'white',
+                    color: '#1F2937',
                     marginBottom: '0.5rem'
                 }}>
                     My Courses
                 </h1>
-                <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.95rem' }}>
+                <p style={{ color: '#6B7280', fontSize: '0.95rem' }}>
                     Select a course to manage videos and study materials
                 </p>
             </div>
@@ -103,13 +103,13 @@ const MyCourseList = () => {
                         gridColumn: '1/-1',
                         textAlign: 'center',
                         padding: '4rem 2rem',
-                        background: 'rgba(30, 30, 50, 0.6)',
+                        background: '#F9FAFB',
                         borderRadius: '16px',
-                        border: '1px solid rgba(255, 255, 255, 0.1)'
+                        border: '1px solid #E5E7EB'
                     }}>
                         <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📚</div>
-                        <h3 style={{ color: 'white', marginBottom: '0.5rem' }}>No Courses Assigned</h3>
-                        <p style={{ color: 'rgba(255,255,255,0.5)', maxWidth: '400px', margin: '0 auto' }}>
+                        <h3 style={{ color: '#1F2937', marginBottom: '0.5rem' }}>No Courses Assigned</h3>
+                        <p style={{ color: '#6B7280', maxWidth: '400px', margin: '0 auto' }}>
                             You haven't been assigned any courses yet. Please contact the administrator to get courses assigned to you.
                         </p>
                     </div>

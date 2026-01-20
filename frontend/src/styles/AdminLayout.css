@@ -1,18 +1,37 @@
 .admin-layout {
     display: flex;
     min-height: 100vh;
+    background-color: var(--bg-main);
 }
 
 .main-content {
     flex: 1;
-    margin-left: 260px;
-    /* Match sidebar width */
+    margin-left: 240px;
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
-.content-area {
+.content-area,
+.page-content {
     padding: 2rem;
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .content-area,
+    .page-content {
+        padding: 1rem;
+    }
 }

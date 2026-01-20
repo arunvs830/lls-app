@@ -40,7 +40,7 @@ const ProgramForm = () => {
                 <InputField id="program_name" label="Program Name" placeholder="e.g. Bachelor of Computer Application" value={formData.program_name} onChange={handleChange} required />
                 <InputField id="program_code" label="Program Code" placeholder="e.g. BCA" value={formData.program_code} onChange={handleChange} required />
 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem' }}>
                     <Button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save Program'}</Button>
                     <Button variant="secondary" onClick={() => navigate('/admin/programs')}>Cancel</Button>
                 </div>

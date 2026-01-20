@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { courseApi, studyMaterialApi, assignmentApi } from '../../../services/api';
+import { courseApi, studyMaterialApi, assignmentApi, API_ORIGIN } from '../../../services/api';
 import Button from '../../../components/Button';
 
 const CourseVideos = () => {
@@ -84,7 +84,7 @@ const CourseVideos = () => {
         if (!filePath) return null;
         // If it starts with /api, prepend backend URL
         if (filePath.startsWith('/api')) {
-            return `http://localhost:5001${filePath}`;
+            return `${API_ORIGIN}${filePath}`;
         }
         // If it's already a full URL (http/https), return as is
         if (filePath.startsWith('http')) {
@@ -116,7 +116,7 @@ const CourseVideos = () => {
                 </div>
             </header>
 
-            <div style={styles.contentGrid}>
+            <div className="responsive-grid-sidebar-wide">
                 {/* Primary Content Column */}
                 <main style={styles.mainContent}>
                     {/* Player Card */}
@@ -310,7 +310,7 @@ const CourseVideos = () => {
                                                 <p style={styles.assignmentDesc}>{a.description}</p>
                                             )}
                                             {a.file_path && (
-                                                <a href={`http://localhost:5001${a.file_path}`} target="_blank" rel="noopener noreferrer" style={styles.downloadLink}>
+                                                <a href={`${API_ORIGIN}${a.file_path}`} target="_blank" rel="noopener noreferrer" style={styles.downloadLink}>
                                                     📎 Download Question File
                                                 </a>
                                             )}
@@ -378,13 +378,13 @@ const CourseVideos = () => {
                                         {getTypeIcon(m.file_type)}
                                     </div>
                                     <div style={styles.navText}>
-                                        <div style={{ ...styles.navLabel, color: selectedMaterial?.id === m.id ? 'white' : 'rgba(255,255,255,0.85)' }}>
+                                        <div style={{ ...styles.navLabel, color: selectedMaterial?.id === m.id ? 'white' : '#1F2937' }}>
                                             {m.title}
                                         </div>
-                                        <div style={styles.navSub}>
+                                        <div style={{ ...styles.navSub, color: selectedMaterial?.id === m.id ? 'rgba(255,255,255,0.9)' : '#6B7280' }}>
                                             {m.file_type?.toUpperCase()}
                                             {m.children?.length > 0 && (
-                                                <span style={styles.inlineCount}>• {m.children.length} attachments</span>
+                                                <span style={{ ...styles.inlineCount, color: selectedMaterial?.id === m.id ? 'white' : 'rgba(168, 85, 247, 0.8)' }}>• {m.children.length} attachments</span>
                                             )}
                                         </div>
                                     </div>
@@ -445,7 +445,7 @@ const styles = {
         alignSelf: 'flex-start'
     },
     pageTitle: {
-        color: '#FFFFFF',
+        color: '#1F2937',
         fontSize: '2rem',
         margin: 0,
         fontWeight: '700',
@@ -490,12 +490,11 @@ const styles = {
 
     // Player Card
     playerContainer: {
-        backgroundColor: 'rgba(17, 17, 27, 0.7)',
+        backgroundColor: '#FFFFFF',
         borderRadius: '24px',
         overflow: 'hidden',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3)',
-        backdropFilter: 'blur(10px)'
+        border: '1px solid #E5E7EB',
+        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.1)',
     },
     aspectRatioBox: {
         position: 'relative',
@@ -530,7 +529,7 @@ const styles = {
     placeholderTitle: {
         fontSize: '1.5rem',
         fontWeight: '600',
-        color: 'white',
+        color: '#1F2937',
         marginBottom: '32px'
     },
     primaryBtn: {
@@ -552,7 +551,7 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: 'rgba(255, 255, 255, 0.3)',
+        color: '#9CA3AF',
         fontSize: '1.1rem'
     },
 
@@ -576,19 +575,19 @@ const styles = {
         border: '1px solid currentColor'
     },
     uploadTime: {
-        color: 'rgba(255, 255, 255, 0.4)',
+        color: '#6B7280',
         fontSize: '0.85rem',
         fontWeight: '500'
     },
     selectedTitle: {
-        color: '#FFFFFF',
+        color: '#1F2937',
         fontSize: '1.75rem',
         fontWeight: '700',
         margin: '0 0 16px 0',
         letterSpacing: '-0.01em'
     },
     selectedDesc: {
-        color: 'rgba(255, 255, 255, 0.6)',
+        color: '#4B5563',
         fontSize: '1.05rem',
         lineHeight: '1.7',
         margin: 0,
@@ -600,7 +599,7 @@ const styles = {
         marginTop: '8px'
     },
     sectionHeading: {
-        color: '#FFFFFF',
+        color: '#1F2937',
         fontSize: '1.25rem',
         fontWeight: '600',
         marginBottom: '24px',
@@ -609,8 +608,8 @@ const styles = {
     },
     countBadge: {
         marginLeft: '12px',
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        color: 'rgba(255,255,255,0.7)',
+        backgroundColor: '#E5E7EB',
+        color: '#4B5563',
         padding: '2px 10px',
         borderRadius: '20px',
         fontSize: '0.85rem',
@@ -622,13 +621,13 @@ const styles = {
         gap: '16px'
     },
     attachmentCard: {
-        backgroundColor: 'rgba(255, 255, 255, 0.03)',
-        border: '1px solid rgba(255, 255, 255, 0.06)',
+        backgroundColor: '#F9FAFB',
+        border: '1px solid #E5E7EB',
         borderRadius: '20px',
         padding: '20px',
         transition: 'background-color 0.2s',
         ':hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            backgroundColor: '#F3F4F6',
         }
     },
     attachmentCore: {
@@ -650,7 +649,7 @@ const styles = {
         flex: 1
     },
     attachmentName: {
-        color: 'white',
+        color: '#1F2937',
         fontWeight: '600',
         fontSize: '1.1rem',
         marginBottom: '4px'
@@ -674,7 +673,7 @@ const styles = {
         paddingLeft: '76px', // Align with metadata
     },
     attachmentDesc: {
-        color: 'rgba(255, 255, 255, 0.5)',
+        color: '#6B7280',
         fontSize: '0.95rem',
         lineHeight: '1.6',
         margin: 0
@@ -687,9 +686,9 @@ const styles = {
         height: 'calc(100vh - 48px)',
     },
     sidebarFrame: {
-        backgroundColor: 'rgba(30, 30, 46, 0.6)',
+        backgroundColor: '#FFFFFF',
         borderRadius: '24px',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
+        border: '1px solid #E5E7EB',
         display: 'flex',
         flexDirection: 'column',
         maxHeight: '100%',
@@ -698,20 +697,20 @@ const styles = {
     },
     sidebarHeader: {
         padding: '24px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+        borderBottom: '1px solid #E5E7EB',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.02)'
+        backgroundColor: '#F9FAFB'
     },
     sidebarTitle: {
-        color: 'white',
+        color: '#1F2937',
         fontSize: '1.1rem',
         fontWeight: '600',
         margin: 0
     },
     sidebarStats: {
-        color: 'rgba(255, 255, 255, 0.4)',
+        color: '#6B7280',
         fontSize: '0.8rem',
         fontWeight: '500',
         textTransform: 'uppercase',
@@ -725,7 +724,7 @@ const styles = {
     emptySidebar: {
         padding: '40px 20px',
         textAlign: 'center',
-        color: 'rgba(255, 255, 255, 0.2)',
+        color: '#9CA3AF',
         fontSize: '0.9rem'
     },
     navItem: {
@@ -768,7 +767,7 @@ const styles = {
         textOverflow: 'ellipsis'
     },
     navSub: {
-        color: 'rgba(255, 255, 255, 0.4)',
+        color: '#6B7280',
         fontSize: '0.75rem',
         fontWeight: '500',
         display: 'flex',
@@ -781,7 +780,7 @@ const styles = {
     navDelete: {
         background: 'none',
         border: 'none',
-        color: 'rgba(255, 255, 255, 0.2)',
+        color: '#D1D5DB',
         fontSize: '1.5rem',
         cursor: 'pointer',
         padding: '0 4px',
@@ -816,10 +815,10 @@ const styles = {
     emptyAssignments: {
         padding: '2rem',
         textAlign: 'center',
-        color: 'rgba(255,255,255,0.4)',
-        backgroundColor: 'rgba(255,255,255,0.02)',
+        color: '#9CA3AF',
+        backgroundColor: '#F9FAFB',
         borderRadius: '12px',
-        border: '1px dashed rgba(255,255,255,0.1)',
+        border: '1px dashed #D1D5DB',
     },
     assignmentList: {
         display: 'flex',
@@ -827,8 +826,8 @@ const styles = {
         gap: '1rem',
     },
     assignmentCard: {
-        backgroundColor: 'rgba(16, 185, 129, 0.05)',
-        border: '1px solid rgba(16, 185, 129, 0.2)',
+        backgroundColor: '#ECFDF5',
+        border: '1px solid #10B981',
         borderRadius: '14px',
         padding: '1.25rem',
     },
@@ -838,13 +837,13 @@ const styles = {
         alignItems: 'flex-start',
     },
     assignmentTitle: {
-        color: 'white',
+        color: '#1F2937',
         fontSize: '1.1rem',
         fontWeight: '600',
         marginBottom: '0.5rem',
     },
     assignmentMeta: {
-        color: 'rgba(255,255,255,0.5)',
+        color: '#4B5563',
         fontSize: '0.85rem',
     },
     assignmentActions: {
@@ -862,7 +861,7 @@ const styles = {
         cursor: 'pointer',
     },
     assignmentDesc: {
-        color: 'rgba(255,255,255,0.6)',
+        color: '#374151',
         fontSize: '0.9rem',
         lineHeight: '1.6',
         marginTop: '0.75rem',
@@ -899,15 +898,15 @@ const styles = {
     },
     quizInfo: {
         padding: '1.5rem',
-        backgroundColor: 'rgba(139, 92, 246, 0.08)',
+        backgroundColor: '#F3F4F6',
         borderRadius: '12px',
-        border: '1px solid rgba(139, 92, 246, 0.2)',
+        border: '1px solid #E5E7EB',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
     quizInfoText: {
-        color: 'rgba(255,255,255,0.6)',
+        color: '#4B5563',
         fontSize: '0.9rem',
         margin: 0,
     },
@@ -1073,22 +1072,7 @@ const styles = {
         objectFit: 'contain',
         display: 'block',
     },
-    pptActions: {
-        marginTop: '16px',
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    pptDownloadBtn: {
-        background: 'linear-gradient(135deg, #FF9900, #FF6600)',
-        padding: '10px 24px',
-        borderRadius: '10px',
-        color: 'white',
-        textDecoration: 'none',
-        fontWeight: '600',
-        fontSize: '0.9rem',
-        boxShadow: '0 10px 20px rgba(255, 102, 0, 0.2)',
-    }
+    // (deduped) pptActions and pptDownloadBtn are defined earlier
 };
 
 // Add hover styles via standard CSS if needed, but keeping it inline for now

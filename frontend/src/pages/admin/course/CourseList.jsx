@@ -77,7 +77,20 @@ const CourseList = () => {
                             <td>{getProgramName(course.program_id)}</td>
                             <td>{getSemesterName(course.semester_id)}</td>
                             <td>
-                                <button className="btn-secondary action-btn" onClick={() => handleDelete(course.id)} style={{ color: '#ef4444' }}>Delete</button>
+                                <button
+                                    className="btn-secondary action-btn"
+                                    onClick={() => navigate(`/admin/courses/edit/${course.id}`)}
+                                    style={{ color: '#3b82f6', marginRight: '8px' }}
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    className="btn-secondary action-btn"
+                                    onClick={() => handleDelete(course.id)}
+                                    style={{ color: '#ef4444' }}
+                                >
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     ))}

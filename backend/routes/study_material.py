@@ -2,6 +2,7 @@ import os
 from flask import Blueprint, request, jsonify, current_app, send_from_directory
 from werkzeug.utils import secure_filename
 from models import db, StudyMaterial
+from services.notification_service import NotificationService
 from datetime import datetime
 
 study_material_bp = Blueprint('study_material', __name__)
@@ -82,6 +83,13 @@ def create():
     )
     db.session.add(material)
     db.session.commit()
+    
+    # Notify students about new material
+    try:
+        NotificationService.notify_new_study_material(material)
+    except Exception as e:
+        current_app.logger.error(f"Failed to send study material notifications: {str(e)}")
+        
     return jsonify({'id': material.id, 'message': 'Created successfully'}), 201
 
 @study_material_bp.route('/api/study-materials/<int:id>', methods=['GET'])
@@ -178,6 +186,13 @@ def add_to_course(course_id):
     
         db.session.add(material)
         db.session.commit()
+        
+        # Notify students about new material (background)
+        try:
+            NotificationService.notify_new_study_material(material)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send study material notifications: {str(e)}")
+            
         return jsonify({'id': material.id, 'message': 'Created successfully'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -221,6 +236,13 @@ def add_child(parent_id):
             
         db.session.add(child)
         db.session.commit()
+        
+        # Notify students about new material (background)
+        try:
+            NotificationService.notify_new_study_material(child)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send study material notifications: {str(e)}")
+            
         return jsonify({'id': child.id, 'message': 'Created successfully'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500

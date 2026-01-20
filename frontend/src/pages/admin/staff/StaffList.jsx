@@ -51,19 +51,17 @@ const StaffList = () => {
                     <tr>
                         <th>Staff Code</th>
                         <th>Full Name</th>
-                        <th>Username</th>
                         <th>Email</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {staffMembers.length === 0 ? (
-                        <tr><td colSpan="5" style={{ textAlign: 'center' }}>No staff found</td></tr>
+                        <tr><td colSpan="4" style={{ textAlign: 'center' }}>No staff found</td></tr>
                     ) : staffMembers.map((staff) => (
                         <tr key={staff.id}>
                             <td>{staff.staff_code}</td>
                             <td>{staff.full_name}</td>
-                            <td>{staff.username}</td>
                             <td>{staff.email}</td>
                             <td>
                                 <button className="btn-secondary action-btn" onClick={() => handleDelete(staff.id)} style={{ color: '#ef4444' }}>Delete</button>

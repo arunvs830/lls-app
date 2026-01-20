@@ -63,7 +63,7 @@ const StaffCourseForm = () => {
             <form onSubmit={handleSubmit}>
                 <div className="input-field-wrapper">
                     <label className="input-label">Staff Member</label>
-                    <select id="staff_id" className="input-element" value={formData.staff_id} onChange={handleChange} style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }} required>
+                    <select id="staff_id" className="input-element" value={formData.staff_id} onChange={handleChange} required>
                         <option value="">Select Staff...</option>
                         {staff.map(s => <option key={s.id} value={s.id}>{s.full_name}</option>)}
                     </select>
@@ -71,15 +71,15 @@ const StaffCourseForm = () => {
 
                 <div className="input-field-wrapper">
                     <label className="input-label">Course</label>
-                    <select id="course_id" className="input-element" value={formData.course_id} onChange={handleChange} style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }} required>
+                    <select id="course_id" className="input-element" value={formData.course_id} onChange={handleChange} required>
                         <option value="">Select Course...</option>
-                        {courses.map(c => <option key={c.id} value={c.id}>{c.course_name}</option>)}
+                        {courses.map(c => <option key={c.id} value={c.id}>{c.course_name} ({c.program_code || 'No Program'})</option>)}
                     </select>
                 </div>
 
                 <div className="input-field-wrapper">
                     <label className="input-label">Academic Year</label>
-                    <select id="academic_year_id" className="input-element" value={formData.academic_year_id} onChange={handleChange} style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }}>
+                    <select id="academic_year_id" className="input-element" value={formData.academic_year_id} onChange={handleChange}>
                         <option value="">Select Year...</option>
                         {years.map(y => <option key={y.id} value={y.id}>{y.year_name}</option>)}
                     </select>
@@ -87,7 +87,7 @@ const StaffCourseForm = () => {
 
                 <InputField id="assigned_date" type="date" label="Assignment Date" value={formData.assigned_date} onChange={handleChange} required />
 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem' }}>
                     <Button type="submit" disabled={loading}>{loading ? 'Assigning...' : 'Assign'}</Button>
                     <Button variant="secondary" onClick={() => navigate('/admin/staff-allocation')}>Cancel</Button>
                 </div>

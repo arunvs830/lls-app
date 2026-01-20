@@ -9,7 +9,6 @@ const StudentForm = () => {
     const [formData, setFormData] = useState({
         student_code: '',
         full_name: '',
-        username: '',
         email: '',
         password: '',
         program_id: '',
@@ -67,24 +66,21 @@ const StudentForm = () => {
                     <InputField id="full_name" label="Full Name" placeholder="John Doe" value={formData.full_name} onChange={handleChange} required />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <InputField id="username" label="Username" placeholder="john.doe" value={formData.username} onChange={handleChange} required />
-                    <InputField id="email" type="email" label="Email" placeholder="john@example.com" value={formData.email} onChange={handleChange} required />
-                </div>
+                <InputField id="email" type="email" label="Email" placeholder="john@example.com" value={formData.email} onChange={handleChange} required />
 
                 <InputField id="password" type="password" label="Password" placeholder="••••••••" value={formData.password} onChange={handleChange} required />
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div className="input-field-wrapper">
                         <label className="input-label">Program</label>
-                        <select id="program_id" className="input-element" value={formData.program_id} onChange={handleChange} style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }}>
+                        <select id="program_id" className="input-element" value={formData.program_id} onChange={handleChange}>
                             <option value="">Select Program...</option>
                             {programs.map(p => <option key={p.id} value={p.id}>{p.program_name}</option>)}
                         </select>
                     </div>
                     <div className="input-field-wrapper">
                         <label className="input-label">Semester</label>
-                        <select id="semester_id" className="input-element" value={formData.semester_id} onChange={handleChange} style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }}>
+                        <select id="semester_id" className="input-element" value={formData.semester_id} onChange={handleChange}>
                             <option value="">Select Semester...</option>
                             {semesters.map(s => <option key={s.id} value={s.id}>{s.semester_name}</option>)}
                         </select>
@@ -93,7 +89,7 @@ const StudentForm = () => {
 
                 <InputField id="enrollment_date" type="date" label="Enrollment Date" value={formData.enrollment_date} onChange={handleChange} required />
 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem' }}>
                     <Button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save Student'}</Button>
                     <Button variant="secondary" onClick={() => navigate('/admin/students')}>Cancel</Button>
                 </div>

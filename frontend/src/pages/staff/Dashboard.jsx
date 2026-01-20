@@ -17,26 +17,35 @@ const StaffDashboard = () => {
     const staffId = 1;
 
     useEffect(() => {
-        loadStats();
-    }, []);
+        let cancelled = false;
 
-    const loadStats = async () => {
-        try {
-            const [courses, materials, assignments] = await Promise.all([
-                staffCourseApi.getAll(),
-                studyMaterialApi.getAll(),
-                assignmentApi.getAll()
-            ]);
-            setStats({
-                courses: courses.filter(c => c.staff_id === staffId).length,
-                materials: materials.length,
-                assignments: assignments.length,
-                pending: 0
-            });
-        } catch (error) {
-            console.error('Error loading stats:', error);
-        }
-    };
+        const loadStats = async () => {
+            try {
+                const [courses, materials, assignments] = await Promise.all([
+                    staffCourseApi.getAll(),
+                    studyMaterialApi.getAll(),
+                    assignmentApi.getAll()
+                ]);
+
+                if (cancelled) return;
+
+                setStats({
+                    courses: courses.filter(c => c.staff_id === staffId).length,
+                    materials: materials.length,
+                    assignments: assignments.length,
+                    pending: 0
+                });
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        };
+
+        loadStats();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [staffId]);
 
     return (
         <div className="staff-dashboard">

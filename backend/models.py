@@ -296,4 +296,45 @@ class Feedback(db.Model):
     feedback_text = db.Column(db.Text)
     is_anonymous = db.Column(db.Boolean, default=False)
     submitted_at = db.Column(db.DateTime, default=datetime.utcnow)
-    submitted_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+# -----------------------------------------------------
+# Notification Models
+# -----------------------------------------------------
+
+class Notification(db.Model):
+    __tablename__ = 'notification'
+    id = db.Column(db.Integer, primary_key=True)
+    user_type = db.Column(db.String(20), nullable=False)  # 'student', 'staff', 'admin'
+    user_id = db.Column(db.Integer, nullable=False)
+    title = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    notification_type = db.Column(db.String(50))  # 'assignment_submitted', 'assignment_graded', 'deadline_reminder', etc.
+    reference_type = db.Column(db.String(50))  # 'assignment', 'submission', 'quiz', etc.
+    reference_id = db.Column(db.Integer)
+    is_read = db.Column(db.Boolean, default=False)
+    email_sent = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    read_at = db.Column(db.DateTime)
+
+
+# -----------------------------------------------------
+# Student Course Enrollment Models
+# -----------------------------------------------------
+
+class StudentCourse(db.Model):
+    """
+    Many-to-many relationship between students and courses.
+    Allows students to enroll in multiple courses.
+    """
+    __tablename__ = 'student_course'
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    enrolled_at = db.Column(db.DateTime, default=datetime.utcnow)
+    status = db.Column(db.String(20), default='active')  # 'active', 'completed', 'dropped'
+    
+    # Relationships
+    student = db.relationship('Student', backref=db.backref('enrolled_courses', lazy=True))
+    course = db.relationship('Course', backref=db.backref('enrolled_students', lazy=True))
+    
+    __table_args__ = (db.UniqueConstraint('student_id', 'course_id', name='unique_student_course_enrollment'),)

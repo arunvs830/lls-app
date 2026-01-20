@@ -1,19 +1,29 @@
+import { API_ORIGIN } from '../../../services/api';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { studentDashboardApi } from '../../../services/api';
+import { studentDashboardApi, assignmentApi } from '../../../services/api';
 
 const CourseMaterials = () => {
     const { courseId } = useParams();
     const navigate = useNavigate();
     const [courseData, setCourseData] = useState(null);
     const [selectedMaterial, setSelectedMaterial] = useState(null);
+    const [assignments, setAssignments] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const studentId = localStorage.getItem('userId') || 1;
+    const studentId = localStorage.getItem('userId') || JSON.parse(localStorage.getItem('user') || '{}')?.id;
 
     useEffect(() => {
         loadMaterials();
     }, [courseId]);
+
+    useEffect(() => {
+        if (selectedMaterial) {
+            loadAssignments(selectedMaterial.id);
+        } else {
+            setAssignments([]);
+        }
+    }, [selectedMaterial]);
 
     const loadMaterials = async () => {
         try {
@@ -29,10 +39,21 @@ const CourseMaterials = () => {
         }
     };
 
+    const loadAssignments = async (materialId) => {
+        try {
+            // Depending on API, getByMaterial might be right.
+            const data = await assignmentApi.getByMaterial(materialId);
+            setAssignments(data);
+        } catch (error) {
+            console.error('Error loading assignments:', error);
+            setAssignments([]);
+        }
+    };
+
     const getFileUrl = (path) => {
         if (!path) return null;
         if (path.startsWith('http')) return path;
-        return `http://localhost:5001${path}`;
+        return `${API_ORIGIN}${path}`;
     };
 
     const getVideoId = (url) => {
@@ -64,7 +85,7 @@ const CourseMaterials = () => {
                 <span style={styles.breadcrumbCurrent}>{course?.course_name}</span>
             </div>
 
-            <div style={styles.contentGrid}>
+            <div className="responsive-grid-sidebar">
                 {/* Main Content */}
                 <main style={styles.mainContent}>
                     {selectedMaterial ? (
@@ -121,15 +142,47 @@ const CourseMaterials = () => {
                                 <h2 style={styles.materialTitle}>{selectedMaterial.title}</h2>
                                 <p style={styles.materialDesc}>{selectedMaterial.description}</p>
 
-                                {/* Take Quiz Button - Show if material has MCQs */}
-                                {selectedMaterial.mcq_count > 0 && (
-                                    <div style={styles.quizSection}>
-                                        <button
-                                            onClick={() => navigate(`/student/quiz/material/${selectedMaterial.id}`)}
-                                            style={styles.quizBtn}
-                                        >
-                                            📝 Take Quiz ({selectedMaterial.mcq_count} questions)
-                                        </button>
+                                {/* Activities Section (Quizzes & Assignments) */}
+                                {(selectedMaterial.mcq_count > 0 || assignments.length > 0) && (
+                                    <div style={styles.activitySection}>
+                                        <h4 style={styles.sectionTitle}>📝 Tasks & Activities</h4>
+                                        <div style={styles.activityList}>
+                                            {/* Quiz Item */}
+                                            {selectedMaterial.mcq_count > 0 && (
+                                                <div style={styles.activityItem}>
+                                                    <div style={{ flex: 1 }}>
+                                                        <div style={styles.activityTitle}>Video Quiz</div>
+                                                        <div style={styles.activityMeta}>
+                                                            {selectedMaterial.mcq_count} Questions • Test your knowledge
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => navigate(`/student/quiz/material/${selectedMaterial.id}`)}
+                                                        style={styles.actionBtn}
+                                                    >
+                                                        Take Quiz
+                                                    </button>
+                                                </div>
+                                            )}
+
+                                            {/* Assignment Items */}
+                                            {assignments.map(a => (
+                                                <div key={a.id} style={styles.activityItem}>
+                                                    <div style={{ flex: 1 }}>
+                                                        <div style={styles.activityTitle}>{a.title}</div>
+                                                        <div style={styles.activityMeta}>
+                                                            Due: {a.due_date ? new Date(a.due_date).toLocaleDateString() : 'N/A'} • {a.max_marks} Marks
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => navigate(`/student/assignments/${a.id}`)}
+                                                        style={styles.actionBtn}
+                                                    >
+                                                        View Assignment
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 )}
 
@@ -170,11 +223,20 @@ const CourseMaterials = () => {
                         {materials.map(material => (
                             <div
                                 key={material.id}
+                                role="button"
+                                tabIndex={0}
+                                aria-selected={selectedMaterial?.id === material.id}
                                 style={{
                                     ...styles.materialItem,
                                     ...(selectedMaterial?.id === material.id ? styles.materialItemActive : {})
                                 }}
                                 onClick={() => setSelectedMaterial(material)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        setSelectedMaterial(material);
+                                    }
+                                }}
                             >
                                 <span style={styles.materialIcon}>{getTypeIcon(material.file_type)}</span>
                                 <div style={styles.materialMeta}>
@@ -217,7 +279,7 @@ const styles = {
         borderRadius: '50%',
         animation: 'spin 1s linear infinite',
     },
-    loadingText: { marginTop: '16px', color: 'rgba(255,255,255,0.6)' },
+    loadingText: { marginTop: '16px', color: '#5C6873' },
 
     breadcrumb: {
         display: 'flex',
@@ -232,8 +294,8 @@ const styles = {
         cursor: 'pointer',
         fontSize: '0.9rem',
     },
-    breadcrumbSeparator: { color: 'rgba(255,255,255,0.3)' },
-    breadcrumbCurrent: { color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem' },
+    breadcrumbSeparator: { color: '#8F96A1' },
+    breadcrumbCurrent: { color: '#5C6873', fontSize: '0.9rem' },
 
     contentGrid: {
         display: 'grid',
@@ -300,83 +362,113 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        color: 'rgba(255,255,255,0.3)',
+        color: '#8F96A1',
     },
     placeholderIcon: { fontSize: '4rem', marginBottom: '12px' },
 
     materialInfo: {
-        background: 'rgba(255,255,255,0.03)',
+        background: '#FFFFFF',
         borderRadius: '16px',
         padding: '24px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
-    materialTitle: { color: 'white', margin: '0 0 12px 0', fontSize: '1.5rem' },
-    materialDesc: { color: 'rgba(255,255,255,0.6)', lineHeight: '1.6' },
-    quizSection: {
-        marginTop: '20px',
-        paddingTop: '20px',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
+    materialTitle: { color: '#21272A', margin: '0 0 12px 0', fontSize: '1.5rem' },
+    materialDesc: { color: '#5C6873', lineHeight: '1.6' },
+    // Integrated Activity Styles
+    activitySection: {
+        marginTop: '24px',
+        paddingTop: '24px',
+        borderTop: '1px solid #E3E5E8',
     },
-    quizBtn: {
-        background: 'linear-gradient(135deg, #10b981, #059669)',
-        border: 'none',
-        color: 'white',
-        padding: '14px 24px',
+    sectionTitle: { color: '#21272A', margin: '0 0 16px 0', fontSize: '1.1rem', fontWeight: '600' },
+    activityList: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+    },
+    activityItem: {
+        background: '#F5F7FA',
+        padding: '16px',
         borderRadius: '12px',
-        cursor: 'pointer',
-        fontWeight: '600',
-        fontSize: '1rem',
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
+        justifyContent: 'space-between',
+        border: '1px solid #E3E5E8',
+        transition: 'all 0.2s',
     },
-    childrenSection: { marginTop: '24px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.06)' },
-    childrenTitle: { color: 'white', margin: '0 0 12px 0' },
+    activityTitle: {
+        color: '#21272A',
+        fontWeight: '600',
+        marginBottom: '4px',
+        fontSize: '1rem',
+    },
+    activityMeta: {
+        color: '#6B7280',
+        fontSize: '0.85rem',
+    },
+    actionBtn: {
+        background: '#8b5cf6',
+        color: 'white',
+        border: 'none',
+        padding: '8px 16px',
+        borderRadius: '8px',
+        cursor: 'pointer',
+        fontWeight: '500',
+        fontSize: '0.9rem',
+        whiteSpace: 'nowrap',
+        boxShadow: '0 2px 4px rgba(139, 92, 246, 0.2)',
+    },
+
+    // Assignment Styles
+    childrenSection: { marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #E3E5E8' },
+    childrenTitle: { color: '#21272A', margin: '0 0 12px 0' },
     childrenList: { display: 'flex', flexDirection: 'column', gap: '8px' },
     childItem: {
         display: 'flex',
         alignItems: 'center',
         gap: '12px',
         padding: '12px',
-        background: 'rgba(255,255,255,0.02)',
+        background: '#F5F7FA',
         borderRadius: '8px',
-        color: 'white',
+        color: '#21272A',
         textDecoration: 'none',
     },
 
     sidebar: {
-        background: 'rgba(255,255,255,0.03)',
+        background: '#FFFFFF',
         borderRadius: '16px',
         padding: '20px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
         height: 'fit-content',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
-    sidebarTitle: { color: 'white', margin: '0 0 16px 0', fontSize: '1.1rem' },
+    sidebarTitle: { color: '#21272A', margin: '0 0 16px 0', fontSize: '1.1rem' },
     materialList: { display: 'flex', flexDirection: 'column', gap: '8px' },
     materialItem: {
         display: 'flex',
         alignItems: 'center',
         gap: '12px',
         padding: '14px',
-        background: 'rgba(255,255,255,0.02)',
+        background: '#F5F7FA',
         borderRadius: '10px',
         cursor: 'pointer',
         transition: 'all 0.2s',
         border: '1px solid transparent',
     },
     materialItemActive: {
-        background: 'rgba(139, 92, 246, 0.15)',
+        background: 'rgba(139, 92, 246, 0.1)',
         borderColor: 'rgba(139, 92, 246, 0.4)',
     },
     materialIcon: { fontSize: '1.5rem' },
     materialMeta: { display: 'flex', flexDirection: 'column' },
-    materialName: { color: 'white', fontSize: '0.95rem', fontWeight: '500' },
-    materialType: { color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', marginTop: '2px' },
+    materialName: { color: '#21272A', fontSize: '0.95rem', fontWeight: '500' },
+    materialType: { color: '#5C6873', fontSize: '0.75rem', marginTop: '2px' },
 
     emptyState: {
         textAlign: 'center',
         padding: '80px 20px',
-        color: 'rgba(255,255,255,0.4)',
+        color: '#5C6873',
     },
     emptyIcon: { fontSize: '4rem', display: 'block', marginBottom: '12px' },
 };

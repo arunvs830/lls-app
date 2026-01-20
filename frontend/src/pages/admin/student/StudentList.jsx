@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/Button';
+import ConfirmDialog from '../../../components/ConfirmDialog';
 import { studentApi } from '../../../services/api';
 import '../../../styles/Table.css';
 
@@ -8,6 +9,8 @@ const StudentList = () => {
     const navigate = useNavigate();
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -24,14 +27,20 @@ const StudentList = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (confirm('Are you sure?')) {
-            try {
-                await studentApi.delete(id);
-                loadData();
-            } catch (error) {
-                console.error('Error deleting:', error);
-            }
+    const handleDeleteClick = (id) => {
+        setDeleteId(id);
+        setShowConfirm(true);
+    };
+
+    const confirmDelete = async () => {
+        try {
+            await studentApi.delete(deleteId);
+            loadData();
+        } catch (error) {
+            console.error('Error deleting:', error);
+        } finally {
+            setShowConfirm(false);
+            setDeleteId(null);
         }
     };
 
@@ -64,12 +73,35 @@ const StudentList = () => {
                             <td>{student.full_name}</td>
                             <td>{student.email}</td>
                             <td>
-                                <button className="btn-secondary action-btn" onClick={() => handleDelete(student.id)} style={{ color: '#ef4444' }}>Delete</button>
+                                <button
+                                    className="btn-secondary action-btn"
+                                    onClick={() => navigate(`/admin/students/edit/${student.id}`)}
+                                    style={{ color: '#3b82f6', marginRight: '8px' }}
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    className="btn-secondary action-btn"
+                                    onClick={() => handleDeleteClick(student.id)}
+                                    style={{ color: '#ef4444' }}
+                                >
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+
+            <ConfirmDialog
+                isOpen={showConfirm}
+                title="Delete Student"
+                message="Are you sure you want to delete this student? This action cannot be undone."
+                onConfirm={confirmDelete}
+                onCancel={() => setShowConfirm(false)}
+                confirmText="Delete"
+                confirmVariant="danger"
+            />
         </div>
     );
 };

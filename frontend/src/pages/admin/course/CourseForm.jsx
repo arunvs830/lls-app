@@ -61,14 +61,14 @@ const CourseForm = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div className="input-field-wrapper">
                         <label className="input-label">Program</label>
-                        <select id="program_id" className="input-element" value={formData.program_id} onChange={handleChange} style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }} required>
+                        <select id="program_id" className="input-element" value={formData.program_id} onChange={handleChange} required>
                             <option value="">Select Program...</option>
                             {programs.map(p => <option key={p.id} value={p.id}>{p.program_name}</option>)}
                         </select>
                     </div>
                     <div className="input-field-wrapper">
                         <label className="input-label">Semester</label>
-                        <select id="semester_id" className="input-element" value={formData.semester_id} onChange={handleChange} style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }} required>
+                        <select id="semester_id" className="input-element" value={formData.semester_id} onChange={handleChange} required>
                             <option value="">Select Semester...</option>
                             {semesters.map(s => <option key={s.id} value={s.id}>{s.semester_name}</option>)}
                         </select>
@@ -78,7 +78,7 @@ const CourseForm = () => {
                 <InputField id="course_name" label="Course Name" placeholder="e.g. German A1" value={formData.course_name} onChange={handleChange} required />
                 <InputField id="course_code" label="Course Code" placeholder="e.g. GER-A1" value={formData.course_code} onChange={handleChange} required />
 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem' }}>
                     <Button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save Course'}</Button>
                     <Button variant="secondary" onClick={() => navigate('/admin/courses')}>Cancel</Button>
                 </div>

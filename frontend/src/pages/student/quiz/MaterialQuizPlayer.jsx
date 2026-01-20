@@ -147,8 +147,8 @@ const MaterialQuizPlayer = () => {
                         const isWrong = showResult && isSelected && !feedback.is_correct;
 
                         // Explicit border and background for each state
-                        let border = '2px solid rgba(255,255,255,0.1)';
-                        let background = 'rgba(255,255,255,0.02)';
+                        let border = '2px solid #E3E5E8';
+                        let background = '#F5F7FA';
 
                         if (isSelected && !showResult) {
                             border = '2px solid #8b5cf6';
@@ -173,7 +173,7 @@ const MaterialQuizPlayer = () => {
                                     background: background,
                                     border: border,
                                     borderRadius: '12px',
-                                    color: 'white',
+                                    color: '#21272A',
                                     cursor: 'pointer',
                                     textAlign: 'left',
                                     transition: 'all 0.2s',
@@ -247,11 +247,11 @@ const styles = {
         borderRadius: '50%',
         animation: 'spin 1s linear infinite',
     },
-    loadingText: { marginTop: '16px', color: 'rgba(255,255,255,0.6)' },
+    loadingText: { marginTop: '16px', color: '#5C6873' },
     emptyState: {
         textAlign: 'center',
         padding: '80px 20px',
-        color: 'rgba(255,255,255,0.5)',
+        color: '#5C6873',
     },
     emptyIcon: { fontSize: '4rem', display: 'block', marginBottom: '16px' },
 
@@ -262,21 +262,21 @@ const styles = {
         marginBottom: '24px',
     },
     exitBtn: {
-        background: 'rgba(255,255,255,0.05)',
-        border: '1px solid rgba(255,255,255,0.1)',
-        color: 'white',
+        background: '#F5F7FA',
+        border: '1px solid #E3E5E8',
+        color: '#21272A',
         padding: '8px 16px',
         borderRadius: '8px',
         cursor: 'pointer',
     },
-    scoreDisplay: { color: 'rgba(255,255,255,0.6)' },
+    scoreDisplay: { color: '#5C6873' },
     scoreValue: { color: '#10b981', fontWeight: '700' },
 
     progressSection: { marginBottom: '24px' },
-    progressText: { color: 'rgba(255,255,255,0.5)', marginBottom: '8px', fontSize: '0.9rem' },
+    progressText: { color: '#5C6873', marginBottom: '8px', fontSize: '0.9rem' },
     progressBar: {
         height: '8px',
-        background: 'rgba(255,255,255,0.1)',
+        background: '#E3E5E8',
         borderRadius: '4px',
         overflow: 'hidden',
     },
@@ -287,10 +287,11 @@ const styles = {
     },
 
     questionCard: {
-        background: 'rgba(255,255,255,0.03)',
+        background: '#FFFFFF',
         borderRadius: '20px',
         padding: '32px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid #E3E5E8',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
     },
     attemptedBadge: {
         display: 'inline-block',
@@ -302,7 +303,7 @@ const styles = {
         marginBottom: '16px',
     },
     questionText: {
-        color: 'white',
+        color: '#21272A',
         fontSize: '1.4rem',
         lineHeight: '1.5',
         marginBottom: '24px',
@@ -318,10 +319,10 @@ const styles = {
         alignItems: 'center',
         gap: '16px',
         padding: '16px 20px',
-        background: 'rgba(255,255,255,0.02)',
-        border: '2px solid rgba(255,255,255,0.1)',
+        background: '#F5F7FA',
+        border: '2px solid #E3E5E8',
         borderRadius: '12px',
-        color: 'white',
+        color: '#21272A',
         cursor: 'pointer',
         textAlign: 'left',
         transition: 'all 0.2s',
@@ -341,10 +342,11 @@ const styles = {
         background: 'rgba(239, 68, 68, 0.1)',
     },
     optionLabel: {
-        background: 'rgba(255,255,255,0.1)',
+        background: '#E3E5E8',
         padding: '6px 12px',
         borderRadius: '6px',
         fontWeight: '700',
+        color: '#21272A',
     },
     optionText: { flex: 1 },
     checkmark: { color: '#10b981', fontWeight: 'bold', fontSize: '1.2rem' },
@@ -376,9 +378,9 @@ const styles = {
         gap: '16px',
     },
     navBtn: {
-        background: 'rgba(255,255,255,0.05)',
-        border: '1px solid rgba(255,255,255,0.1)',
-        color: 'white',
+        background: '#F5F7FA',
+        border: '1px solid #E3E5E8',
+        color: '#21272A',
         padding: '14px 24px',
         borderRadius: '10px',
         cursor: 'pointer',
@@ -393,9 +395,9 @@ const styles = {
         fontWeight: '600',
     },
     disabledBtn: {
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.05)',
-        color: 'rgba(255,255,255,0.3)',
+        background: '#F5F7FA',
+        border: '1px solid #E3E5E8',
+        color: '#8F96A1',
         padding: '14px 24px',
         borderRadius: '10px',
         cursor: 'not-allowed',
@@ -404,7 +406,7 @@ const styles = {
         marginTop: '16px',
         background: 'rgba(139, 92, 246, 0.2)',
         border: '1px solid rgba(139, 92, 246, 0.4)',
-        color: '#8b5cf6',
+        color: '#7c3aed',
         padding: '10px 20px',
         borderRadius: '8px',
         cursor: 'pointer',

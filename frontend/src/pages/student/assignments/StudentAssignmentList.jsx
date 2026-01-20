@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../../services/api';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/Button';
@@ -11,7 +12,7 @@ const StudentAssignmentList = () => {
     const [loading, setLoading] = useState(true);
 
     // In a real app, you'd get this from auth context
-    const studentId = localStorage.getItem('userId') || 1;
+    const studentId = localStorage.getItem('userId') || JSON.parse(localStorage.getItem('user'))?.id || 1;
 
     useEffect(() => {
         loadData();
@@ -72,7 +73,7 @@ const StudentAssignmentList = () => {
                                 <td>
                                     <div style={{ fontWeight: 600 }}>{a.title}</div>
                                     {a.file_path && (
-                                        <a href={`http://localhost:5001${a.file_path}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.8rem', color: '#8b5cf6' }}>
+                                        <a href={`${API_ORIGIN}${a.file_path}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.8rem', color: '#8b5cf6' }}>
                                             📥 Download Question
                                         </a>
                                     )}

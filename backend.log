@@ -1,0 +1,40 @@
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:6000
+[33mPress CTRL+C to quit[0m
+ * Restarting with watchdog (fsevents)
+ * Debugger is active!
+ * Debugger PIN: 406-498-356
+127.0.0.1 - - [21/Jan/2026 00:24:51] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:24:51] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:24:51] "GET /api/courses/3/materials HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:24:51] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:24:51] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:24:51] "GET /api/courses/3/materials HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:24:51] "[36mGET /api/study-materials/thumbnail/material_1768934887.17289_Presentation1_Autosaved.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [21/Jan/2026 00:24:51] "GET /api/assignments?study_material_id=2 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:24:51] "GET /api/assignments?study_material_id=2 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:24:55] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:24:55] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:25:21] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:25:33] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+[2026-01-21 00:25:35,072] INFO in notification_service: Email queued (background): 📚 New Study Material: gtt to ancy@gmail.com
+[2026-01-21 00:25:35,087] INFO in notification_service: Email queued (background): 📚 New Study Material: gtt to arunvs830@yahoo.com
+127.0.0.1 - - [21/Jan/2026 00:25:35] "[35m[1mPOST /api/courses/3/materials HTTP/1.1[0m" 201 -
+127.0.0.1 - - [21/Jan/2026 00:25:35] "GET /api/courses/3/materials HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:25:35] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:25:35] "GET /api/courses/3/materials HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:25:35] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:25:35] "GET /api/study-materials/download/material_1768935335.012698_bodyy.pdf HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:25:35] "GET /api/assignments?study_material_id=3 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:25:35] "GET /api/assignments?study_material_id=3 HTTP/1.1" 200 -
+[2026-01-21 00:25:40,504] INFO in notification_service: Email sent (background): 📚 New Study Material: gtt to ancy@gmail.com
+[2026-01-21 00:25:40,504] INFO in notification_service: Email sent (background): 📚 New Study Material: gtt to arunvs830@yahoo.com
+127.0.0.1 - - [21/Jan/2026 00:25:51] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:26:21] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:26:33] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:26:51] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:27:21] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:27:33] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jan/2026 00:27:51] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -

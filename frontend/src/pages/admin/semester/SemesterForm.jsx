@@ -42,7 +42,7 @@ const SemesterForm = () => {
                     <InputField id="semester_number" type="number" label="Number" placeholder="1" value={formData.semester_number} onChange={handleChange} required />
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem' }}>
                     <Button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save Semester'}</Button>
                     <Button variant="secondary" onClick={() => navigate('/admin/semesters')}>Cancel</Button>
                 </div>

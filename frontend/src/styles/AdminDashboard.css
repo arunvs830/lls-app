@@ -12,16 +12,18 @@
 }
 
 .card {
-    background: var(--bg-card);
+    background: var(--bg-white);
     border: 1px solid var(--border-color);
-    border-radius: 1rem;
+    border-radius: var(--border-radius-lg);
     padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
 }
 
 .card h3 {
     margin-bottom: 1.25rem;
     color: var(--text-main);
     font-size: 1.125rem;
+    font-weight: 600;
 }
 
 .activity-list {
@@ -31,10 +33,10 @@
 }
 
 .activity-list li {
-    padding: 0.75rem 0;
+    padding: 0.875rem 0;
     border-bottom: 1px solid var(--border-color);
     font-size: 0.9375rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
 }
 
 .activity-list li:last-child {
@@ -43,12 +45,13 @@
 
 .activity-list strong {
     color: var(--text-main);
+    font-weight: 600;
 }
 
 .time {
     float: right;
-    font-size: 0.75rem;
-    opacity: 0.7;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
 }
 
 .quick-actions {

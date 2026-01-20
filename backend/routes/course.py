@@ -11,7 +11,10 @@ def get_all():
         'course_code': c.course_code,
         'course_name': c.course_name,
         'program_id': c.program_id,
-        'semester_id': c.semester_id
+        'program_name': c.program.program_name if c.program else None,
+        'program_code': c.program.program_code if c.program else None,
+        'semester_id': c.semester_id,
+        'semester_name': c.semester.semester_name if c.semester else None
     } for c in courses])
 
 @course_bp.route('/api/courses', methods=['POST'])

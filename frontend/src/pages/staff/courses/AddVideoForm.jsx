@@ -106,18 +106,18 @@ const AddVideoForm = () => {
 
     return (
         <div className="card" style={{ maxWidth: '700px', margin: '0 auto' }}>
-            <button onClick={() => navigate(`/staff/course/${courseId}/videos`)} style={{ background: 'none', border: 'none', color: '#8b5cf6', cursor: 'pointer', marginBottom: '1rem' }}>
+            <button onClick={() => navigate(`/staff/course/${courseId}/videos`)} style={{ background: 'none', border: 'none', color: '#8b5cf6', cursor: 'pointer', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: 500 }}>
                 ← Back to {course?.course_name || 'Course'}
             </button>
 
-            <h2 style={{ color: 'white', marginBottom: '1.5rem' }}>Add Study Material</h2>
+            <h2 style={{ color: '#1F2937', marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: '600' }}>Add Study Material</h2>
 
             {/* Material Type Selector */}
             <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ color: 'rgba(255,255,255,0.8)', display: 'block', marginBottom: '0.75rem', fontWeight: 500 }}>
+                <label style={{ color: '#374151', display: 'block', marginBottom: '0.75rem', fontWeight: 500 }}>
                     Material Type
                 </label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
                     {typeButtons.map(btn => (
                         <button
                             key={btn.id}
@@ -126,17 +126,23 @@ const AddVideoForm = () => {
                             style={{
                                 padding: '1rem',
                                 borderRadius: '12px',
-                                border: materialType === btn.id ? `2px solid ${btn.color}` : '2px solid rgba(255,255,255,0.1)',
-                                background: materialType === btn.id ? `${btn.color}15` : 'rgba(255,255,255,0.03)',
-                                color: 'white',
+                                border: materialType === btn.id ? `2px solid ${btn.color}` : '1px solid #E5E7EB',
+                                background: materialType === btn.id ? `${btn.color}15` : '#fff',
+                                color: materialType === btn.id ? btn.color : '#6B7280',
                                 cursor: 'pointer',
                                 fontSize: '0.95rem',
                                 transition: 'all 0.2s',
-                                textAlign: 'left'
+                                textAlign: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem',
+                                height: '100px'
                             }}
                         >
-                            <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>{btn.label.split(' ')[0]}</div>
-                            <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>{btn.label.split(' ').slice(1).join(' ')}</div>
+                            <div style={{ fontSize: '1.5rem' }}>{btn.label.split(' ')[0]}</div>
+                            <div style={{ fontSize: '0.85rem', fontWeight: 500 }}>{btn.label.split(' ').slice(1).join(' ')}</div>
                         </button>
                     ))}
                 </div>
@@ -167,8 +173,6 @@ const AddVideoForm = () => {
                         onChange={handleChange}
                         rows={3}
                         style={{
-                            backgroundColor: 'rgba(255,255,255,0.05)',
-                            color: 'white',
                             resize: 'vertical'
                         }}
                     />
@@ -191,20 +195,20 @@ const AddVideoForm = () => {
                     <div className="input-field-wrapper">
                         <label className="input-label">{getFileTypeLabel()} File</label>
                         <div style={{
-                            border: '2px dashed rgba(255,255,255,0.2)',
+                            border: '2px dashed #D1D5DB',
                             borderRadius: '12px',
                             padding: '2rem',
                             textAlign: 'center',
-                            background: selectedFile ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255,255,255,0.02)',
-                            borderColor: selectedFile ? '#10b981' : 'rgba(255,255,255,0.2)'
+                            background: selectedFile ? '#ECFDF5' : '#F9FAFB',
+                            borderColor: selectedFile ? '#10B981' : '#D1D5DB'
                         }}>
                             {selectedFile ? (
                                 <>
                                     <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>✓</div>
-                                    <p style={{ color: '#10b981', fontWeight: 500, marginBottom: '0.5rem' }}>
+                                    <p style={{ color: '#10B981', fontWeight: 500, marginBottom: '0.5rem' }}>
                                         {selectedFile.name}
                                     </p>
-                                    <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
+                                    <p style={{ color: '#6B7280', fontSize: '0.85rem' }}>
                                         {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                                     </p>
                                     <button
@@ -216,10 +220,10 @@ const AddVideoForm = () => {
                                         style={{
                                             marginTop: '0.75rem',
                                             padding: '0.5rem 1rem',
-                                            background: 'rgba(239, 68, 68, 0.2)',
-                                            border: 'none',
+                                            background: '#FEF2F2',
+                                            border: '1px solid #FECACA',
                                             borderRadius: '6px',
-                                            color: '#ef4444',
+                                            color: '#EF4444',
                                             cursor: 'pointer',
                                             fontSize: '0.85rem'
                                         }}
@@ -232,7 +236,7 @@ const AddVideoForm = () => {
                                     <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>
                                         {materialType === 'video' ? '📹' : materialType === 'pdf' ? '📄' : '📊'}
                                     </div>
-                                    <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '1rem', fontSize: '0.9rem' }}>
+                                    <p style={{ color: '#6B7280', marginBottom: '1rem', fontSize: '0.9rem' }}>
                                         Drag & drop your {getFileTypeLabel()} file here
                                     </p>
                                     <input
@@ -263,7 +267,7 @@ const AddVideoForm = () => {
                     </div>
                 )}
 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem' }}>
                     <Button type="submit" disabled={loading}>
                         {loading ? 'Adding...' : 'Add Material'}
                     </Button>

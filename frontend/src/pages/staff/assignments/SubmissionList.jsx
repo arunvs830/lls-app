@@ -1,7 +1,8 @@
+import { API_ORIGIN } from '../../../services/api';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../../../components/Button';
-import { submissionApi, assignmentApi } from '../../../services/api';
+import { submissionApi, assignmentApi, staffCourseApi, courseApi } from '../../../services/api';
 import '../../../styles/Table.css';
 
 const SubmissionList = () => {
@@ -11,9 +12,14 @@ const SubmissionList = () => {
     const [submissions, setSubmissions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [evaluating, setEvaluating] = useState(null); // id of submission being evaluated
+    const [saving, setSaving] = useState(false); // prevent multiple submissions
     const [gradeForm, setGradeForm] = useState({ marks: '', feedback: '' });
 
-    const staffId = localStorage.getItem('userId') || 1;
+    const [courses, setCourses] = useState([]);
+    const [selectedCourseId, setSelectedCourseId] = useState('');
+    const [scope, setScope] = useState('assignment'); // 'assignment' | 'course'
+
+    const staffId = Number(localStorage.getItem('userId') || 1);
 
     useEffect(() => {
         loadData();
@@ -21,18 +27,56 @@ const SubmissionList = () => {
 
     const loadData = async () => {
         try {
-            const [assignmentData, submissionData] = await Promise.all([
+            setLoading(true);
+
+            const [assignmentData, allocations, allCourses] = await Promise.all([
                 assignmentApi.getOne(assignmentId),
-                submissionApi.getAll(assignmentId)
+                staffCourseApi.getAll(),
+                courseApi.getAll()
             ]);
+
+            // Courses this staff is assigned to
+            const myCourseIds = allocations
+                .filter(a => Number(a.staff_id) === staffId)
+                .map(a => Number(a.course_id));
+
+            const visibleCourses = myCourseIds.length > 0
+                ? allCourses.filter(c => myCourseIds.includes(Number(c.id)))
+                : allCourses;
+
+            setCourses(visibleCourses);
             setAssignment(assignmentData);
-            setSubmissions(submissionData);
+
+            // Default course selection to the assignment's course
+            const assignmentCourseId = assignmentData?.course_id;
+            if (!selectedCourseId && assignmentCourseId) {
+                setSelectedCourseId(String(assignmentCourseId));
+            }
+
+            // Default scope: show this assignment's submissions
+            if (scope === 'assignment') {
+                const submissionData = await submissionApi.getAll(assignmentId);
+                setSubmissions(submissionData);
+            } else {
+                const courseId = Number(selectedCourseId || assignmentCourseId);
+                const submissionData = courseId
+                    ? await submissionApi.getForStaffCourse(staffId, courseId)
+                    : await submissionApi.getForStaff(staffId);
+                setSubmissions(submissionData);
+            }
         } catch (error) {
             console.error('Error loading submissions:', error);
         } finally {
             setLoading(false);
         }
     };
+
+    // Reload submissions when scope/course changes
+    useEffect(() => {
+        if (!assignmentId) return;
+        loadData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [scope, selectedCourseId]);
 
     const handleEvaluate = (sub) => {
         setEvaluating(sub.id);
@@ -43,6 +87,8 @@ const SubmissionList = () => {
     };
 
     const submitEvaluation = async (submissionId) => {
+        if (saving) return; // Prevent multiple clicks
+        setSaving(true);
         try {
             await submissionApi.evaluate(submissionId, {
                 staff_id: staffId,
@@ -55,6 +101,8 @@ const SubmissionList = () => {
         } catch (error) {
             console.error('Error saving evaluation:', error);
             alert('Failed to save evaluation.');
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -70,12 +118,42 @@ const SubmissionList = () => {
                     <h2>Submissions: {assignment?.title}</h2>
                     <span style={{ fontSize: '1.2rem', fontWeight: 600 }}>Total: {submissions.length}</span>
                 </div>
+
+                <div style={{ display: 'flex', gap: '12px', marginTop: '12px', flexWrap: 'wrap' }}>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>Scope</label>
+                        <select
+                            value={scope}
+                            onChange={(e) => setScope(e.target.value)}
+                            style={{ background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '8px 10px', borderRadius: '8px' }}
+                        >
+                            <option value="assignment">This assignment</option>
+                            <option value="course">All assignments in course</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>Course</label>
+                        <select
+                            value={selectedCourseId}
+                            onChange={(e) => setSelectedCourseId(e.target.value)}
+                            disabled={scope !== 'course'}
+                            style={{ background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '8px 10px', borderRadius: '8px', minWidth: '260px', opacity: scope === 'course' ? 1 : 0.6 }}
+                        >
+                            <option value="">All my courses</option>
+                            {courses.map(c => (
+                                <option key={c.id} value={String(c.id)}>{c.course_code} - {c.course_name}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <table className="data-table">
                 <thead>
                     <tr>
-                        <th>Student ID</th>
+                        <th>Student</th>
+                        {scope === 'course' && <th>Assignment</th>}
                         <th>Submitted At</th>
                         <th>Work</th>
                         <th>Status</th>
@@ -85,10 +163,18 @@ const SubmissionList = () => {
                 </thead>
                 <tbody>
                     {submissions.length === 0 ? (
-                        <tr><td colSpan="6" style={{ textAlign: 'center' }}>No submissions received yet</td></tr>
+                        <tr><td colSpan={scope === 'course' ? 7 : 6} style={{ textAlign: 'center' }}>No submissions received yet</td></tr>
                     ) : submissions.map((s) => (
                         <tr key={s.id}>
-                            <td>Student #{s.student_id}</td>
+                            <td>
+                                {s.student?.full_name || `Student #${s.student_id}`}
+                                {s.student?.student_code ? (
+                                    <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{s.student.student_code}</div>
+                                ) : null}
+                            </td>
+                            {scope === 'course' && (
+                                <td>{s.assignment?.title || '-'}</td>
+                            )}
                             <td>{new Date(s.submitted_at).toLocaleString()}</td>
                             <td>
                                 <div>
@@ -98,7 +184,7 @@ const SubmissionList = () => {
                                         </div>
                                     )}
                                     {s.file_path && (
-                                        <a href={`http://localhost:5001${s.file_path}`} target="_blank" rel="noopener noreferrer" style={{ color: '#8b5cf6', fontWeight: 500 }}>
+                                        <a href={`${API_ORIGIN}${s.file_path}`} target="_blank" rel="noopener noreferrer" style={{ color: '#8b5cf6', fontWeight: 500 }}>
                                             📄 View Attachment
                                         </a>
                                     )}
@@ -117,7 +203,10 @@ const SubmissionList = () => {
                             </td>
                             <td>
                                 {s.evaluation ? (
-                                    <span style={{ fontWeight: 600 }}>{s.evaluation.marks_obtained} / {assignment.max_marks}</span>
+                                    <span style={{ fontWeight: 600 }}>
+                                        {s.evaluation.marks_obtained}
+                                        {scope === 'assignment' && assignment?.max_marks ? ` / ${assignment.max_marks}` : ''}
+                                    </span>
                                 ) : '--'}
                             </td>
                             <td>
@@ -137,8 +226,10 @@ const SubmissionList = () => {
                                             style={{ width: '100%', marginBottom: '0.5rem', background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '4px', height: '60px' }}
                                         ></textarea>
                                         <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                            <Button size="small" onClick={() => submitEvaluation(s.id)}>Save</Button>
-                                            <button onClick={() => setEvaluating(null)} className="btn-secondary" style={{ padding: '4px 8px' }}>Cancel</button>
+                                            <Button size="small" onClick={() => submitEvaluation(s.id)} disabled={saving}>
+                                                {saving ? 'Saving...' : 'Save'}
+                                            </Button>
+                                            <button onClick={() => setEvaluating(null)} className="btn-secondary" style={{ padding: '4px 8px' }} disabled={saving}>Cancel</button>
                                         </div>
                                     </div>
                                 ) : (

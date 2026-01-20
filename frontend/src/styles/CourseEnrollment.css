@@ -1,0 +1,329 @@
+.enrollment-page {
+    padding: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-header h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+    font-weight: 600;
+    color: #21272A;
+}
+
+.page-header p {
+    margin: 0;
+    color: #5C6873;
+    font-size: 14px;
+}
+
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #5C6873;
+    font-size: 16px;
+}
+
+/* Alerts */
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.alert-error {
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    color: #DC2626;
+}
+
+.alert-success {
+    background: #F0FDF4;
+    border: 1px solid #86EFAC;
+    color: #16A34A;
+}
+
+/* Sections */
+.enrollment-section {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #E8EAED;
+}
+
+.enrollment-section h2 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #21272A;
+}
+
+.section-description {
+    margin: 0 0 20px 0;
+    color: #5C6873;
+    font-size: 14px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #8B949E;
+}
+
+.empty-state .empty-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.empty-state .hint {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #A0A8B0;
+}
+
+/* Course Grid - Enrolled */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.enrolled-card {
+    background: #FAFBFC;
+    border: 1px solid #E8EAED;
+    border-radius: 10px;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    transition: box-shadow 0.2s ease;
+}
+
+.enrolled-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-content .course-code {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #667eea;
+    text-transform: uppercase;
+    background: rgba(102, 126, 234, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.card-content h3 {
+    margin: 0 0 12px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #21272A;
+}
+
+.enrollment-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.status-badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 12px;
+    text-transform: capitalize;
+}
+
+.status-badge.active {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.status-badge.dropped {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.status-badge.completed {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.enrolled-date {
+    font-size: 12px;
+    color: #8B949E;
+}
+
+.btn-drop {
+    background: none;
+    border: 1px solid #E8EAED;
+    color: #DC2626;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-drop:hover {
+    background: #FEF2F2;
+    border-color: #FCA5A5;
+}
+
+/* Available Courses */
+.available-courses {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.available-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    background: #FAFBFC;
+    border: 2px solid #E8EAED;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.available-card:hover {
+    border-color: #667eea;
+    background: #F8F9FF;
+}
+
+.available-card.selected {
+    border-color: #667eea;
+    background: #F0F4FF;
+}
+
+.available-card .checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #D1D5DA;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.available-card.selected .checkbox {
+    background: #667eea;
+    border-color: #667eea;
+}
+
+.course-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.course-details .course-code {
+    font-size: 11px;
+    font-weight: 600;
+    color: #667eea;
+    text-transform: uppercase;
+}
+
+.course-details .course-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #21272A;
+}
+
+/* Enrollment Actions */
+.enrollment-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid #E8EAED;
+}
+
+.selected-count {
+    font-size: 14px;
+    color: #5C6873;
+}
+
+.btn-enroll {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-enroll:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-enroll:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .enrollment-page {
+        padding: 16px;
+    }
+
+    .enrollment-section {
+        padding: 16px;
+    }
+
+    .enrolled-card {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-drop {
+        width: 100%;
+    }
+
+    .enrollment-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-enroll {
+        width: 100%;
+    }
+}

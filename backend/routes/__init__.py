@@ -11,6 +11,11 @@ from .assignment import assignment_bp
 from .submission import submission_bp
 from .student_dashboard import student_dashboard_bp
 from .mcq import mcq_bp
+from .auth import auth_bp
+from .result import result_bp
+from .certificate import certificate_bp
+from .notification import notification_bp
+from .communication import communication_bp
 
 def register_routes(app):
     app.register_blueprint(academic_year_bp)
@@ -25,4 +30,8 @@ def register_routes(app):
     app.register_blueprint(submission_bp)
     app.register_blueprint(student_dashboard_bp)
     app.register_blueprint(mcq_bp)
-
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(result_bp)
+    app.register_blueprint(certificate_bp)
+    app.register_blueprint(notification_bp)
+    app.register_blueprint(communication_bp)

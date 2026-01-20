@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import AdminLayout from './layouts/AdminLayout';
 import StaffLayout from './layouts/StaffLayout';
 import StudentLayout from './layouts/StudentLayout';
@@ -20,7 +21,8 @@ import StudentList from './pages/admin/student/StudentList';
 import StudentForm from './pages/admin/student/StudentForm';
 import StaffCourseList from './pages/admin/staff-course/StaffCourseList';
 import StaffCourseForm from './pages/admin/staff-course/StaffCourseForm';
-
+import CertificateLayoutList from './pages/admin/certificates/CertificateLayoutList';
+import CertificateDesigner from './pages/admin/certificates/CertificateDesigner';
 // Staff imports
 import StaffDashboard from './pages/staff/Dashboard';
 import MyCourseList from './pages/staff/courses/MyCourseList';
@@ -38,6 +40,7 @@ import MCQForm from './pages/staff/mcq/MCQForm';
 import StudentDashboard from './pages/student/Dashboard';
 import StudentCourseList from './pages/student/courses/CourseList';
 import StudentCourseMaterials from './pages/student/courses/CourseMaterials';
+import CourseEnrollment from './pages/student/courses/CourseEnrollment';
 import StudentResultList from './pages/student/results/ResultList';
 import StudentAssignmentList from './pages/student/assignments/StudentAssignmentList';
 import SubmissionForm from './pages/student/assignments/SubmissionForm';
@@ -46,11 +49,18 @@ import QuizPlayer from './pages/student/quiz/QuizPlayer';
 import QuizResults from './pages/student/quiz/QuizResults';
 import MaterialQuizPlayer from './pages/student/quiz/MaterialQuizPlayer';
 
+// Shared imports
+import Inbox from './pages/messages/Inbox';
+import Compose from './pages/messages/Compose';
+import MessageDetail from './pages/messages/MessageDetail';
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
@@ -68,8 +78,10 @@ function App() {
         <Route path="/admin/students/new" element={<AdminLayout><StudentForm /></AdminLayout>} />
         <Route path="/admin/staff-allocation" element={<AdminLayout><StaffCourseList /></AdminLayout>} />
         <Route path="/admin/staff-allocation/new" element={<AdminLayout><StaffCourseForm /></AdminLayout>} />
+        <Route path="/admin/certificates" element={<AdminLayout><CertificateLayoutList /></AdminLayout>} />
+        <Route path="/admin/certificates/new" element={<AdminLayout><CertificateDesigner /></AdminLayout>} />
+        <Route path="/admin/certificates/edit/:id" element={<AdminLayout><CertificateDesigner /></AdminLayout>} />
 
-        {/* Staff Routes */}
         <Route path="/staff" element={<StaffLayout><StaffDashboard /></StaffLayout>} />
         <Route path="/staff/my-courses" element={<StaffLayout><MyCourseList /></StaffLayout>} />
         <Route path="/staff/course/:courseId/videos" element={<StaffLayout><CourseVideos /></StaffLayout>} />
@@ -83,11 +95,15 @@ function App() {
         <Route path="/staff/mcqs" element={<StaffLayout><MCQList /></StaffLayout>} />
         <Route path="/staff/mcqs/new" element={<StaffLayout><MCQForm /></StaffLayout>} />
         <Route path="/staff/mcqs/edit/:id" element={<StaffLayout><MCQForm /></StaffLayout>} />
+        <Route path="/staff/mcqs/edit/:id" element={<StaffLayout><MCQForm /></StaffLayout>} />
+        <Route path="/staff/messages" element={<StaffLayout><Inbox /></StaffLayout>} />
+        <Route path="/staff/messages/new" element={<StaffLayout><Compose /></StaffLayout>} />
+        <Route path="/staff/messages/:id" element={<StaffLayout><MessageDetail /></StaffLayout>} />
 
-        {/* Student Routes */}
         <Route path="/student" element={<StudentLayout><StudentDashboard /></StudentLayout>} />
         <Route path="/student/courses" element={<StudentLayout><StudentCourseList /></StudentLayout>} />
         <Route path="/student/courses/:courseId" element={<StudentLayout><StudentCourseMaterials /></StudentLayout>} />
+        <Route path="/student/enroll" element={<StudentLayout><CourseEnrollment /></StudentLayout>} />
         <Route path="/student/results" element={<StudentLayout><StudentResultList /></StudentLayout>} />
         <Route path="/student/assignments" element={<StudentLayout><StudentAssignmentList /></StudentLayout>} />
         <Route path="/student/assignments/submit/:assignmentId" element={<StudentLayout><SubmissionForm /></StudentLayout>} />
@@ -95,6 +111,9 @@ function App() {
         <Route path="/student/quiz/:courseId" element={<StudentLayout><QuizPlayer /></StudentLayout>} />
         <Route path="/student/quiz/results" element={<StudentLayout><QuizResults /></StudentLayout>} />
         <Route path="/student/quiz/material/:materialId" element={<StudentLayout><MaterialQuizPlayer /></StudentLayout>} />
+        <Route path="/student/messages" element={<StudentLayout><Inbox /></StudentLayout>} />
+        <Route path="/student/messages/new" element={<StudentLayout><Compose /></StudentLayout>} />
+        <Route path="/student/messages/:id" element={<StudentLayout><MessageDetail /></StudentLayout>} />
 
       </Routes>
     </Router>

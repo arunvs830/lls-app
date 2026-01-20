@@ -9,7 +9,6 @@ const MaterialForm = () => {
     const [searchParams] = useSearchParams();
     const parentId = searchParams.get('parent');
 
-    const [courses, setCourses] = useState([]);
     const [myCourses, setMyCourses] = useState([]);
     const [parentMaterial, setParentMaterial] = useState(null);
     const [materialType, setMaterialType] = useState('youtube');
@@ -35,7 +34,6 @@ const MaterialForm = () => {
                 courseApi.getAll(),
                 staffCourseApi.getAll()
             ]);
-            setCourses(courseData);
             const myAllocations = allocations.filter(a => a.staff_id === staffId);
             const myCourseIds = myAllocations.map(a => a.course_id);
             setMyCourses(courseData.filter(c => myCourseIds.includes(c.id)));
@@ -136,29 +134,29 @@ const MaterialForm = () => {
 
     return (
         <div className="card" style={{ maxWidth: '700px', margin: '0 auto' }}>
-            <h2 style={{ color: 'white', marginBottom: '0.5rem' }}>
+            <h2 style={{ color: '#1F2937', marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: '600' }}>
                 {parentId ? 'Add Sub-Material' : 'Upload Study Material'}
             </h2>
 
             {parentMaterial && (
                 <div style={{
-                    background: 'rgba(139, 92, 246, 0.1)',
+                    background: '#F3F4F6',
                     padding: '0.75rem 1rem',
                     borderRadius: '8px',
                     marginBottom: '1.5rem',
-                    border: '1px solid rgba(139, 92, 246, 0.3)'
+                    border: '1px solid #E5E7EB'
                 }}>
-                    <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>Adding under: </span>
+                    <span style={{ color: '#6B7280', fontSize: '0.85rem' }}>Adding under: </span>
                     <span style={{ color: '#8b5cf6', fontWeight: 500 }}>{parentMaterial.title}</span>
                 </div>
             )}
 
             {/* Material Type Selector */}
             <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ color: 'rgba(255,255,255,0.8)', display: 'block', marginBottom: '0.75rem', fontWeight: 500 }}>
+                <label style={{ color: '#374151', display: 'block', marginBottom: '0.75rem', fontWeight: 500 }}>
                     Material Type
                 </label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
                     {typeButtons.map(btn => (
                         <button
                             key={btn.id}
@@ -167,17 +165,23 @@ const MaterialForm = () => {
                             style={{
                                 padding: '1rem',
                                 borderRadius: '12px',
-                                border: materialType === btn.id ? `2px solid ${btn.color}` : '2px solid rgba(255,255,255,0.1)',
-                                background: materialType === btn.id ? `${btn.color}15` : 'rgba(255,255,255,0.03)',
-                                color: 'white',
+                                border: materialType === btn.id ? `2px solid ${btn.color}` : '1px solid #E5E7EB',
+                                background: materialType === btn.id ? `${btn.color}15` : '#fff',
+                                color: materialType === btn.id ? btn.color : '#6B7280',
                                 cursor: 'pointer',
                                 fontSize: '0.95rem',
                                 transition: 'all 0.2s',
-                                textAlign: 'left'
+                                textAlign: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem',
+                                height: '100px'
                             }}
                         >
-                            <div style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>{btn.label.split(' ')[0]}</div>
-                            <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>{btn.label.split(' ').slice(1).join(' ')}</div>
+                            <div style={{ fontSize: '1.5rem' }}>{btn.label.split(' ')[0]}</div>
+                            <div style={{ fontSize: '0.85rem', fontWeight: 500 }}>{btn.label.split(' ').slice(1).join(' ')}</div>
                         </button>
                     ))}
                 </div>
@@ -193,11 +197,10 @@ const MaterialForm = () => {
                             className="input-element"
                             value={formData.course_id}
                             onChange={handleChange}
-                            style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'white' }}
                             required
                         >
                             <option value="">Select Course...</option>
-                            {myCourses.map(c => <option key={c.id} value={c.id}>{c.course_name}</option>)}
+                            {myCourses.map(c => <option key={c.id} value={c.id}>{c.course_name} ({c.program_code})</option>)}
                         </select>
                     </div>
                 )}
@@ -220,7 +223,7 @@ const MaterialForm = () => {
                         value={formData.description}
                         onChange={handleChange}
                         rows={3}
-                        style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'white', resize: 'vertical' }}
+                        style={{ resize: 'vertical' }}
                     />
                 </div>
 
@@ -239,24 +242,24 @@ const MaterialForm = () => {
                     <div className="input-field-wrapper">
                         <label className="input-label">{getFileTypeLabel()} File</label>
                         <div style={{
-                            border: '2px dashed rgba(255,255,255,0.2)',
+                            border: '2px dashed #D1D5DB',
                             borderRadius: '12px',
                             padding: '2rem',
                             textAlign: 'center',
-                            background: selectedFile ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255,255,255,0.02)',
-                            borderColor: selectedFile ? '#10b981' : 'rgba(255,255,255,0.2)'
+                            background: selectedFile ? '#ECFDF5' : '#F9FAFB',
+                            borderColor: selectedFile ? '#10B981' : '#D1D5DB'
                         }}>
                             {selectedFile ? (
                                 <>
                                     <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✓</div>
-                                    <p style={{ color: '#10b981', fontWeight: 500 }}>{selectedFile.name}</p>
-                                    <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginTop: '0.25rem' }}>
+                                    <p style={{ color: '#10B981', fontWeight: 500 }}>{selectedFile.name}</p>
+                                    <p style={{ color: '#6B7280', fontSize: '0.85rem', marginTop: '0.25rem' }}>
                                         {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                                     </p>
                                     <button
                                         type="button"
                                         onClick={() => { setSelectedFile(null); setFormData({ ...formData, file_path: '' }); }}
-                                        style={{ marginTop: '0.75rem', padding: '0.5rem 1rem', background: 'rgba(239, 68, 68, 0.2)', border: 'none', borderRadius: '6px', color: '#ef4444', cursor: 'pointer' }}
+                                        style={{ marginTop: '0.75rem', padding: '0.5rem 1rem', background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '6px', color: '#EF4444', cursor: 'pointer' }}
                                     >
                                         Remove
                                     </button>
@@ -266,9 +269,9 @@ const MaterialForm = () => {
                                     <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
                                         {materialType === 'video' ? '📹' : materialType === 'pdf' ? '📄' : '📊'}
                                     </div>
-                                    <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '1rem' }}>Drag & drop or click to upload</p>
+                                    <p style={{ color: '#6B7280', marginBottom: '1rem' }}>Drag & drop or click to upload</p>
                                     <input type="file" accept={getAcceptType()} onChange={handleFileChange} style={{ display: 'none' }} id="fileInput" required />
-                                    <label htmlFor="fileInput" style={{ padding: '0.75rem 1.5rem', background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', borderRadius: '8px', color: 'white', cursor: 'pointer' }}>
+                                    <label htmlFor="fileInput" style={{ padding: '0.75rem 1.5rem', background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', borderRadius: '8px', color: 'white', cursor: 'pointer', display: 'inline-block' }}>
                                         Choose File
                                     </label>
                                 </>
@@ -277,7 +280,7 @@ const MaterialForm = () => {
                     </div>
                 )}
 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem' }}>
                     <Button type="submit" disabled={loading}>
                         {loading ? 'Uploading...' : parentId ? 'Add Sub-Material' : 'Upload Material'}
                     </Button>

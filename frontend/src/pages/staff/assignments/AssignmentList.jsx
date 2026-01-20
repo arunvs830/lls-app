@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../../services/api';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/Button';
@@ -7,7 +8,6 @@ import '../../../styles/Table.css';
 const AssignmentList = () => {
     const navigate = useNavigate();
     const [assignments, setAssignments] = useState([]);
-    const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -28,7 +28,6 @@ const AssignmentList = () => {
             }));
 
             setAssignments(enrichedAssignments);
-            setCourses(courseData);
         } catch (error) {
             console.error('Error loading assignments:', error);
         } finally {
@@ -81,7 +80,7 @@ const AssignmentList = () => {
                             <td>{a.max_marks}</td>
                             <td>
                                 {a.file_path ? (
-                                    <a href={`http://localhost:5001${a.file_path}`} target="_blank" rel="noopener noreferrer" style={{ color: '#8b5cf6' }}>
+                                    <a href={`${API_ORIGIN}${a.file_path}`} target="_blank" rel="noopener noreferrer" style={{ color: '#8b5cf6' }}>
                                         View File
                                     </a>
                                 ) : 'None'}

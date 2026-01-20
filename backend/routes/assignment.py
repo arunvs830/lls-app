@@ -2,6 +2,7 @@ import os
 from flask import Blueprint, request, jsonify, current_app, send_from_directory
 from werkzeug.utils import secure_filename
 from models import db, Assignment
+from services.notification_service import NotificationService
 from datetime import datetime
 
 assignment_bp = Blueprint('assignment', __name__)
@@ -79,6 +80,13 @@ def create():
     )
     db.session.add(assignment)
     db.session.commit()
+    
+    # Notify students about new assignment
+    try:
+        NotificationService.notify_new_assignment(assignment)
+    except Exception as e:
+        current_app.logger.error(f"Failed to send assignment notifications: {str(e)}")
+        
     return jsonify({'id': assignment.id, 'message': 'Created successfully'}), 201
 
 @assignment_bp.route('/api/assignments/<int:id>', methods=['GET'])
