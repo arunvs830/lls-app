@@ -28,8 +28,10 @@ def login():
     user = None
     user_data = None
     
+    from sqlalchemy import or_
+
     if role == 'admin':
-        user = Admin.query.filter_by(email=email).first()
+        user = Admin.query.filter(or_(Admin.email == email, Admin.username == email)).first()
         if user and check_password_hash(user.password_hash, password):
             user_data = {
                 "id": user.id,
@@ -40,7 +42,7 @@ def login():
             }
     
     elif role == 'staff':
-        user = Staff.query.filter_by(email=email).first()
+        user = Staff.query.filter(or_(Staff.email == email, Staff.username == email)).first()
         if user and check_password_hash(user.password_hash, password):
             user_data = {
                 "id": user.id,
@@ -52,7 +54,7 @@ def login():
             }
     
     elif role == 'student':
-        user = Student.query.filter_by(email=email).first()
+        user = Student.query.filter(or_(Student.email == email, Student.username == email)).first()
         # Ensure student is found AND password matches correctly
         if user and check_password_hash(user.password_hash, password):
             user_data = {

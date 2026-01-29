@@ -97,9 +97,9 @@ const LoginForm = ({ onLogin }) => {
 
             <InputField
                 id="email"
-                type="email"
-                label="Email"
-                placeholder="Enter your email"
+                type="text"
+                label="Email or Username"
+                placeholder="Enter email or username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
