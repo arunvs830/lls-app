@@ -516,3 +516,35 @@ sqlalchemy.exc.InvalidRequestError: Entity namespace for "study_material" has no
 127.0.0.1 - - [29/Jan/2026 23:35:51] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
 127.0.0.1 - - [29/Jan/2026 23:36:21] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
 127.0.0.1 - - [29/Jan/2026 23:36:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:37:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:37:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:38:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:38:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:39:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:39:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:40:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:40:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:41:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:41:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:42:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:42:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:43:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:43:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:44:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:44:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:45:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:45:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:46:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:46:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+ * Detected change in '/Users/macbook/Documents/lls app/backend/app.py', reloading
+ * Detected change in '/Users/macbook/Documents/lls app/backend/app.py', reloading
+ * Restarting with watchdog (fsevents)
+ * Debugger is active!
+ * Debugger PIN: 406-498-356
+ * Detected change in '/Users/macbook/Documents/lls app/backend/config.py', reloading
+ * Detected change in '/Users/macbook/Documents/lls app/backend/config.py', reloading
+ * Restarting with watchdog (fsevents)
+ * Debugger is active!
+ * Debugger PIN: 406-498-356
+127.0.0.1 - - [29/Jan/2026 23:47:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [29/Jan/2026 23:47:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -

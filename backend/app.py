@@ -9,8 +9,9 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Enable CORS for frontend (allow all for dev)
-    CORS(app)
+    # Enable CORS for frontend
+    frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:6001')
+    CORS(app, origins=[frontend_url, 'http://localhost:6001', 'http://localhost:3000'])
 
     db.init_app(app)
     
@@ -22,8 +23,10 @@ def create_app(config_class=Config):
 
     return app
 
-if __name__ == '__main__':
-    app = create_app()
-    port = int(os.environ.get('PORT', 6000))
-    app.run(debug=True, port=port)
+# For gunicorn production deployment
+app = create_app()
 
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 6000))
+    debug = os.getenv('FLASK_ENV', 'development') != 'production'
+    app.run(debug=debug, port=port)
