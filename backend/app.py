@@ -11,7 +11,17 @@ def create_app(config_class=Config):
 
     # Enable CORS for frontend
     frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:6001')
-    CORS(app, origins=[frontend_url, 'http://localhost:6001', 'http://localhost:3000'])
+    
+    # Allow local development and production domains
+    origins = [
+        frontend_url, 
+        'http://localhost:6001', 
+        'http://localhost:3000',
+        'https://lls-app.vercel.app',  # Explicitly add your Vercel domain
+        'https://lls-app-git-main-arunvs830s-projects.vercel.app' # Preview deployments
+    ]
+    
+    CORS(app, origins=origins, supports_credentials=True)
 
     db.init_app(app)
     
