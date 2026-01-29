@@ -20,6 +20,26 @@ def create_app(config_class=Config):
 
     with app.app_context():
         db.create_all()
+        
+        # Auto-create admin if not exists (for deployments with no shell access)
+        from models import Admin
+        from werkzeug.security import generate_password_hash
+        
+        try:
+            if not Admin.query.filter_by(username="admin").first():
+                print("👤 Auto-creating default 'admin' user...")
+                admin = Admin(
+                    username="admin",
+                    email="admin@lls.edu",
+                    password_hash=generate_password_hash("admin123"),
+                    full_name="System Administrator",
+                    phone="0000000000"
+                )
+                db.session.add(admin)
+                db.session.commit()
+                print("✅ Default admin created: admin / admin123")
+        except Exception as e:
+            print(f"⚠️ Admin creation skipped: {e}")
 
     return app
 
