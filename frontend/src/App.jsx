@@ -15,8 +15,10 @@ import ProgramList from './pages/admin/program/ProgramList';
 import ProgramForm from './pages/admin/program/ProgramForm';
 import CourseList from './pages/admin/course/CourseList';
 import CourseForm from './pages/admin/course/CourseForm';
+import CourseReport from './pages/admin/course/CourseReport';
 import StaffList from './pages/admin/staff/StaffList';
 import StaffForm from './pages/admin/staff/StaffForm';
+import StaffReport from './pages/admin/staff/StaffReport';
 import StudentList from './pages/admin/student/StudentList';
 import StudentForm from './pages/admin/student/StudentForm';
 import StaffCourseList from './pages/admin/staff-course/StaffCourseList';
@@ -35,6 +37,7 @@ import AssignmentForm from './pages/staff/assignments/AssignmentForm';
 import SubmissionList from './pages/staff/assignments/SubmissionList';
 import MCQList from './pages/staff/mcq/MCQList';
 import MCQForm from './pages/staff/mcq/MCQForm';
+import ReportDashboard from './pages/staff/reports/ReportDashboard';
 
 // Student imports
 import StudentDashboard from './pages/student/Dashboard';
@@ -44,6 +47,7 @@ import CourseEnrollment from './pages/student/courses/CourseEnrollment';
 import StudentResultList from './pages/student/results/ResultList';
 import StudentAssignmentList from './pages/student/assignments/StudentAssignmentList';
 import SubmissionForm from './pages/student/assignments/SubmissionForm';
+import SubmissionView from './pages/student/assignments/SubmissionView';
 import QuizList from './pages/student/quiz/QuizList';
 import QuizPlayer from './pages/student/quiz/QuizPlayer';
 import QuizResults from './pages/student/quiz/QuizResults';
@@ -54,69 +58,81 @@ import Inbox from './pages/messages/Inbox';
 import Compose from './pages/messages/Compose';
 import MessageDetail from './pages/messages/MessageDetail';
 
+import { AuthProvider } from './context/AuthContext';
+import { NotificationProvider } from './context/NotificationContext';
+
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+    <NotificationProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
-        {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
-        <Route path="/admin/academic-years" element={<AdminLayout><AcademicYearList /></AdminLayout>} />
-        <Route path="/admin/academic-years/new" element={<AdminLayout><AcademicYearForm /></AdminLayout>} />
-        <Route path="/admin/semesters" element={<AdminLayout><SemesterList /></AdminLayout>} />
-        <Route path="/admin/semesters/new" element={<AdminLayout><SemesterForm /></AdminLayout>} />
-        <Route path="/admin/programs" element={<AdminLayout><ProgramList /></AdminLayout>} />
-        <Route path="/admin/programs/new" element={<AdminLayout><ProgramForm /></AdminLayout>} />
-        <Route path="/admin/courses" element={<AdminLayout><CourseList /></AdminLayout>} />
-        <Route path="/admin/courses/new" element={<AdminLayout><CourseForm /></AdminLayout>} />
-        <Route path="/admin/staff" element={<AdminLayout><StaffList /></AdminLayout>} />
-        <Route path="/admin/staff/new" element={<AdminLayout><StaffForm /></AdminLayout>} />
-        <Route path="/admin/students" element={<AdminLayout><StudentList /></AdminLayout>} />
-        <Route path="/admin/students/new" element={<AdminLayout><StudentForm /></AdminLayout>} />
-        <Route path="/admin/staff-allocation" element={<AdminLayout><StaffCourseList /></AdminLayout>} />
-        <Route path="/admin/staff-allocation/new" element={<AdminLayout><StaffCourseForm /></AdminLayout>} />
-        <Route path="/admin/certificates" element={<AdminLayout><CertificateLayoutList /></AdminLayout>} />
-        <Route path="/admin/certificates/new" element={<AdminLayout><CertificateDesigner /></AdminLayout>} />
-        <Route path="/admin/certificates/edit/:id" element={<AdminLayout><CertificateDesigner /></AdminLayout>} />
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
+            <Route path="/admin/academic-years" element={<AdminLayout><AcademicYearList /></AdminLayout>} />
+            <Route path="/admin/academic-years/new" element={<AdminLayout><AcademicYearForm /></AdminLayout>} />
+            <Route path="/admin/semesters" element={<AdminLayout><SemesterList /></AdminLayout>} />
+            <Route path="/admin/semesters/new" element={<AdminLayout><SemesterForm /></AdminLayout>} />
+            <Route path="/admin/programs" element={<AdminLayout><ProgramList /></AdminLayout>} />
+            <Route path="/admin/programs/new" element={<AdminLayout><ProgramForm /></AdminLayout>} />
+            <Route path="/admin/courses" element={<AdminLayout><CourseList /></AdminLayout>} />
+            <Route path="/admin/courses/new" element={<AdminLayout><CourseForm /></AdminLayout>} />
+            <Route path="/admin/staff" element={<AdminLayout><StaffList /></AdminLayout>} />
+            <Route path="/admin/staff/new" element={<AdminLayout><StaffForm /></AdminLayout>} />
+            <Route path="/admin/students" element={<AdminLayout><StudentList /></AdminLayout>} />
+            <Route path="/admin/students/new" element={<AdminLayout><StudentForm /></AdminLayout>} />
+            <Route path="/admin/staff-allocation" element={<AdminLayout><StaffCourseList /></AdminLayout>} />
+            <Route path="/admin/staff-allocation/new" element={<AdminLayout><StaffCourseForm /></AdminLayout>} />
+            <Route path="/admin/certificates" element={<AdminLayout><CertificateLayoutList /></AdminLayout>} />
+            <Route path="/admin/certificates/new" element={<AdminLayout><CertificateDesigner /></AdminLayout>} />
+            <Route path="/admin/certificates/edit/:id" element={<AdminLayout><CertificateDesigner /></AdminLayout>} />
+            <Route path="/admin/staff-report" element={<AdminLayout><StaffReport /></AdminLayout>} />
+            <Route path="/admin/course-report" element={<AdminLayout><CourseReport /></AdminLayout>} />
 
-        <Route path="/staff" element={<StaffLayout><StaffDashboard /></StaffLayout>} />
-        <Route path="/staff/my-courses" element={<StaffLayout><MyCourseList /></StaffLayout>} />
-        <Route path="/staff/course/:courseId/videos" element={<StaffLayout><CourseVideos /></StaffLayout>} />
-        <Route path="/staff/course/:courseId/videos/new" element={<StaffLayout><AddVideoForm /></StaffLayout>} />
-        <Route path="/staff/materials" element={<StaffLayout><MaterialList /></StaffLayout>} />
-        <Route path="/staff/materials/new" element={<StaffLayout><MaterialForm /></StaffLayout>} />
-        <Route path="/staff/assignments" element={<StaffLayout><AssignmentList /></StaffLayout>} />
-        <Route path="/staff/assignments/new" element={<StaffLayout><AssignmentForm /></StaffLayout>} />
-        <Route path="/staff/assignments/edit/:id" element={<StaffLayout><AssignmentForm /></StaffLayout>} />
-        <Route path="/staff/assignments/:assignmentId/submissions" element={<StaffLayout><SubmissionList /></StaffLayout>} />
-        <Route path="/staff/mcqs" element={<StaffLayout><MCQList /></StaffLayout>} />
-        <Route path="/staff/mcqs/new" element={<StaffLayout><MCQForm /></StaffLayout>} />
-        <Route path="/staff/mcqs/edit/:id" element={<StaffLayout><MCQForm /></StaffLayout>} />
-        <Route path="/staff/mcqs/edit/:id" element={<StaffLayout><MCQForm /></StaffLayout>} />
-        <Route path="/staff/messages" element={<StaffLayout><Inbox /></StaffLayout>} />
-        <Route path="/staff/messages/new" element={<StaffLayout><Compose /></StaffLayout>} />
-        <Route path="/staff/messages/:id" element={<StaffLayout><MessageDetail /></StaffLayout>} />
+            <Route path="/staff" element={<StaffLayout><StaffDashboard /></StaffLayout>} />
+            <Route path="/staff/my-courses" element={<StaffLayout><MyCourseList /></StaffLayout>} />
+            <Route path="/staff/course/:courseId/videos" element={<StaffLayout><CourseVideos /></StaffLayout>} />
+            <Route path="/staff/course/:courseId/videos/new" element={<StaffLayout><AddVideoForm /></StaffLayout>} />
+            <Route path="/staff/materials" element={<StaffLayout><MaterialList /></StaffLayout>} />
+            <Route path="/staff/materials/new" element={<StaffLayout><MaterialForm /></StaffLayout>} />
+            <Route path="/staff/assignments" element={<StaffLayout><AssignmentList /></StaffLayout>} />
+            <Route path="/staff/assignments/new" element={<StaffLayout><AssignmentForm /></StaffLayout>} />
+            <Route path="/staff/assignments/edit/:id" element={<StaffLayout><AssignmentForm /></StaffLayout>} />
+            <Route path="/staff/assignments/:assignmentId/submissions" element={<StaffLayout><SubmissionList /></StaffLayout>} />
+            <Route path="/staff/submissions" element={<StaffLayout><SubmissionList /></StaffLayout>} />
+            <Route path="/staff/mcqs" element={<StaffLayout><MCQList /></StaffLayout>} />
+            <Route path="/staff/mcqs/new" element={<StaffLayout><MCQForm /></StaffLayout>} />
+            <Route path="/staff/mcqs/edit/:id" element={<StaffLayout><MCQForm /></StaffLayout>} />
+            <Route path="/staff/mcqs/edit/:id" element={<StaffLayout><MCQForm /></StaffLayout>} />
+            <Route path="/staff/messages" element={<StaffLayout><Inbox /></StaffLayout>} />
+            <Route path="/staff/messages/new" element={<StaffLayout><Compose /></StaffLayout>} />
+            <Route path="/staff/messages/:id" element={<StaffLayout><MessageDetail /></StaffLayout>} />
+            <Route path="/staff/reports" element={<StaffLayout><ReportDashboard /></StaffLayout>} />
 
-        <Route path="/student" element={<StudentLayout><StudentDashboard /></StudentLayout>} />
-        <Route path="/student/courses" element={<StudentLayout><StudentCourseList /></StudentLayout>} />
-        <Route path="/student/courses/:courseId" element={<StudentLayout><StudentCourseMaterials /></StudentLayout>} />
-        <Route path="/student/enroll" element={<StudentLayout><CourseEnrollment /></StudentLayout>} />
-        <Route path="/student/results" element={<StudentLayout><StudentResultList /></StudentLayout>} />
-        <Route path="/student/assignments" element={<StudentLayout><StudentAssignmentList /></StudentLayout>} />
-        <Route path="/student/assignments/submit/:assignmentId" element={<StudentLayout><SubmissionForm /></StudentLayout>} />
-        <Route path="/student/quiz" element={<StudentLayout><QuizList /></StudentLayout>} />
-        <Route path="/student/quiz/:courseId" element={<StudentLayout><QuizPlayer /></StudentLayout>} />
-        <Route path="/student/quiz/results" element={<StudentLayout><QuizResults /></StudentLayout>} />
-        <Route path="/student/quiz/material/:materialId" element={<StudentLayout><MaterialQuizPlayer /></StudentLayout>} />
-        <Route path="/student/messages" element={<StudentLayout><Inbox /></StudentLayout>} />
-        <Route path="/student/messages/new" element={<StudentLayout><Compose /></StudentLayout>} />
-        <Route path="/student/messages/:id" element={<StudentLayout><MessageDetail /></StudentLayout>} />
+            <Route path="/student" element={<StudentLayout><StudentDashboard /></StudentLayout>} />
+            <Route path="/student/courses" element={<StudentLayout><StudentCourseList /></StudentLayout>} />
+            <Route path="/student/courses/:courseId" element={<StudentLayout><StudentCourseMaterials /></StudentLayout>} />
+            <Route path="/student/enroll" element={<StudentLayout><CourseEnrollment /></StudentLayout>} />
+            <Route path="/student/results" element={<StudentLayout><StudentResultList /></StudentLayout>} />
+            <Route path="/student/assignments" element={<StudentLayout><StudentAssignmentList /></StudentLayout>} />
+            <Route path="/student/assignments/submit/:assignmentId" element={<StudentLayout><SubmissionForm /></StudentLayout>} />
+            <Route path="/student/assignments/view/:assignmentId" element={<StudentLayout><SubmissionView /></StudentLayout>} />
+            <Route path="/student/quiz" element={<StudentLayout><QuizList /></StudentLayout>} />
+            <Route path="/student/quiz/:courseId" element={<StudentLayout><QuizPlayer /></StudentLayout>} />
+            <Route path="/student/quiz/results" element={<StudentLayout><QuizResults /></StudentLayout>} />
+            <Route path="/student/quiz/material/:materialId" element={<StudentLayout><MaterialQuizPlayer /></StudentLayout>} />
+            <Route path="/student/messages" element={<StudentLayout><Inbox /></StudentLayout>} />
+            <Route path="/student/messages/new" element={<StudentLayout><Compose /></StudentLayout>} />
+            <Route path="/student/messages/:id" element={<StudentLayout><MessageDetail /></StudentLayout>} />
 
-      </Routes>
-    </Router>
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </NotificationProvider>
   );
 }
 

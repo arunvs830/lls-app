@@ -7,7 +7,7 @@ class TestAuth(BaseTestCase):
     def test_admin_login(self):
         """Test that admin can login with correct credentials."""
         response = self.client.post('/api/auth/login', json={
-            'username': 'admin',
+            'email': 'admin@test.com',
             'password': 'password123',
             'role': 'admin'
         })
@@ -20,7 +20,7 @@ class TestAuth(BaseTestCase):
     def test_admin_login_fail(self):
         """Test that admin login fails with incorrect password."""
         response = self.client.post('/api/auth/login', json={
-            'username': 'admin',
+            'email': 'admin@test.com',
             'password': 'wrongpassword',
             'role': 'admin'
         })
@@ -43,7 +43,7 @@ class TestAuth(BaseTestCase):
         db.session.commit()
 
         response = self.client.post('/api/auth/login', json={
-            'username': 'student1',
+            'email': 'student1@test.com',
             'password': 'studentpass',
             'role': 'student'
         })
@@ -55,7 +55,7 @@ class TestAuth(BaseTestCase):
     def test_invalid_role(self):
         """Test login with invalid role."""
         response = self.client.post('/api/auth/login', json={
-            'username': 'admin',
+            'email': 'admin@test.com',
             'password': 'password123',
             'role': 'hacker'
         })

@@ -22,6 +22,27 @@ const CertificateLayoutList = () => {
         }
     };
 
+    const handleSetDefault = async (layout) => {
+        try {
+            const response = await fetch(`/api/certificate-layouts/${layout.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    is_default: true,
+                    program_id: null // Ensure it becomes a global default as requested
+                }),
+            });
+
+            if (response.ok) {
+                loadLayouts();
+            } else {
+                console.error('Failed to set default layout');
+            }
+        } catch (error) {
+            console.error('Error setting default layout:', error);
+        }
+    };
+
     const handleDelete = async (id) => {
         if (!window.confirm('Are you sure you want to delete this certificate layout?')) return;
 
@@ -41,7 +62,7 @@ const CertificateLayoutList = () => {
         <div className="admin-list-container">
             <div className="list-header">
                 <h2>Certificate Layouts</h2>
-                <button 
+                <button
                     className="btn btn-primary"
                     onClick={() => navigate('/admin/certificates/new')}
                 >
@@ -79,18 +100,29 @@ const CertificateLayoutList = () => {
                                     </td>
                                     <td>{new Date(layout.created_at).toLocaleDateString()}</td>
                                     <td>
-                                        <button
-                                            className="btn btn-sm btn-secondary"
-                                            onClick={() => navigate(`/admin/certificates/edit/${layout.id}`)}
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            className="btn btn-sm btn-danger"
-                                            onClick={() => handleDelete(layout.id)}
-                                        >
-                                            Delete
-                                        </button>
+                                        <div className="action-buttons">
+                                            {!layout.is_default && (
+                                                <button
+                                                    className="btn btn-sm btn-success"
+                                                    onClick={() => handleSetDefault(layout)}
+                                                    title="Set as Global Default"
+                                                >
+                                                    Set Default
+                                                </button>
+                                            )}
+                                            <button
+                                                className="btn btn-sm btn-secondary"
+                                                onClick={() => navigate(`/admin/certificates/edit/${layout.id}`)}
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                className="btn btn-sm btn-danger"
+                                                onClick={() => handleDelete(layout.id)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

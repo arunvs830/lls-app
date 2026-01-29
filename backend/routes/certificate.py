@@ -46,11 +46,19 @@ def create_layout():
     data = request.json
     
     # If setting as default, remove default from other layouts of same program
-    if data.get('is_default') and data.get('program_id'):
-        CertificateLayout.query.filter_by(
-            program_id=data['program_id'], 
-            is_default=True
-        ).update({'is_default': False})
+    if data.get('is_default'):
+        program_id = data.get('program_id')
+        if program_id:
+            CertificateLayout.query.filter_by(
+                program_id=program_id, 
+                is_default=True
+            ).update({'is_default': False})
+        else:
+            # Global default
+            CertificateLayout.query.filter(
+                CertificateLayout.program_id.is_(None),
+                CertificateLayout.is_default == True
+            ).update({'is_default': False})
     
     new_layout = CertificateLayout(
         layout_name=data['layout_name'],
@@ -80,12 +88,20 @@ def update_layout(id):
     will_be_default = data['is_default'] if 'is_default' in data else layout.is_default
 
     # If setting as default, remove default from other layouts of same program
-    if will_be_default and new_program_id:
-        CertificateLayout.query.filter(
-            CertificateLayout.id != id,
-            CertificateLayout.program_id == new_program_id, 
-            CertificateLayout.is_default == True
-        ).update({'is_default': False})
+    if will_be_default:
+        if new_program_id:
+            CertificateLayout.query.filter(
+                CertificateLayout.id != id,
+                CertificateLayout.program_id == new_program_id, 
+                CertificateLayout.is_default == True
+            ).update({'is_default': False})
+        else:
+            # Global default
+            CertificateLayout.query.filter(
+                CertificateLayout.id != id,
+                CertificateLayout.program_id.is_(None),
+                CertificateLayout.is_default == True
+            ).update({'is_default': False})
     
     layout.layout_name = data.get('layout_name', layout.layout_name)
     layout.template_content = data.get('template_content', layout.template_content)
@@ -130,9 +146,20 @@ def get_default_layout(program_id):
     ).first()
     
     if not layout:
-        # Return first available layout if no default
+        # Fallback to global default
+        layout = CertificateLayout.query.filter(
+            CertificateLayout.program_id.is_(None),
+            CertificateLayout.is_default == True
+        ).first()
+
+    if not layout:
+        # Fallback to any layout for the program
         layout = CertificateLayout.query.filter_by(program_id=program_id).first()
-    
+
+    if not layout:
+        # Last resort: any global layout
+        layout = CertificateLayout.query.filter(CertificateLayout.program_id.is_(None)).first()
+
     if not layout:
         return jsonify({'message': 'No certificate layout found for this program'}), 404
     

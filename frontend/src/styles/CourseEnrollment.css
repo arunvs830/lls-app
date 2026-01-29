@@ -194,6 +194,30 @@
     border-color: #FCA5A5;
 }
 
+/* Added Re-enroll button style */
+.btn-re-enroll {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-re-enroll:hover {
+    background: #5a67d8;
+    box-shadow: 0 2px 4px rgba(90, 103, 216, 0.3);
+}
+
+.btn-re-enroll:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* Available Courses */
 .available-courses {
     display: flex;
@@ -314,7 +338,8 @@
         gap: 12px;
     }
 
-    .btn-drop {
+    .btn-drop,
+    .btn-re-enroll {
         width: 100%;
     }
 

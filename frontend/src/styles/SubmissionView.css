@@ -1,0 +1,203 @@
+/* SubmissionView.css - Styles for viewing submission details */
+
+.submission-view-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.submission-view-header {
+    margin-bottom: 24px;
+}
+
+.submission-view-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #6366f1;
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 8px 0;
+    margin-bottom: 16px;
+}
+
+.submission-view-back-btn:hover {
+    color: #4f46e5;
+}
+
+.submission-view-header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.submission-view-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.submission-view-card h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 20px 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.submission-view-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.submission-view-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.submission-view-info-item .label {
+    font-size: 0.85rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.submission-view-info-item .value {
+    font-size: 1rem;
+    color: #1f2937;
+    font-weight: 500;
+}
+
+.submission-view-info-item .value.marks {
+    font-size: 1.25rem;
+    color: #10b981;
+    font-weight: 600;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-badge.graded {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.submission-view-description,
+.submission-view-content,
+.submission-view-feedback {
+    margin-top: 16px;
+}
+
+.submission-view-description .label,
+.submission-view-content .label,
+.submission-view-feedback .label {
+    display: block;
+    font-size: 0.85rem;
+    color: #6b7280;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.submission-view-description p,
+.content-box,
+.feedback-box {
+    background: #f9fafb;
+    padding: 16px;
+    border-radius: 8px;
+    color: #374151;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.feedback-box {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+.file-link {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.file-link:hover {
+    text-decoration: underline;
+}
+
+.submission-view-no-submission {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    background: #fef2f2;
+    border-radius: 8px;
+    color: #991b1b;
+}
+
+.evaluation-card {
+    border-left: 4px solid #10b981;
+}
+
+/* Loading & Error States */
+.submission-view-loading,
+.submission-view-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: 16px;
+    color: #6b7280;
+}
+
+.submission-view-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #6366f1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.submission-view-error {
+    color: #ef4444;
+}
+
+.submission-view-error h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .submission-view-info-grid {
+        grid-template-columns: 1fr;
+    }
+}

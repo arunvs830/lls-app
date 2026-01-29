@@ -52,7 +52,7 @@ Skeleton.Circle = ({ size = '40px' }) => (
 );
 
 // Card skeleton
-Skeleton.Card = ({ height = '120px' }) => (
+Skeleton.Card = () => (
     <div style={{
         background: '#FFFFFF',
         borderRadius: '16px',

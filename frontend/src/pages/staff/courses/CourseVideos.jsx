@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { courseApi, studyMaterialApi, assignmentApi, API_ORIGIN } from '../../../services/api';
-import Button from '../../../components/Button';
+import ConfirmDialog from '../../../components/ConfirmDialog';
+import { useNotification } from '../../../context/NotificationContext';
+import '../../../styles/CourseVideos.css';
 
 const CourseVideos = () => {
     const { courseId } = useParams();
     const navigate = useNavigate();
+    const { success, error: notifyError } = useNotification();
     const [course, setCourse] = useState(null);
     const [materials, setMaterials] = useState([]);
     const [selectedMaterial, setSelectedMaterial] = useState(null);
     const [materialAssignments, setMaterialAssignments] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // Confirm Dialog State
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -58,19 +65,33 @@ const CourseVideos = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (confirm('Delete this material?')) {
-            try {
-                await studyMaterialApi.delete(id);
-                loadData();
-            } catch (error) {
-                console.error('Error deleting:', error);
+    const handleDeleteClick = (id) => {
+        setItemToDelete(id);
+        setShowDeleteConfirm(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!itemToDelete) return;
+
+        try {
+            await studyMaterialApi.delete(itemToDelete);
+            success('Material deleted successfully');
+            loadData();
+            // If the deleted material was selected, clear selection or selection logic keys off re-fetch
+            if (selectedMaterial?.id === itemToDelete) {
+                setSelectedMaterial(null);
             }
+        } catch (err) {
+            console.error('Error deleting:', err);
+            notifyError('Failed to delete material');
+        } finally {
+            setShowDeleteConfirm(false);
+            setItemToDelete(null);
         }
     };
 
     const getTypeIcon = (type) => ({ youtube: '🎬', pdf: '📄', ppt: '📊', video: '📹' }[type] || '📁');
-    const getTypeColor = (type) => ({ youtube: '#FF0000', pdf: '#00A3FF', ppt: '#FF9900' }[type] || '#A855F7');
+    const getTypeClass = (type) => `cv-type-${type || 'default'}`;
 
     const getVideoId = (url) => {
         if (!url) return null;
@@ -82,50 +103,49 @@ const CourseVideos = () => {
     // Helper to get full URL for file downloads
     const getFileUrl = (filePath) => {
         if (!filePath) return null;
-        // If it starts with /api, prepend backend URL
         if (filePath.startsWith('/api')) {
             return `${API_ORIGIN}${filePath}`;
         }
-        // If it's already a full URL (http/https), return as is
         if (filePath.startsWith('http')) {
             return filePath;
         }
-        // Otherwise, it's probably an old relative path - return null to avoid navigation issues
         return null;
     };
 
-    if (loading) return <div style={styles.loading}>Loading experience...</div>;
+    if (loading) return <div className="cv-loading">Loading experience...</div>;
+
+    const typeClass = selectedMaterial ? getTypeClass(selectedMaterial?.file_type) : '';
 
     return (
-        <div style={styles.pageWrapper}>
+        <div className="course-videos-page">
             {/* Elegant Header */}
-            <header style={styles.header}>
-                <div style={styles.headerTitleArea}>
-                    <button onClick={() => navigate('/staff/my-courses')} style={styles.backLink}>
-                        <span style={{ marginRight: '6px' }}>←</span> My Courses
+            <header className="cv-header">
+                <div className="cv-header-title-area">
+                    <button onClick={() => navigate('/staff/my-courses')} className="cv-back-link">
+                        <span>←</span> My Courses
                     </button>
-                    <h1 style={styles.pageTitle}>{course?.course_name || 'Course Content'}</h1>
+                    <h1 className="cv-page-title">{course?.course_name || 'Course Content'}</h1>
                 </div>
-                <div style={styles.headerActions}>
+                <div className="cv-header-actions">
                     <button
                         onClick={() => navigate(`/staff/course/${courseId}/videos/new`)}
-                        style={styles.addMaterialBtn}
+                        className="cv-add-material-btn"
                     >
                         + Add New Material
                     </button>
                 </div>
             </header>
 
-            <div className="responsive-grid-sidebar-wide">
+            <div className="cv-content-grid">
                 {/* Primary Content Column */}
-                <main style={styles.mainContent}>
+                <main className="cv-main-content">
                     {/* Player Card */}
-                    <div style={styles.playerContainer}>
-                        <div style={styles.aspectRatioBox}>
+                    <div className="cv-player-container">
+                        <div className="cv-aspect-ratio-box">
                             {selectedMaterial?.file_type === 'youtube' && getVideoId(selectedMaterial.file_path) ? (
                                 <iframe
                                     src={`https://www.youtube.com/embed/${getVideoId(selectedMaterial.file_path)}?modestbranding=1&rel=0`}
-                                    style={styles.iframe}
+                                    className="cv-iframe"
                                     allowFullScreen
                                     title={selectedMaterial.title}
                                 />
@@ -133,70 +153,71 @@ const CourseVideos = () => {
                                 // Embedded PDF Viewer
                                 <iframe
                                     src={getFileUrl(selectedMaterial.file_path)}
-                                    style={styles.iframe}
+                                    className="cv-iframe"
                                     title={selectedMaterial.title}
                                 />
                             ) : selectedMaterial?.file_type === 'ppt' && getFileUrl(selectedMaterial.file_path) ? (
-                                // Enhanced PPT Preview with actual thumbnail or slide mockup
-                                <div style={styles.pptPreviewContainer}>
-                                    <div style={styles.slideFrame}>
-                                        <div style={styles.slideMockup}>
-                                            <div style={styles.slideHeader}>
-                                                <div style={styles.slideHeaderBar}>
-                                                    <span style={styles.slideWindowDot}></span>
-                                                    <span style={{ ...styles.slideWindowDot, background: '#FBBF24' }}></span>
-                                                    <span style={{ ...styles.slideWindowDot, background: '#34D399' }}></span>
+                                // Enhanced PPT Preview
+                                <div className="cv-ppt-preview-container">
+                                    <div className="cv-slide-frame">
+                                        <div className="cv-slide-mockup">
+                                            <div className="cv-slide-header">
+                                                <div className="cv-slide-header-bar">
+                                                    <span className="cv-slide-window-dot"></span>
+                                                    <span className="cv-slide-window-dot" style={{ background: '#FBBF24' }}></span>
+                                                    <span className="cv-slide-window-dot" style={{ background: '#34D399' }}></span>
                                                 </div>
                                             </div>
-                                            <div style={styles.slideContent}>
+                                            <div className="cv-slide-content">
                                                 {selectedMaterial.thumbnail_path ? (
                                                     <img
                                                         src={getFileUrl(selectedMaterial.thumbnail_path)}
                                                         alt="PPT Preview"
-                                                        style={styles.slideImage}
+                                                        className="cv-slide-image"
                                                     />
                                                 ) : (
-                                                    <div style={styles.slideMockupContent}>
-                                                        <div style={styles.slideIcon}>📊</div>
-                                                        <h3 style={styles.slideTitleMock}>{selectedMaterial.title}</h3>
-                                                        <p style={styles.slideSubMock}>PowerPoint Presentation</p>
-                                                        <div style={styles.slideBars}>
-                                                            <div style={{ ...styles.slideBar, width: '80%' }}></div>
-                                                            <div style={{ ...styles.slideBar, width: '60%' }}></div>
-                                                            <div style={{ ...styles.slideBar, width: '70%' }}></div>
+                                                    <div className="cv-slide-mockup-content">
+                                                        <div className="cv-slide-icon">📊</div>
+                                                        <h3 className="cv-slide-title-mock">{selectedMaterial.title}</h3>
+                                                        <p className="cv-slide-sub-mock">PowerPoint Presentation</p>
+                                                        <div className="cv-slide-bars">
+                                                            <div className="cv-slide-bar" style={{ width: '80%' }}></div>
+                                                            <div className="cv-slide-bar" style={{ width: '60%' }}></div>
+                                                            <div className="cv-slide-bar" style={{ width: '70%' }}></div>
                                                         </div>
-                                                        <p style={styles.noPreviewText}>No preview available</p>
+                                                        <p className="cv-no-preview-text">No preview available</p>
                                                     </div>
                                                 )}
                                             </div>
                                         </div>
                                     </div>
-                                    <div style={styles.pptActions}>
+                                    <div className="cv-ppt-actions">
                                         <a
                                             href={getFileUrl(selectedMaterial.file_path)}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            style={styles.pptDownloadBtn}
+                                            className="cv-ppt-download-btn"
                                         >
                                             📥 Download & Open
                                         </a>
                                     </div>
                                 </div>
                             ) : selectedMaterial ? (
-                                <div style={styles.nonVideoPlaceholder}>
-                                    <div style={{ ...styles.largeIcon, color: getTypeColor(selectedMaterial.file_type) }}>
+                                <div className={`cv-non-video-placeholder ${typeClass}`}>
+                                    <div className="cv-large-icon" style={{ color: 'var(--type-color)' }}>
                                         {getTypeIcon(selectedMaterial.file_type)}
                                     </div>
-                                    <h3 style={styles.placeholderTitle}>{selectedMaterial.title}</h3>
+                                    <h3 className="cv-placeholder-title">{selectedMaterial.title}</h3>
                                     {getFileUrl(selectedMaterial.file_path) && (
                                         <a href={getFileUrl(selectedMaterial.file_path)} target="_blank" rel="noopener noreferrer"
-                                            style={{ ...styles.primaryBtn, background: getTypeColor(selectedMaterial.file_type) }}>
+                                            className="cv-primary-btn"
+                                            style={{ background: 'var(--type-color)' }}>
                                             View {selectedMaterial.file_type?.toUpperCase()}
                                         </a>
                                     )}
                                 </div>
                             ) : (
-                                <div style={styles.emptyPlayerPlaceholder}>
+                                <div className="cv-empty-player">
                                     <p>Select a material to begin learning</p>
                                 </div>
                             )}
@@ -204,23 +225,18 @@ const CourseVideos = () => {
 
                         {/* Info Section beneath player */}
                         {selectedMaterial && (
-                            <div style={styles.selectionInfo}>
-                                <div style={styles.infoTopRow}>
-                                    <span style={{
-                                        ...styles.statusTag,
-                                        backgroundColor: `${getTypeColor(selectedMaterial.file_type)}15`,
-                                        color: getTypeColor(selectedMaterial.file_type),
-                                        borderColor: `${getTypeColor(selectedMaterial.file_type)}30`
-                                    }}>
+                            <div className={`cv-selection-info ${typeClass}`}>
+                                <div className="cv-info-top-row">
+                                    <span className="cv-status-tag">
                                         {selectedMaterial.file_type?.toUpperCase()}
                                     </span>
-                                    <span style={styles.uploadTime}>
+                                    <span className="cv-upload-time">
                                         Uploaded on {selectedMaterial.upload_date ? new Date(selectedMaterial.upload_date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : 'Unknown date'}
                                     </span>
                                 </div>
-                                <h2 style={styles.selectedTitle}>{selectedMaterial.title}</h2>
+                                <h2 className="cv-selected-title">{selectedMaterial.title}</h2>
                                 {selectedMaterial.description && (
-                                    <p style={styles.selectedDesc}>{selectedMaterial.description}</p>
+                                    <p className="cv-selected-desc">{selectedMaterial.description}</p>
                                 )}
                             </div>
                         )}
@@ -228,35 +244,35 @@ const CourseVideos = () => {
 
                     {/* Sub-materials / Related Column */}
                     {selectedMaterial?.children?.length > 0 && (
-                        <div style={styles.relatedSection}>
-                            <h3 style={styles.sectionHeading}>
+                        <div className="cv-related-section">
+                            <h3 className="cv-section-heading">
                                 <span style={{ marginRight: '8px', opacity: 0.8 }}>📎</span>
                                 Attachments & Related
-                                <span style={styles.countBadge}>{selectedMaterial.children.length}</span>
+                                <span className="cv-count-badge">{selectedMaterial.children.length}</span>
                             </h3>
-                            <div style={styles.relatedList}>
+                            <div className="cv-related-list">
                                 {selectedMaterial.children.map(child => (
-                                    <div key={child.id} style={styles.attachmentCard}>
-                                        <div style={styles.attachmentCore}>
-                                            <div style={{ ...styles.attachmentIcon, backgroundColor: `${getTypeColor(child.file_type)}12` }}>
+                                    <div key={child.id} className={`cv-attachment-card ${getTypeClass(child.file_type)}`}>
+                                        <div className="cv-attachment-core">
+                                            <div className="cv-attachment-icon">
                                                 {getTypeIcon(child.file_type)}
                                             </div>
-                                            <div style={styles.attachmentMeta}>
-                                                <div style={styles.attachmentName}>{child.title}</div>
-                                                <div style={{ ...styles.attachmentType, color: getTypeColor(child.file_type) }}>
+                                            <div className="cv-attachment-meta">
+                                                <div className="cv-attachment-name">{child.title}</div>
+                                                <div className="cv-attachment-type">
                                                     {child.file_type?.toUpperCase()} DOCUMENT
                                                 </div>
                                             </div>
                                             {getFileUrl(child.file_path) && (
                                                 <a href={getFileUrl(child.file_path)} target="_blank" rel="noopener noreferrer"
-                                                    style={{ ...styles.actionBtn, borderColor: `${getTypeColor(child.file_type)}40`, color: getTypeColor(child.file_type) }}>
+                                                    className="cv-action-btn-outline">
                                                     Open File
                                                 </a>
                                             )}
                                         </div>
                                         {child.description && (
-                                            <div style={styles.attachmentBody}>
-                                                <p style={styles.attachmentDesc}>{child.description}</p>
+                                            <div className="cv-attachment-body">
+                                                <p className="cv-attachment-desc">{child.description}</p>
                                             </div>
                                         )}
                                     </div>
@@ -267,50 +283,50 @@ const CourseVideos = () => {
 
                     {/* Assignments for this Material */}
                     {selectedMaterial && (
-                        <div style={styles.assignmentSection}>
-                            <div style={styles.assignmentHeader}>
-                                <h3 style={styles.sectionHeading}>
+                        <div className="cv-assignment-section">
+                            <div className="cv-assignment-header">
+                                <h3 className="cv-section-heading">
                                     <span style={{ marginRight: '8px' }}>📝</span>
                                     Assignments
-                                    <span style={styles.countBadge}>{materialAssignments.length}</span>
+                                    <span className="cv-count-badge">{materialAssignments.length}</span>
                                 </h3>
                                 <button
                                     onClick={() => navigate(`/staff/assignments/new?study_material_id=${selectedMaterial.id}&course_id=${courseId}`)}
-                                    style={styles.addAssignmentBtn}
+                                    className="cv-add-btn"
                                 >
                                     + Add Assignment
                                 </button>
                             </div>
                             {materialAssignments.length === 0 ? (
-                                <div style={styles.emptyAssignments}>
+                                <div className="cv-empty-assignments">
                                     <p>No assignments for this material yet.</p>
                                 </div>
                             ) : (
-                                <div style={styles.assignmentList}>
+                                <div className="cv-assignment-list">
                                     {materialAssignments.map(a => (
-                                        <div key={a.id} style={styles.assignmentCard}>
-                                            <div style={styles.assignmentCardHeader}>
+                                        <div key={a.id} className="cv-assignment-card">
+                                            <div className="cv-assignment-card-header">
                                                 <div>
-                                                    <div style={styles.assignmentTitle}>{a.title}</div>
-                                                    <div style={styles.assignmentMeta}>
+                                                    <div className="cv-assignment-title">{a.title}</div>
+                                                    <div className="cv-assignment-meta">
                                                         <span>📅 Due: {a.due_date ? new Date(a.due_date).toLocaleDateString() : 'N/A'}</span>
                                                         <span style={{ marginLeft: '1rem' }}>🎯 {a.max_marks} marks</span>
                                                     </div>
                                                 </div>
-                                                <div style={styles.assignmentActions}>
+                                                <div className="cv-assignment-actions">
                                                     <button
                                                         onClick={() => navigate(`/staff/assignments/${a.id}/submissions`)}
-                                                        style={styles.viewSubmissionsBtn}
+                                                        className="cv-view-submissions-btn"
                                                     >
                                                         View Submissions
                                                     </button>
                                                 </div>
                                             </div>
                                             {a.description && (
-                                                <p style={styles.assignmentDesc}>{a.description}</p>
+                                                <p className="cv-assignment-desc">{a.description}</p>
                                             )}
                                             {a.file_path && (
-                                                <a href={`${API_ORIGIN}${a.file_path}`} target="_blank" rel="noopener noreferrer" style={styles.downloadLink}>
+                                                <a href={`${API_ORIGIN}${a.file_path}`} target="_blank" rel="noopener noreferrer" className="cv-download-link">
                                                     📎 Download Question File
                                                 </a>
                                             )}
@@ -323,26 +339,26 @@ const CourseVideos = () => {
 
                     {/* Quiz Questions for this Material */}
                     {selectedMaterial && (
-                        <div style={styles.quizSection}>
-                            <div style={styles.quizHeader}>
-                                <h3 style={styles.sectionHeading}>
+                        <div className="cv-quiz-section">
+                            <div className="cv-quiz-header">
+                                <h3 className="cv-section-heading">
                                     <span style={{ marginRight: '8px' }}>❓</span>
                                     Quiz Questions
                                 </h3>
                                 <button
                                     onClick={() => navigate(`/staff/mcqs/new?study_material_id=${selectedMaterial.id}&course_id=${courseId}`)}
-                                    style={styles.addQuizBtn}
+                                    className="cv-add-btn"
                                 >
                                     + Add Quiz Question
                                 </button>
                             </div>
-                            <div style={styles.quizInfo}>
-                                <p style={styles.quizInfoText}>
+                            <div className="cv-quiz-info">
+                                <p className="cv-quiz-info-text">
                                     Create quiz questions for students to test their understanding of this material.
                                 </p>
                                 <button
                                     onClick={() => navigate(`/staff/mcqs?study_material_id=${selectedMaterial.id}`)}
-                                    style={styles.viewQuestionsBtn}
+                                    className="cv-view-questions-btn"
                                 >
                                     View All Questions →
                                 </button>
@@ -352,45 +368,38 @@ const CourseVideos = () => {
                 </main>
 
                 {/* Navigation Sidebar */}
-                <aside style={styles.sidebar}>
-                    <div style={styles.sidebarFrame}>
-                        <div style={styles.sidebarHeader}>
-                            <h4 style={styles.sidebarTitle}>Curriculum</h4>
-                            <div style={styles.sidebarStats}>{materials.length} items</div>
+                <aside className="cv-sidebar">
+                    <div className="cv-sidebar-frame">
+                        <div className="cv-sidebar-header">
+                            <h4 className="cv-sidebar-title">Curriculum</h4>
+                            <div className="cv-sidebar-stats">{materials.length} items</div>
                         </div>
-                        <div style={styles.scrollableList}>
+                        <div className="cv-scrollable-list">
                             {materials.length === 0 ? (
-                                <div style={styles.emptySidebar}>No materials found</div>
+                                <div className="cv-empty-sidebar">No materials found</div>
                             ) : materials.map(m => (
                                 <div
                                     key={m.id}
-                                    style={{
-                                        ...styles.navItem,
-                                        ...(selectedMaterial?.id === m.id ? styles.navItemActive : {})
-                                    }}
+                                    className={`cv-nav-item ${selectedMaterial?.id === m.id ? 'active' : ''} ${getTypeClass(m.file_type)}`}
                                     onClick={() => setSelectedMaterial(m)}
                                 >
-                                    <div style={{
-                                        ...styles.navIcon,
-                                        backgroundColor: selectedMaterial?.id === m.id ? 'rgba(255,255,255,0.1)' : `${getTypeColor(m.file_type)}15`,
-                                        color: selectedMaterial?.id === m.id ? 'white' : getTypeColor(m.file_type)
-                                    }}>
+                                    <div className="cv-nav-icon">
                                         {getTypeIcon(m.file_type)}
                                     </div>
-                                    <div style={styles.navText}>
-                                        <div style={{ ...styles.navLabel, color: selectedMaterial?.id === m.id ? 'white' : '#1F2937' }}>
+                                    <div className="cv-nav-text">
+                                        <div className="cv-nav-label">
                                             {m.title}
                                         </div>
-                                        <div style={{ ...styles.navSub, color: selectedMaterial?.id === m.id ? 'rgba(255,255,255,0.9)' : '#6B7280' }}>
+                                        <div className="cv-nav-sub">
                                             {m.file_type?.toUpperCase()}
                                             {m.children?.length > 0 && (
-                                                <span style={{ ...styles.inlineCount, color: selectedMaterial?.id === m.id ? 'white' : 'rgba(168, 85, 247, 0.8)' }}>• {m.children.length} attachments</span>
+                                                <span className="cv-inline-count">• {m.children.length} attachments</span>
                                             )}
                                         </div>
                                     </div>
                                     <button
-                                        onClick={(e) => { e.stopPropagation(); handleDelete(m.id); }}
-                                        style={styles.navDelete}
+                                        onClick={(e) => { e.stopPropagation(); handleDeleteClick(m.id); }}
+                                        className="cv-nav-delete"
                                         title="Delete"
                                     >×</button>
                                 </div>
@@ -399,699 +408,18 @@ const CourseVideos = () => {
                     </div>
                 </aside>
             </div>
+            {/* Confirm Dialog */}
+            <ConfirmDialog
+                isOpen={showDeleteConfirm}
+                title="Delete Material"
+                message="Are you sure you want to delete this material? This action cannot be undone."
+                onConfirm={confirmDelete}
+                onCancel={() => setShowDeleteConfirm(false)}
+                confirmText="Delete"
+                confirmVariant="danger"
+            />
         </div>
     );
 };
 
-const styles = {
-    pageWrapper: {
-        maxWidth: '1440px',
-        margin: '0 auto',
-        padding: '24px',
-        minHeight: '100vh',
-    },
-    loading: {
-        height: '60vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'rgba(255,255,255,0.5)',
-        fontSize: '1.1rem',
-        letterSpacing: '0.05em'
-    },
-
-    // Header
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
-        marginBottom: '32px',
-    },
-    headerTitleArea: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px'
-    },
-    backLink: {
-        background: 'none',
-        border: 'none',
-        color: 'rgba(168, 85, 247, 0.8)',
-        cursor: 'pointer',
-        fontSize: '0.9rem',
-        fontWeight: '500',
-        padding: 0,
-        textAlign: 'left',
-        transition: 'color 0.2s',
-        alignSelf: 'flex-start'
-    },
-    pageTitle: {
-        color: '#1F2937',
-        fontSize: '2rem',
-        margin: 0,
-        fontWeight: '700',
-        letterSpacing: '-0.02em'
-    },
-    headerActions: {
-        display: 'flex',
-        alignItems: 'center'
-    },
-    addMaterialBtn: {
-        backgroundColor: '#6366F1',
-        color: 'white',
-        border: 'none',
-        padding: '12px 24px',
-        borderRadius: '12px',
-        fontSize: '0.95rem',
-        fontWeight: '600',
-        cursor: 'pointer',
-        boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
-        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-        ':hover': {
-            backgroundColor: '#4F46E5',
-            transform: 'translateY(-2px)',
-            boxShadow: '0 6px 16px rgba(99, 102, 241, 0.4)',
-        }
-    },
-
-    // Main Layout
-    contentGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1fr) 340px',
-        gap: '32px',
-        alignItems: 'start'
-    },
-
-    // Left Content
-    mainContent: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '32px'
-    },
-
-    // Player Card
-    playerContainer: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: '24px',
-        overflow: 'hidden',
-        border: '1px solid #E5E7EB',
-        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.1)',
-    },
-    aspectRatioBox: {
-        position: 'relative',
-        paddingTop: '56.25%', // 16:9
-        backgroundColor: '#000',
-    },
-    iframe: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        border: 'none',
-    },
-    nonVideoPlaceholder: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'linear-gradient(135deg, #1e1e2f 0%, #11111b 100%)',
-    },
-    largeIcon: {
-        fontSize: '5rem',
-        marginBottom: '20px',
-        filter: 'drop-shadow(0 0 20px currentColor)'
-    },
-    placeholderTitle: {
-        fontSize: '1.5rem',
-        fontWeight: '600',
-        color: '#1F2937',
-        marginBottom: '32px'
-    },
-    primaryBtn: {
-        padding: '14px 32px',
-        borderRadius: '12px',
-        color: 'white',
-        textDecoration: 'none',
-        fontSize: '1rem',
-        fontWeight: '600',
-        transition: 'transform 0.2s',
-        textAlign: 'center'
-    },
-    emptyPlayerPlaceholder: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#9CA3AF',
-        fontSize: '1.1rem'
-    },
-
-    // Info Area
-    selectionInfo: {
-        padding: '32px',
-    },
-    infoTopRow: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        marginBottom: '16px'
-    },
-    statusTag: {
-        padding: '4px 12px',
-        borderRadius: '6px',
-        fontSize: '0.75rem',
-        fontWeight: '700',
-        textTransform: 'uppercase',
-        letterSpacing: '0.05em',
-        border: '1px solid currentColor'
-    },
-    uploadTime: {
-        color: '#6B7280',
-        fontSize: '0.85rem',
-        fontWeight: '500'
-    },
-    selectedTitle: {
-        color: '#1F2937',
-        fontSize: '1.75rem',
-        fontWeight: '700',
-        margin: '0 0 16px 0',
-        letterSpacing: '-0.01em'
-    },
-    selectedDesc: {
-        color: '#4B5563',
-        fontSize: '1.05rem',
-        lineHeight: '1.7',
-        margin: 0,
-        maxWidth: '800px'
-    },
-
-    // Related Materials Section
-    relatedSection: {
-        marginTop: '8px'
-    },
-    sectionHeading: {
-        color: '#1F2937',
-        fontSize: '1.25rem',
-        fontWeight: '600',
-        marginBottom: '24px',
-        display: 'flex',
-        alignItems: 'center',
-    },
-    countBadge: {
-        marginLeft: '12px',
-        backgroundColor: '#E5E7EB',
-        color: '#4B5563',
-        padding: '2px 10px',
-        borderRadius: '20px',
-        fontSize: '0.85rem',
-        fontWeight: '500'
-    },
-    relatedList: {
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        gap: '16px'
-    },
-    attachmentCard: {
-        backgroundColor: '#F9FAFB',
-        border: '1px solid #E5E7EB',
-        borderRadius: '20px',
-        padding: '20px',
-        transition: 'background-color 0.2s',
-        ':hover': {
-            backgroundColor: '#F3F4F6',
-        }
-    },
-    attachmentCore: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '20px'
-    },
-    attachmentIcon: {
-        width: '56px',
-        height: '56px',
-        borderRadius: '14px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '1.75rem',
-        flexShrink: 0
-    },
-    attachmentMeta: {
-        flex: 1
-    },
-    attachmentName: {
-        color: '#1F2937',
-        fontWeight: '600',
-        fontSize: '1.1rem',
-        marginBottom: '4px'
-    },
-    attachmentType: {
-        fontSize: '0.75rem',
-        fontWeight: '700',
-        letterSpacing: '0.04em'
-    },
-    actionBtn: {
-        padding: '8px 20px',
-        borderRadius: '10px',
-        border: '1px solid',
-        textDecoration: 'none',
-        fontSize: '0.85rem',
-        fontWeight: '600',
-        transition: 'all 0.2s'
-    },
-    attachmentBody: {
-        marginTop: '16px',
-        paddingLeft: '76px', // Align with metadata
-    },
-    attachmentDesc: {
-        color: '#6B7280',
-        fontSize: '0.95rem',
-        lineHeight: '1.6',
-        margin: 0
-    },
-
-    // Sidebar Navigation
-    sidebar: {
-        position: 'sticky',
-        top: '24px',
-        height: 'calc(100vh - 48px)',
-    },
-    sidebarFrame: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: '24px',
-        border: '1px solid #E5E7EB',
-        display: 'flex',
-        flexDirection: 'column',
-        maxHeight: '100%',
-        overflow: 'hidden',
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
-    },
-    sidebarHeader: {
-        padding: '24px',
-        borderBottom: '1px solid #E5E7EB',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#F9FAFB'
-    },
-    sidebarTitle: {
-        color: '#1F2937',
-        fontSize: '1.1rem',
-        fontWeight: '600',
-        margin: 0
-    },
-    sidebarStats: {
-        color: '#6B7280',
-        fontSize: '0.8rem',
-        fontWeight: '500',
-        textTransform: 'uppercase',
-        letterSpacing: '0.05em'
-    },
-    scrollableList: {
-        padding: '12px',
-        overflowY: 'auto',
-        flex: 1
-    },
-    emptySidebar: {
-        padding: '40px 20px',
-        textAlign: 'center',
-        color: '#9CA3AF',
-        fontSize: '0.9rem'
-    },
-    navItem: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        padding: '14px 16px',
-        borderRadius: '16px',
-        cursor: 'pointer',
-        marginBottom: '6px',
-        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-        position: 'relative',
-        group: true // conceptual
-    },
-    navItemActive: {
-        backgroundColor: '#6366F1',
-        boxShadow: '0 8px 20px rgba(99, 102, 241, 0.25)',
-    },
-    navIcon: {
-        width: '42px',
-        height: '42px',
-        borderRadius: '12px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '1.2rem',
-        flexShrink: 0,
-        transition: 'all 0.2s'
-    },
-    navText: {
-        flex: 1,
-        minWidth: 0
-    },
-    navLabel: {
-        fontSize: '1rem',
-        fontWeight: '600',
-        marginBottom: '2px',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis'
-    },
-    navSub: {
-        color: '#6B7280',
-        fontSize: '0.75rem',
-        fontWeight: '500',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '6px'
-    },
-    inlineCount: {
-        color: 'rgba(168, 85, 247, 0.8)'
-    },
-    navDelete: {
-        background: 'none',
-        border: 'none',
-        color: '#D1D5DB',
-        fontSize: '1.5rem',
-        cursor: 'pointer',
-        padding: '0 4px',
-        opacity: 0,
-        transition: 'opacity 0.2s, color 0.2s',
-        ':hover': {
-            color: '#FF4444'
-        }
-    },
-
-    // Assignment Section Styles
-    assignmentSection: {
-        marginTop: '2rem',
-    },
-    assignmentHeader: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '1rem',
-    },
-    addAssignmentBtn: {
-        backgroundColor: '#10b981',
-        color: 'white',
-        border: 'none',
-        padding: '8px 16px',
-        borderRadius: '8px',
-        fontSize: '0.85rem',
-        fontWeight: '600',
-        cursor: 'pointer',
-        transition: 'all 0.2s',
-    },
-    emptyAssignments: {
-        padding: '2rem',
-        textAlign: 'center',
-        color: '#9CA3AF',
-        backgroundColor: '#F9FAFB',
-        borderRadius: '12px',
-        border: '1px dashed #D1D5DB',
-    },
-    assignmentList: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-    },
-    assignmentCard: {
-        backgroundColor: '#ECFDF5',
-        border: '1px solid #10B981',
-        borderRadius: '14px',
-        padding: '1.25rem',
-    },
-    assignmentCardHeader: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-    },
-    assignmentTitle: {
-        color: '#1F2937',
-        fontSize: '1.1rem',
-        fontWeight: '600',
-        marginBottom: '0.5rem',
-    },
-    assignmentMeta: {
-        color: '#4B5563',
-        fontSize: '0.85rem',
-    },
-    assignmentActions: {
-        display: 'flex',
-        gap: '0.5rem',
-    },
-    viewSubmissionsBtn: {
-        backgroundColor: 'rgba(139, 92, 246, 0.15)',
-        color: '#a855f7',
-        border: '1px solid rgba(139, 92, 246, 0.3)',
-        padding: '6px 12px',
-        borderRadius: '6px',
-        fontSize: '0.8rem',
-        fontWeight: '500',
-        cursor: 'pointer',
-    },
-    assignmentDesc: {
-        color: '#374151',
-        fontSize: '0.9rem',
-        lineHeight: '1.6',
-        marginTop: '0.75rem',
-        marginBottom: '0',
-    },
-    downloadLink: {
-        display: 'inline-block',
-        marginTop: '0.75rem',
-        color: '#10b981',
-        fontSize: '0.85rem',
-        textDecoration: 'none',
-    },
-
-    // Quiz Section Styles
-    quizSection: {
-        marginTop: '2rem',
-    },
-    quizHeader: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '1rem',
-    },
-    addQuizBtn: {
-        backgroundColor: '#8b5cf6',
-        color: 'white',
-        border: 'none',
-        padding: '8px 16px',
-        borderRadius: '8px',
-        fontSize: '0.85rem',
-        fontWeight: '600',
-        cursor: 'pointer',
-        transition: 'all 0.2s',
-    },
-    quizInfo: {
-        padding: '1.5rem',
-        backgroundColor: '#F3F4F6',
-        borderRadius: '12px',
-        border: '1px solid #E5E7EB',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    quizInfoText: {
-        color: '#4B5563',
-        fontSize: '0.9rem',
-        margin: 0,
-    },
-    viewQuestionsBtn: {
-        background: 'transparent',
-        color: '#a855f7',
-        border: '1px solid rgba(139, 92, 246, 0.3)',
-        padding: '8px 16px',
-        borderRadius: '8px',
-        fontSize: '0.85rem',
-        fontWeight: '500',
-        cursor: 'pointer',
-    },
-
-    pptPreview: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100%',
-        background: 'linear-gradient(145deg, rgba(255, 153, 0, 0.05), rgba(255, 153, 0, 0.02))',
-        borderRadius: '16px',
-        padding: '2rem',
-    },
-    pptIcon: {
-        fontSize: '5rem',
-        marginBottom: '1rem',
-        filter: 'drop-shadow(0 0 30px rgba(255, 153, 0, 0.3))',
-    },
-    pptTitle: {
-        color: 'white',
-        fontSize: '1.5rem',
-        fontWeight: '600',
-        marginBottom: '0.5rem',
-        textAlign: 'center',
-    },
-    pptSubtitle: {
-        color: 'rgba(255,255,255,0.5)',
-        fontSize: '0.95rem',
-        marginBottom: '1.5rem',
-    },
-    pptActions: {
-        display: 'flex',
-        gap: '1rem',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-    },
-    pptDownloadBtn: {
-        padding: '12px 24px',
-        background: 'linear-gradient(135deg, #FF9900, #FF6600)',
-        color: 'white',
-        borderRadius: '10px',
-        textDecoration: 'none',
-        fontWeight: '600',
-        fontSize: '0.95rem',
-        transition: 'all 0.2s',
-        boxShadow: '0 4px 15px rgba(255, 153, 0, 0.3)',
-    },
-    pptViewBtn: {
-        padding: '12px 24px',
-        background: 'rgba(255, 153, 0, 0.15)',
-        color: '#FF9900',
-        border: '1px solid rgba(255, 153, 0, 0.3)',
-        borderRadius: '10px',
-        textDecoration: 'none',
-        fontWeight: '600',
-        fontSize: '0.95rem',
-        transition: 'all 0.2s',
-    },
-
-    // Enhanced Slide Mockup Styles
-    pptPreviewContainer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'rgba(0,0,0,0.95)',
-        padding: '24px',
-    },
-    slideFrame: {
-        width: '100%',
-        height: 'calc(100% - 60px)', // Leave room for download button
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    slideMockup: {
-        background: 'rgba(255,255,255,0.02)',
-        borderRadius: '16px',
-        overflow: 'hidden',
-        boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        border: '1px solid rgba(255,255,255,0.1)',
-    },
-    slideHeader: {
-        background: 'rgba(255,255,255,0.05)',
-        padding: '8px 16px',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
-    },
-    slideHeaderBar: {
-        display: 'flex',
-        gap: '6px',
-    },
-    slideWindowDot: {
-        width: '10px',
-        height: '10px',
-        borderRadius: '50%',
-        background: '#EF4444',
-    },
-    slideContent: {
-        flex: 1,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        background: '#0a0a0a',
-    },
-    slideMockupContent: {
-        padding: '3rem',
-        textAlign: 'center',
-    },
-    slideIcon: {
-        fontSize: '4rem',
-        marginBottom: '1rem',
-        filter: 'drop-shadow(0 0 20px rgba(255,153,0,0.4))',
-    },
-    slideTitleMock: {
-        color: 'white',
-        fontSize: '1.4rem',
-        fontWeight: '700',
-        marginBottom: '0.5rem',
-    },
-    slideSubMock: {
-        color: 'rgba(255,255,255,0.4)',
-        fontSize: '0.9rem',
-        marginBottom: '1.5rem',
-    },
-    slideBars: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-        alignItems: 'center',
-        marginTop: '1rem',
-    },
-    slideBar: {
-        height: '8px',
-        background: 'linear-gradient(90deg, rgba(255,153,0,0.3), rgba(255,102,0,0.2))',
-        borderRadius: '4px',
-    },
-    slideImage: {
-        width: '100%',
-        height: '100%',
-        objectFit: 'contain',
-        display: 'block',
-    },
-    // (deduped) pptActions and pptDownloadBtn are defined earlier
-};
-
-// Add hover styles via standard CSS if needed, but keeping it inline for now
-// Just need to handle the delete button visibility
-const GlobalStyles = () => (
-    <style>{`
-        .nav-item-hover:hover .delete-btn { opacity: 1; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
-    `}</style>
-);
-
-const CourseVideosWithStyles = () => (
-    <>
-        <GlobalStyles />
-        <CourseVideos />
-    </>
-);
-
-export default CourseVideosWithStyles;
+export default CourseVideos;

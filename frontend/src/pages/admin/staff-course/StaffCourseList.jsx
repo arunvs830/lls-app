@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/Button';
-import { staffCourseApi, staffApi, courseApi } from '../../../services/api';
+import { staffCourseApi, staffApi, courseApi, academicYearApi, programApi, semesterApi } from '../../../services/api';
 import '../../../styles/Table.css';
 
 const StaffCourseList = () => {
@@ -9,6 +9,9 @@ const StaffCourseList = () => {
     const [allocations, setAllocations] = useState([]);
     const [staff, setStaff] = useState([]);
     const [courses, setCourses] = useState([]);
+    const [academicYears, setAcademicYears] = useState([]);
+    const [programs, setPrograms] = useState([]);
+    const [semesters, setSemesters] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -17,14 +20,20 @@ const StaffCourseList = () => {
 
     const loadData = async () => {
         try {
-            const [allocData, staffData, courseData] = await Promise.all([
+            const [allocData, staffData, courseData, yearData, programData, semesterData] = await Promise.all([
                 staffCourseApi.getAll(),
                 staffApi.getAll(),
-                courseApi.getAll()
+                courseApi.getAll(),
+                academicYearApi.getAll(),
+                programApi.getAll(),
+                semesterApi.getAll()
             ]);
             setAllocations(allocData);
             setStaff(staffData);
             setCourses(courseData);
+            setAcademicYears(yearData);
+            setPrograms(programData);
+            setSemesters(semesterData);
         } catch (error) {
             console.error('Error loading:', error);
         } finally {
@@ -33,7 +42,19 @@ const StaffCourseList = () => {
     };
 
     const getStaffName = (id) => staff.find(s => s.id === id)?.full_name || 'N/A';
-    const getCourseName = (id) => courses.find(c => c.id === id)?.course_name || 'N/A';
+    const getCourse = (id) => courses.find(c => c.id === id);
+    const getCourseName = (id) => getCourse(id)?.course_name || 'N/A';
+    const getAcademicYearName = (id) => academicYears.find(y => y.id === id)?.year_name || 'N/A';
+    const getProgramName = (courseId) => {
+        const course = getCourse(courseId);
+        if (!course) return 'N/A';
+        return programs.find(p => p.id === course.program_id)?.program_name || 'N/A';
+    };
+    const getSemesterName = (courseId) => {
+        const course = getCourse(courseId);
+        if (!course) return 'N/A';
+        return semesters.find(s => s.id === course.semester_id)?.semester_name || 'N/A';
+    };
 
     const handleDelete = async (id) => {
         if (confirm('Are you sure?')) {
@@ -62,18 +83,22 @@ const StaffCourseList = () => {
                     <tr>
                         <th>Staff Name</th>
                         <th>Course</th>
-                        <th>Assigned Date</th>
+                        <th>Program</th>
+                        <th>Semester</th>
+                        <th>Academic Year</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {allocations.length === 0 ? (
-                        <tr><td colSpan="4" style={{ textAlign: 'center' }}>No allocations found</td></tr>
+                        <tr><td colSpan="6" style={{ textAlign: 'center' }}>No allocations found</td></tr>
                     ) : allocations.map((alloc) => (
                         <tr key={alloc.id}>
                             <td>{getStaffName(alloc.staff_id)}</td>
                             <td>{getCourseName(alloc.course_id)}</td>
-                            <td>{alloc.assigned_date}</td>
+                            <td>{getProgramName(alloc.course_id)}</td>
+                            <td>{getSemesterName(alloc.course_id)}</td>
+                            <td>{getAcademicYearName(alloc.academic_year_id)}</td>
                             <td>
                                 <button className="btn-secondary action-btn" onClick={() => handleDelete(alloc.id)} style={{ color: '#ef4444' }}>Unassign</button>
                             </td>

@@ -20,6 +20,13 @@ def get_all():
 @course_bp.route('/api/courses', methods=['POST'])
 def create():
     data = request.get_json()
+    
+    if not data or not data.get('course_code') or not data.get('course_name'):
+        return jsonify({'error': 'Course code and name are required'}), 400
+        
+    if Course.query.filter_by(course_code=data['course_code']).first():
+        return jsonify({'error': 'Course code already exists'}), 400
+
     course = Course(
         course_code=data['course_code'],
         course_name=data['course_name'],

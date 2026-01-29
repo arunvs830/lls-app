@@ -2,18 +2,18 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { communicationApi } from '../../services/api';
 import Button from '../../components/Button';
+import { useAuth } from '../../context/AuthContext';
 import { Mail, Send, Trash2, Eye, Inbox as InboxIcon } from 'lucide-react';
 
 const Inbox = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = useState('inbox'); // 'inbox' or 'sent'
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Get user info from localStorage
-    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-    const userType = storedUser.role || localStorage.getItem('role') || 'student';
-    const userId = storedUser.id || localStorage.getItem('userId') || 1;
+    const userType = user?.role || 'student';
+    const userId = user?.id || 1;
 
     useEffect(() => {
         loadMessages();
@@ -76,13 +76,13 @@ const Inbox = () => {
                 </Button>
             </div>
 
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid #E3E5E8', paddingBottom: '0.5rem' }}>
                 <button
                     onClick={() => setActiveTab('inbox')}
                     style={{
                         background: 'none',
                         border: 'none',
-                        color: activeTab === 'inbox' ? '#8b5cf6' : 'rgba(255,255,255,0.6)',
+                        color: activeTab === 'inbox' ? '#8b5cf6' : '#5C6873',
                         padding: '0.5rem 1rem',
                         cursor: 'pointer',
                         fontSize: '1rem',
@@ -101,7 +101,7 @@ const Inbox = () => {
                     style={{
                         background: 'none',
                         border: 'none',
-                        color: activeTab === 'sent' ? '#8b5cf6' : 'rgba(255,255,255,0.6)',
+                        color: activeTab === 'sent' ? '#8b5cf6' : '#5C6873',
                         padding: '0.5rem 1rem',
                         cursor: 'pointer',
                         fontSize: '1rem',
@@ -118,11 +118,11 @@ const Inbox = () => {
             </div>
 
             {loading ? (
-                <div style={{ padding: '2rem', textAlign: 'center', color: 'rgba(255,255,255,0.5)' }}>Loading messages...</div>
+                <div style={{ padding: '2rem', textAlign: 'center', color: '#5C6873' }}>Loading messages...</div>
             ) : messages.length === 0 ? (
-                <div style={{ padding: '3rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px dashed rgba(255,255,255,0.1)' }}>
-                    <div style={{ marginBottom: '1rem', opacity: 0.3 }}><Mail size={48} /></div>
-                    <p style={{ color: 'rgba(255,255,255,0.6)' }}>No messages found in {activeTab}</p>
+                <div style={{ padding: '3rem', textAlign: 'center', background: '#FAFBFC', borderRadius: '12px', border: '1px dashed #E3E5E8' }}>
+                    <div style={{ marginBottom: '1rem', opacity: 0.3, color: '#5C6873' }}><Mail size={48} /></div>
+                    <p style={{ color: '#5C6873' }}>No messages found in {activeTab}</p>
                 </div>
             ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -135,20 +135,21 @@ const Inbox = () => {
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 padding: '1.25rem',
-                                background: activeTab === 'inbox' && !msg.is_read ? 'rgba(139, 92, 246, 0.1)' : 'rgba(255,255,255,0.03)',
+                                background: activeTab === 'inbox' && !msg.is_read ? '#F5F3FF' : '#FFFFFF',
                                 borderRadius: '12px',
-                                border: activeTab === 'inbox' && !msg.is_read ? '1px solid rgba(139, 92, 246, 0.3)' : '1px solid rgba(255,255,255,0.05)',
+                                border: activeTab === 'inbox' && !msg.is_read ? '1px solid #8B5CF6' : '1px solid #E8EAED',
                                 cursor: 'pointer',
-                                transition: 'all 0.2s'
+                                transition: 'all 0.2s',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                             }}
                             className="message-item"
                         >
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', flex: 1 }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                                    <span style={{ fontWeight: 600, color: 'white', fontSize: '1.05rem' }}>
+                                    <span style={{ fontWeight: 600, color: '#21272A', fontSize: '1.05rem' }}>
                                         {msg.subject || '(No Subject)'}
                                     </span>
-                                    <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)' }}>
+                                    <span style={{ fontSize: '0.85rem', color: '#5C6873' }}>
                                         {new Date(msg.sent_at).toLocaleDateString()}
                                     </span>
                                 </div>
@@ -164,7 +165,7 @@ const Inbox = () => {
                                 </div>
                                 <p style={{
                                     fontSize: '0.9rem',
-                                    color: 'rgba(255,255,255,0.6)',
+                                    color: '#5C6873',
                                     margin: '0.25rem 0 0 0',
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
@@ -179,8 +180,8 @@ const Inbox = () => {
                                 <button
                                     onClick={(e) => handleDelete(e, msg.id)}
                                     style={{
-                                        background: 'rgba(239, 68, 68, 0.1)',
-                                        color: '#ef4444',
+                                        background: '#FEE2E2',
+                                        color: '#DC2626',
                                         border: 'none',
                                         borderRadius: '8px',
                                         padding: '8px',

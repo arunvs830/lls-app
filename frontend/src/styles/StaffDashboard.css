@@ -166,3 +166,12 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Activity empty/loading states */
+.activity-loading,
+.activity-empty {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    text-align: center;
+    padding: 2rem 1rem;
+}

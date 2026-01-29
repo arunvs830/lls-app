@@ -43,7 +43,7 @@ const CourseEnrollment = () => {
                 const available = await availableRes.json();
                 setAvailableCourses(available);
             }
-        } catch (err) {
+        } catch {
             setError('Failed to load courses');
         } finally {
             setLoading(false);
@@ -110,6 +110,35 @@ const CourseEnrollment = () => {
         }
     };
 
+    const handleReEnroll = async (courseId) => {
+        if (!confirm('Do you want to re-enroll in this course? Your previous submissions will be restored.')) return;
+
+        setEnrolling(true);
+        setError('');
+        setSuccess('');
+
+        try {
+            const response = await fetch(`${API_BASE}/students/${studentId}/courses/enroll`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ course_ids: [courseId] })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setSuccess('Successfully re-enrolled in the course');
+                loadCourses();
+            } else {
+                throw new Error(data.error || 'Re-enrollment failed');
+            }
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setEnrolling(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="enrollment-page">
@@ -148,7 +177,7 @@ const CourseEnrollment = () => {
                 ) : (
                     <div className="course-grid">
                         {enrolledCourses.map(enrollment => (
-                            <div key={enrollment.id} className="enrolled-card">
+                            <div key={enrollment.id} className={`enrolled-card ${enrollment.status}`}>
                                 <div className="card-content">
                                     <span className="course-code">{enrollment.course_code}</span>
                                     <h3>{enrollment.course_name}</h3>
@@ -161,12 +190,20 @@ const CourseEnrollment = () => {
                                         </span>
                                     </div>
                                 </div>
-                                {enrollment.status === 'active' && (
-                                    <button 
+                                {enrollment.status === 'active' ? (
+                                    <button
                                         className="btn-drop"
                                         onClick={() => handleDropCourse(enrollment.course_id)}
                                     >
                                         Drop
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="btn-re-enroll"
+                                        onClick={() => handleReEnroll(enrollment.course_id)}
+                                        disabled={enrolling}
+                                    >
+                                        Re-enroll
                                     </button>
                                 )}
                             </div>
@@ -192,7 +229,7 @@ const CourseEnrollment = () => {
                     <>
                         <div className="available-courses">
                             {availableCourses.map(course => (
-                                <div 
+                                <div
                                     key={course.id}
                                     className={`available-card ${selectedCourses.includes(course.id) ? 'selected' : ''}`}
                                     onClick={() => handleCourseToggle(course.id)}
@@ -212,7 +249,7 @@ const CourseEnrollment = () => {
                             <span className="selected-count">
                                 {selectedCourses.length} course(s) selected
                             </span>
-                            <button 
+                            <button
                                 className="btn-enroll"
                                 onClick={handleEnroll}
                                 disabled={enrolling || selectedCourses.length === 0}

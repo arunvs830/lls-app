@@ -1,0 +1,183 @@
+.student-course-list-container {
+    padding: 24px;
+    min-height: 100vh;
+}
+
+.scl-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+}
+
+.scl-loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--primary-light);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: scl-spin 1s linear infinite;
+}
+
+@keyframes scl-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.scl-loading-text {
+    margin-top: 16px;
+    color: var(--text-secondary);
+}
+
+.scl-header {
+    margin-bottom: 32px;
+}
+
+.scl-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.scl-subtitle {
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
+.scl-course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.scl-course-card {
+    background: var(--bg-white);
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    opacity: 0;
+    /* For animation */
+    animation: scl-fade-in 0.5s ease forwards;
+}
+
+@keyframes scl-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.scl-course-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.scl-course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.scl-course-icon {
+    font-size: 2.5rem;
+}
+
+.scl-course-code {
+    background: var(--primary-light);
+    /* var(--primary-color) with opacity */
+    color: var(--primary-color);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.scl-course-name {
+    color: var(--text-main);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+    line-height: 1.4;
+}
+
+.scl-course-meta {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.scl-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.scl-meta-icon {
+    font-size: 1rem;
+}
+
+.scl-course-footer {
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+}
+
+.scl-view-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    width: 100%;
+    transition: transform 0.2s;
+}
+
+.scl-view-btn:hover {
+    transform: scale(1.02);
+}
+
+.scl-empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: var(--bg-white);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+}
+
+.scl-empty-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.scl-empty-title {
+    color: var(--text-main);
+    font-size: 1.5rem;
+    margin: 0 0 8px 0;
+}
+
+.scl-empty-text {
+    color: var(--text-secondary);
+}

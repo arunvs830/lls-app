@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { programApi, semesterApi, courseApi } from '../services/api';
+import { programApi, semesterApi, courseApi, authApi } from '../services/api';
 import '../styles/RegisterPage.css';
 
 const API_BASE = import.meta.env.DEV ? '/api' : 'http://127.0.0.1:6000/api';
@@ -40,7 +40,7 @@ const RegisterPage = () => {
                 setPrograms(programsData);
                 setSemesters(semestersData);
                 setCourses(coursesData);
-            } catch (err) {
+            } catch {
                 setError('Failed to load registration data');
             }
         };
@@ -133,28 +133,27 @@ const RegisterPage = () => {
         setError('');
 
         try {
-            const response = await fetch(`${API_BASE}/auth/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    full_name: formData.full_name,
-                    email: formData.email,
-                    password: formData.password,
-                    program_id: parseInt(formData.program_id),
-                    semester_id: parseInt(formData.semester_id),
-                    course_ids: formData.course_ids
-                })
+            const data = await authApi.register({
+                full_name: formData.full_name,
+                email: formData.email,
+                password: formData.password,
+                program_id: parseInt(formData.program_id),
+                semester_id: parseInt(formData.semester_id),
+                course_ids: formData.course_ids
             });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Registration failed');
+            if (data.error) {
+                throw new Error(data.error);
             }
 
-            // Registration successful - use email as username for login
-            alert(`Registration successful!\n\nUse your email (${formData.email}) as username to login.`);
-            navigate('/login');
+            // Registration successful - show success message and redirect
+            setError(''); // Clear any errors
+            // Navigate to login with success message
+            navigate('/login', {
+                state: {
+                    message: `Registration successful! Use your email (${formData.email}) to login.`
+                }
+            });
 
         } catch (err) {
             setError(err.message);

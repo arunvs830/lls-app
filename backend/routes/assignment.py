@@ -1,9 +1,9 @@
 import os
 from flask import Blueprint, request, jsonify, current_app, send_from_directory
 from werkzeug.utils import secure_filename
-from models import db, Assignment
+from models import db, Assignment, Student, Course, StudentCourse
 from services.notification_service import NotificationService
-from datetime import datetime
+from datetime import datetime, timezone
 
 assignment_bp = Blueprint('assignment', __name__)
 
@@ -16,7 +16,9 @@ def parse_datetime(dt_str):
     if not dt_str:
         return None
     try:
-        return datetime.fromisoformat(dt_str.replace('Z', '+00:00'))
+        dt = datetime.fromisoformat(dt_str.replace('Z', '+00:00'))
+        # Convert to UTC and remove tzinfo to make it naive (compatible with datetime.utcnow())
+        return dt.astimezone(timezone.utc).replace(tzinfo=None)
     except:
         return datetime.strptime(dt_str, '%Y-%m-%dT%H:%M')
 
@@ -33,6 +35,18 @@ def get_all():
         query = query.filter_by(staff_id=int(staff_id))
     if study_material_id:
         query = query.filter_by(study_material_id=int(study_material_id))
+
+    student_id = request.args.get('student_id')
+    if student_id:
+        # Filter assignments for courses the student is explicitly enrolled in
+        enrollments = StudentCourse.query.filter_by(student_id=int(student_id), status='active').all()
+        enrolled_course_ids = [e.course_id for e in enrollments]
+        
+        if enrolled_course_ids:
+            query = query.filter(Assignment.course_id.in_(enrolled_course_ids))
+        else:
+            # No active enrollments, so no assignments
+            return jsonify([])
     
     assignments = query.all()
     return jsonify([{

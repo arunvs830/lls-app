@@ -28,6 +28,7 @@ def get_all():
     return jsonify([{
         'id': s.id,
         'student_code': s.student_code,
+        'username': s.username,
         'email': s.email,
         'full_name': s.full_name,
         'program_id': s.program_id,
@@ -40,6 +41,7 @@ def create():
     data = request.get_json()
     student = Student(
         student_code=data['student_code'],
+        username=data['username'],
         email=data['email'],
         full_name=data['full_name'],
         password_hash=generate_password_hash(data['password']),
@@ -193,7 +195,12 @@ def enroll_in_course(student_id):
         ).first()
         
         if existing:
-            already_enrolled.append(course_id)
+            if existing.status == 'dropped':
+                existing.status = 'active'
+                existing.enrolled_at = datetime.utcnow()
+                enrolled.append(course_id)
+            else:
+                already_enrolled.append(course_id)
             continue
         
         # Enroll

@@ -74,6 +74,7 @@ export const studentApi = {
 // Staff-Course Allocation
 export const staffCourseApi = {
     getAll: () => apiRequest('/staff-courses'),
+    getByStaff: (staffId) => apiRequest(`/staff-courses?staff_id=${staffId}`),
     create: (data) => apiRequest('/staff-courses', { method: 'POST', body: JSON.stringify(data) }),
     delete: (id) => apiRequest(`/staff-courses/${id}`, { method: 'DELETE' }),
 };
@@ -81,6 +82,7 @@ export const staffCourseApi = {
 // Study Materials (Videos)
 export const studyMaterialApi = {
     getAll: () => apiRequest('/study-materials'),
+    getByStaff: (staffId) => apiRequest(`/study-materials?staff_id=${staffId}`),
     getOne: (id) => apiRequest(`/study-materials/${id}`),
     getByCourse: (courseId) => apiRequest(`/courses/${courseId}/materials`),
     create: (data) => apiRequest('/study-materials', { method: 'POST', body: JSON.stringify(data) }),
@@ -107,6 +109,7 @@ export const assignmentApi = {
     getByCourse: (courseId) => apiRequest(`/assignments?course_id=${courseId}`),
     getByStaff: (staffId) => apiRequest(`/assignments?staff_id=${staffId}`),
     getByMaterial: (materialId) => apiRequest(`/assignments?study_material_id=${materialId}`),
+    getByStudent: (studentId) => apiRequest(`/assignments?student_id=${studentId}`),
     getOne: (id) => apiRequest(`/assignments/${id}`),
     create: (formData) => apiRequest('/assignments', { method: 'POST', body: formData }),
     update: (id, formData) => apiRequest(`/assignments/${id}`, { method: 'PUT', body: formData }),
@@ -117,10 +120,12 @@ export const assignmentApi = {
 export const submissionApi = {
     getAll: (assignmentId) => apiRequest(`/submissions?assignment_id=${assignmentId}`),
     getByStudent: (studentId) => apiRequest(`/submissions?student_id=${studentId}`),
+    getByAssignmentAndStudent: (assignmentId, studentId) => apiRequest(`/submissions?assignment_id=${assignmentId}&student_id=${studentId}`).then(data => data?.[0] || null),
     getForStaff: (staffId) => apiRequest(`/submissions?staff_id=${staffId}`),
     getForStaffCourse: (staffId, courseId) => apiRequest(`/submissions?staff_id=${staffId}&course_id=${courseId}`),
     create: (formData) => apiRequest('/submissions', { method: 'POST', body: formData }),
     evaluate: (id, data) => apiRequest(`/submissions/${id}/evaluate`, { method: 'POST', body: JSON.stringify(data) }),
+    getPendingCount: (staffId) => apiRequest(`/submissions/pending-count/${staffId}`),
 };
 
 // Student Dashboard API
@@ -156,6 +161,14 @@ export const authApi = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password, role })
+        });
+        return response.json();
+    },
+    register: async (data) => {
+        const response = await fetch(`${API_BASE}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
         });
         return response.json();
     }
@@ -202,4 +215,25 @@ export const communicationApi = {
         apiRequest(`/communications/${id}`, { method: 'DELETE' }),
     getUnreadCount: (userType, userId) =>
         apiRequest(`/communications/unread-count/${userType}/${userId}`)
+};
+
+// Report API
+export const reportApi = {
+    getStaffReports: (staffId, filters = {}) => {
+        const params = new URLSearchParams(filters).toString();
+        return apiRequest(`/reports/staff/${staffId}${params ? '?' + params : ''}`);
+    }
+};
+
+// Admin API
+export const adminApi = {
+    getStaffReport: () => apiRequest('/admin/staff-report'),
+    getCourseReport: (filters = {}) => {
+        const params = new URLSearchParams();
+        if (filters.academic_year_id) params.append('academic_year_id', filters.academic_year_id);
+        if (filters.program_id) params.append('program_id', filters.program_id);
+        if (filters.semester_id) params.append('semester_id', filters.semester_id);
+        const queryString = params.toString();
+        return apiRequest(`/admin/course-report${queryString ? '?' + queryString : ''}`);
+    }
 };

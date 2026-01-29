@@ -27,6 +27,14 @@ def create():
     if not assignment_id or not student_id:
         return jsonify({'error': 'Missing assignment_id or student_id'}), 400
         
+    # Check if assignment exists and is not overdue
+    assignment = Assignment.query.get(assignment_id)
+    if not assignment:
+        return jsonify({'error': 'Assignment not found'}), 404
+        
+    if assignment.due_date and datetime.utcnow() > assignment.due_date:
+        return jsonify({'error': 'Assignment is overdue. Late submissions are not accepted.'}), 400
+        
     # Check if already submitted
     existing = Submission.query.filter_by(assignment_id=assignment_id, student_id=student_id).first()
     if existing:
@@ -144,3 +152,15 @@ def evaluate(id):
         print(f"Error sending evaluation notification: {e}")
     
     return jsonify({'message': 'Evaluated successfully'})
+
+@submission_bp.route('/api/submissions/pending-count/<int:staff_id>', methods=['GET'])
+def get_pending_count(staff_id):
+    """Get count of pending submissions for a staff member"""
+    try:
+        count = Submission.query.join(Assignment).filter(
+            Assignment.staff_id == staff_id,
+            Submission.status != 'evaluated'
+        ).count()
+        return jsonify({'pending_count': count}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

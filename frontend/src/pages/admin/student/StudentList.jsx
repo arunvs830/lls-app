@@ -44,15 +44,18 @@ const StudentList = () => {
         }
     };
 
-    if (loading) return <div className="card"><p>Loading...</p></div>;
+    if (loading) return (
+        <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p className="loading-text">Loading students...</p>
+        </div>
+    );
 
     return (
         <div className="card">
             <div className="page-header">
                 <h2>Students</h2>
-                <div style={{ width: '200px' }}>
-                    <Button onClick={() => navigate('/admin/students/new')}>Add Student</Button>
-                </div>
+                <Button className="btn-lg-width" onClick={() => navigate('/admin/students/new')}>Add Student</Button>
             </div>
 
             <table className="data-table">
@@ -74,16 +77,14 @@ const StudentList = () => {
                             <td>{student.email}</td>
                             <td>
                                 <button
-                                    className="btn-secondary action-btn"
+                                    className="action-btn edit"
                                     onClick={() => navigate(`/admin/students/edit/${student.id}`)}
-                                    style={{ color: '#3b82f6', marginRight: '8px' }}
                                 >
                                     Edit
                                 </button>
                                 <button
-                                    className="btn-secondary action-btn"
+                                    className="action-btn danger"
                                     onClick={() => handleDeleteClick(student.id)}
-                                    style={{ color: '#ef4444' }}
                                 >
                                     Delete
                                 </button>

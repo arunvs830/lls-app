@@ -35,15 +35,18 @@ const StaffList = () => {
         }
     };
 
-    if (loading) return <div className="card"><p>Loading...</p></div>;
+    if (loading) return (
+        <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p className="loading-text">Loading staff members...</p>
+        </div>
+    );
 
     return (
         <div className="card">
             <div className="page-header">
                 <h2>Staff Members</h2>
-                <div style={{ width: '200px' }}>
-                    <Button onClick={() => navigate('/admin/staff/new')}>Add Staff</Button>
-                </div>
+                <Button className="btn-lg-width" onClick={() => navigate('/admin/staff/new')}>Add Staff</Button>
             </div>
 
             <table className="data-table">
@@ -64,7 +67,7 @@ const StaffList = () => {
                             <td>{staff.full_name}</td>
                             <td>{staff.email}</td>
                             <td>
-                                <button className="btn-secondary action-btn" onClick={() => handleDelete(staff.id)} style={{ color: '#ef4444' }}>Delete</button>
+                                <button className="action-btn danger" onClick={() => handleDelete(staff.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}

@@ -4,8 +4,11 @@ import InputField from '../../../components/InputField';
 import Button from '../../../components/Button';
 import { courseApi, assignmentApi, staffCourseApi, studyMaterialApi } from '../../../services/api';
 
+import { useAuth } from '../../../context/AuthContext';
+
 const AssignmentForm = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const { id } = useParams(); // For edit mode
     const [searchParams] = useSearchParams();
     const initialCourseId = searchParams.get('course_id');
@@ -24,8 +27,9 @@ const AssignmentForm = () => {
     const [materials, setMaterials] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
+    const [notification, setNotification] = useState({ show: false, message: '', type: '' });
 
-    const staffId = 1; // TODO: Get from auth context
+    const staffId = user?.id;
 
     useEffect(() => {
         loadInitialData();
@@ -88,9 +92,17 @@ const AssignmentForm = () => {
                 description: data.description || '',
                 course_id: data.course_id,
                 study_material_id: data.study_material_id || '',
-                due_date: data.due_date ? data.due_date.substring(0, 16) : '',
+                due_date: data.due_date ? new Date(data.due_date + 'Z').toISOString().slice(0, 16).replace('Z', '') : '', // This is tricky. new Date(utcStr) works. But toISOString gives UTC. We want Local String for input.
+                // improved logic below
                 max_marks: data.max_marks
             });
+            // Correction: to get local string "YYYY-MM-DDTHH:MM" from a Date object:
+            if (data.due_date) {
+                const d = new Date(data.due_date + (data.due_date.endsWith('Z') ? '' : 'Z')); // Assume API sends UTC string without Z (sqlalchemy default str)
+                // Adjust for timezone offset to get "Local" time in ISO format part
+                const localIso = new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+                setFormData(prev => ({ ...prev, due_date: localIso }));
+            }
             // Materials will load via useEffect when course_id is set
         } catch (error) {
             console.error('Error loading assignment:', error);
@@ -113,10 +125,16 @@ const AssignmentForm = () => {
         data.append('title', formData.title);
         data.append('description', formData.description);
         data.append('course_id', formData.course_id);
+        if (staffId) {
+            data.append('staff_id', staffId);
+        }
         if (formData.study_material_id) {
             data.append('study_material_id', formData.study_material_id);
         }
-        data.append('due_date', formData.due_date);
+        if (formData.due_date) {
+            const utcDate = new Date(formData.due_date).toISOString();
+            data.append('due_date', utcDate);
+        }
         data.append('max_marks', formData.max_marks);
         if (file) {
             data.append('file', file);
@@ -125,19 +143,22 @@ const AssignmentForm = () => {
         try {
             if (isEdit) {
                 await assignmentApi.update(id, data);
-                alert('Assignment updated successfully!');
+                setNotification({ show: true, message: 'Assignment updated successfully!', type: 'success' });
             } else {
                 await assignmentApi.create(data);
-                alert('Assignment created successfully!');
+                setNotification({ show: true, message: 'Assignment created successfully!', type: 'success' });
             }
-            if (initialMaterialId && initialCourseId) {
-                navigate(`/staff/course/${initialCourseId}/videos`);
-            } else {
-                navigate('/staff/assignments');
-            }
+            setTimeout(() => {
+                if (initialMaterialId && initialCourseId) {
+                    navigate(`/staff/course/${initialCourseId}/videos`);
+                } else {
+                    navigate('/staff/assignments');
+                }
+            }, 1000);
         } catch (error) {
             console.error('Error saving assignment:', error);
-            alert('Failed to save assignment.');
+            setNotification({ show: true, message: 'Failed to save assignment.', type: 'error' });
+            setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
         } finally {
             setLoading(false);
         }
@@ -148,6 +169,21 @@ const AssignmentForm = () => {
             <div className="page-header" style={{ marginBottom: '2rem' }}>
                 <h2 style={{ color: '#1F2937', fontSize: '1.5rem', fontWeight: 'bold' }}>{isEdit ? 'Edit Assignment' : 'Create Assignment'}</h2>
             </div>
+
+            {/* Notification Banner */}
+            {notification.show && (
+                <div style={{
+                    padding: '12px 16px',
+                    borderRadius: '8px',
+                    marginBottom: '16px',
+                    background: notification.type === 'error' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)',
+                    border: `1px solid ${notification.type === 'error' ? '#ef4444' : '#10b981'}`,
+                    color: notification.type === 'error' ? '#ef4444' : '#10b981',
+                    fontWeight: 500
+                }}>
+                    {notification.message}
+                </div>
+            )}
 
             <form onSubmit={handleSubmit}>
                 <InputField id="title" label="Assignment Title" placeholder="e.g. German A1 - Week 1 Assignment" value={formData.title} onChange={handleChange} required />

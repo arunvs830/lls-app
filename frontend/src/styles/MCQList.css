@@ -1,0 +1,299 @@
+.mcq-list-container {
+    padding: 24px;
+}
+
+.mcq-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.mcq-list-title {
+    color: var(--text-main);
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.mcq-list-subtitle {
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
+.mcq-list-add-btn {
+    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s;
+}
+
+.mcq-list-add-btn:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.mcq-list-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.mcq-list-import-btn {
+    background: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 12px 24px;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mcq-list-download-btn {
+    background: white;
+    border: 1px solid var(--border-color);
+    color: var(--secondary-color);
+    padding: 12px 24px;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.mcq-list-download-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--secondary-color);
+}
+
+.mcq-list-import-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--border-color-dark);
+}
+
+.mcq-list-filter-bar {
+    margin-bottom: 24px;
+}
+
+.mcq-list-select {
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 12px 16px;
+    border-radius: var(--border-radius-md);
+    min-width: 200px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.mcq-list-select:focus {
+    border-color: var(--primary-color);
+}
+
+.mcq-list-loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+}
+
+.mcq-list-empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: var(--bg-main);
+    border-radius: var(--border-radius-xl);
+    color: var(--text-secondary);
+}
+
+.mcq-list-empty-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.mcq-list-add-btn-secondary {
+    margin-top: 16px;
+    background: var(--bg-hover);
+    border: 1px solid var(--border-color);
+    color: var(--primary-color);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.mcq-list-add-btn-secondary:hover {
+    border-color: var(--primary-color);
+    background: var(--bg-white);
+}
+
+.mcq-question-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.mcq-question-card {
+    background: var(--bg-white);
+    border-radius: var(--border-radius-lg);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+}
+
+.mcq-question-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.mcq-question-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.mcq-question-number {
+    background: var(--bg-hover);
+    color: var(--primary-color);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.mcq-course-badge {
+    background: var(--secondary-light);
+    /* Use a variable if available, else keep generic or create one */
+    color: var(--secondary-color);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+.mcq-marks {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-left: auto;
+}
+
+.mcq-question-text {
+    color: var(--text-main);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.mcq-options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.mcq-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: var(--bg-main);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    border: 1px solid var(--bg-hover);
+}
+
+.mcq-option.correct {
+    background: var(--success-light);
+    border: 1px solid var(--success-color);
+    color: var(--primary-dark);
+    /* Keep readable text color on light green */
+}
+
+.mcq-option-label {
+    background: var(--border-color);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.mcq-checkmark {
+    margin-left: auto;
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.mcq-actions {
+    display: flex;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.mcq-edit-btn {
+    background: var(--secondary-light);
+    border: 1px solid var(--secondary-hover);
+    color: var(--secondary-color);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.mcq-edit-btn:hover {
+    background: var(--bg-active);
+}
+
+.mcq-delete-btn {
+    background: var(--error-light);
+    border: 1px solid var(--error-color);
+    color: var(--error-color);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.mcq-delete-btn:hover {
+    background: var(--error-light);
+}
+
+@media (max-width: 640px) {
+    .mcq-options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mcq-list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .mcq-list-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .mcq-list-add-btn,
+    .mcq-list-import-btn,
+    .mcq-list-download-btn {
+        width: 100%;
+        text-align: center;
+    }
+}

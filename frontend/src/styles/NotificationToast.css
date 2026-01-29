@@ -1,0 +1,95 @@
+/* NotificationToast.css */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+    /* Allow clicking through the container area */
+}
+
+.notification-toast {
+    pointer-events: auto;
+    /* Re-enable clicks on the toasts themselves */
+    display: flex;
+    align-items: flex-start;
+    min-width: 300px;
+    max-width: 450px;
+    padding: 16px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.notification-toast.success {
+    border-left-color: #10B981;
+    background-color: #ECFDF5;
+}
+
+.notification-toast.error {
+    border-left-color: #EF4444;
+    background-color: #FEF2F2;
+}
+
+.notification-toast.info {
+    border-left-color: #3B82F6;
+    background-color: #EFF6FF;
+}
+
+.notification-toast.warning {
+    border-left-color: #F59E0B;
+    background-color: #FFFBEB;
+}
+
+.notification-icon {
+    font-size: 1.2rem;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-message {
+    margin: 0;
+    color: #1F2937;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: #6B7280;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 12px;
+    line-height: 1;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}

@@ -2,18 +2,18 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { communicationApi } from '../../services/api';
 import Button from '../../components/Button';
+import { useAuth } from '../../context/AuthContext';
 import { ArrowLeft, Trash2, Reply, User, Calendar } from 'lucide-react';
 
 const MessageDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [message, setMessage] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Get user info from localStorage
-    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-    const userType = storedUser.role || localStorage.getItem('role') || 'student';
-    const userId = storedUser.id || localStorage.getItem('userId');
+    const userType = user?.role || 'student';
+    const userId = user?.id;
 
     useEffect(() => {
         loadMessage();
@@ -49,13 +49,16 @@ const MessageDetail = () => {
     const handleReply = () => {
         // Navigate to compose with reply info in state
         const basePath = userType === 'student' ? '/student/messages/new' : '/staff/messages/new';
-        navigate(basePath, { 
-            state: { 
+        navigate(basePath, {
+            state: {
                 replyTo: {
                     receiver_type: message.sender_type,
                     receiver_id: message.sender_id,
                     receiver_name: message.sender_name,
-                    subject: message.subject?.startsWith('Re: ') ? message.subject : `Re: ${message.subject || ''}`
+                    subject: message.subject?.startsWith('Re: ') ? message.subject : `Re: ${message.subject || ''}`,
+                    original_message: message.message,
+                    original_date: message.sent_at,
+                    original_sender: message.sender_name || message.sender_type
                 }
             }
         });

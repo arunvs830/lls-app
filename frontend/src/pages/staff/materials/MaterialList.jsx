@@ -1,27 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/Button';
+import ConfirmDialog from '../../../components/ConfirmDialog';
 import { studyMaterialApi, courseApi, staffCourseApi } from '../../../services/api';
+import { useAuth } from '../../../context/AuthContext';
 import '../../../styles/Table.css';
 
 const MaterialList = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const staffId = user?.id;
     const [materials, setMaterials] = useState([]);
     const [courses, setCourses] = useState([]);
     const [staffCourses, setStaffCourses] = useState([]);
     const [expandedIds, setExpandedIds] = useState(new Set());
     const [loading, setLoading] = useState(true);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
     useEffect(() => {
-        loadData();
-    }, []);
+        if (staffId) {
+            loadData();
+        }
+    }, [staffId]);
 
     const loadData = async () => {
         try {
             const [materialData, courseData, scData] = await Promise.all([
-                studyMaterialApi.getAll(),
+                studyMaterialApi.getByStaff(staffId),
                 courseApi.getAll(),
-                staffCourseApi.getAll()
+                staffCourseApi.getByStaff(staffId)
             ]);
             // Filter to only show parent materials (those without parent_id)
             const parentMaterials = materialData.filter(m => !m.parent_id);
@@ -64,14 +72,20 @@ const MaterialList = () => {
         setExpandedIds(newExpanded);
     };
 
-    const handleDelete = async (id) => {
-        if (confirm('Delete this material and all its sub-materials?')) {
-            try {
-                await studyMaterialApi.delete(id);
-                loadData();
-            } catch (error) {
-                console.error('Error deleting:', error);
-            }
+    const handleDeleteClick = (id) => {
+        setDeleteId(id);
+        setShowConfirm(true);
+    };
+
+    const confirmDelete = async () => {
+        try {
+            await studyMaterialApi.delete(deleteId);
+            loadData();
+        } catch (error) {
+            console.error('Error deleting:', error);
+        } finally {
+            setShowConfirm(false);
+            setDeleteId(null);
         }
     };
 
@@ -82,12 +96,15 @@ const MaterialList = () => {
                     {!isChild && mat.children && mat.children.length > 0 && (
                         <button
                             onClick={() => toggleExpand(mat.id)}
+                            aria-label={expandedIds.has(mat.id) ? `Collapse ${mat.title}` : `Expand ${mat.title}`}
+                            aria-expanded={expandedIds.has(mat.id)}
                             style={{
                                 background: 'none',
                                 border: 'none',
                                 cursor: 'pointer',
                                 color: '#8b5cf6',
-                                fontSize: '0.8rem'
+                                fontSize: '0.8rem',
+                                padding: '4px'
                             }}
                         >
                             {expandedIds.has(mat.id) ? '▼' : '▶'}
@@ -139,7 +156,7 @@ const MaterialList = () => {
                     </button>
                 )}
                 <button
-                    onClick={() => handleDelete(mat.id)}
+                    onClick={() => handleDeleteClick(mat.id)}
                     style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontWeight: 500 }}
                 >
                     Delete
@@ -180,6 +197,16 @@ const MaterialList = () => {
                     ))}
                 </tbody>
             </table>
+
+            <ConfirmDialog
+                isOpen={showConfirm}
+                title="Delete Material"
+                message="Delete this material and all its sub-materials? This action cannot be undone."
+                onConfirm={confirmDelete}
+                onCancel={() => setShowConfirm(false)}
+                confirmText="Delete"
+                confirmVariant="danger"
+            />
         </div>
     );
 };

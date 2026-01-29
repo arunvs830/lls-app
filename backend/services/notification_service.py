@@ -138,13 +138,14 @@ class NotificationService:
     
     @staticmethod
     def notify_assignment_submitted(submission):
-        """Notify student that their assignment was submitted successfully"""
+        """Notify student that their assignment was submitted successfully AND notify staff"""
         student = Student.query.get(submission.student_id)
         assignment = Assignment.query.get(submission.assignment_id)
         
         if not student or not assignment:
             return None
         
+        # 1. Notify Student
         title = "Assignment Submitted Successfully"
         message = f"""Dear {student.full_name},
 
@@ -204,12 +205,77 @@ LLS Team"""
             send_email=False  # We'll send HTML email manually
         )
         
-        # Send HTML email
+        # Send HTML email to student
         if student.email:
-            email_sent = NotificationService.send_email(student.email, title, message, html_message)
-            notification.email_sent = email_sent
+            NotificationService.send_email(student.email, title, message, html_message)
+            notification.email_sent = True
             db.session.commit()
-        
+
+        # 2. Notify Staff (if assigned)
+        if assignment.staff_id:
+            staff = Staff.query.get(assignment.staff_id)
+            if staff:
+                staff_title = f"New Submission: {assignment.title}"
+                staff_message = f"""Dear {staff.full_name},
+
+Student {student.full_name} ({student.student_code}) has submitted an assignment.
+
+Details:
+- Assignment: {assignment.title}
+- Student: {student.full_name}
+- Submitted At: {submission.submitted_at.strftime('%B %d, %Y at %I:%M %p')}
+
+Please review and grade the submission.
+
+Best regards,
+LLS Team"""
+
+                staff_html_message = f"""
+                <html>
+                <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                        <div style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 20px; border-radius: 10px 10px 0 0;">
+                            <h1 style="color: white; margin: 0;">📥 New Submission</h1>
+                        </div>
+                        <div style="background: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; border-radius: 0 0 10px 10px;">
+                            <p>Dear <strong>{staff.full_name}</strong>,</p>
+                            <p><strong>{student.full_name}</strong> ({student.student_code}) has submitted an assignment.</p>
+                            
+                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #3b82f6;">
+                                <h3 style="margin: 0 0 10px 0; color: #374151;">📝 {assignment.title}</h3>
+                                <p style="margin: 5px 0; color: #6b7280;">
+                                    <strong>Submitted:</strong> {submission.submitted_at.strftime('%B %d, %Y at %I:%M %p')}
+                                </p>
+                            </div>
+                            
+                            <p>Please review and grade the submission in your dashboard.</p>
+                            
+                            <p style="color: #6b7280; font-size: 14px; margin-top: 20px;">
+                                Best regards,<br>
+                                <strong>LLS Team</strong>
+                            </p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+                """
+
+                # Create notification for staff
+                NotificationService.create_notification(
+                    user_type='staff',
+                    user_id=staff.id,
+                    title=staff_title,
+                    message=staff_message,
+                    notification_type='assignment_submission_received',
+                    reference_type='submission',
+                    reference_id=submission.id,
+                    send_email=False
+                )
+
+                # Send email to staff
+                if staff.email:
+                    NotificationService.send_email(staff.email, staff_title, staff_message, staff_html_message)
+
         return notification
     
     @staticmethod

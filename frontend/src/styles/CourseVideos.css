@@ -1,0 +1,809 @@
+.course-videos-page {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 24px;
+    min-height: 100vh;
+}
+
+.cv-loading {
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+}
+
+/* Header */
+.cv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+}
+
+.cv-header-title-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cv-back-link {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0;
+    text-align: left;
+    transition: color 0.2s;
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cv-back-link:hover {
+    color: var(--secondary-hover);
+}
+
+.cv-page-title {
+    color: var(--text-main);
+    font-size: 2rem;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.cv-header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.cv-add-material-btn {
+    background-color: var(--secondary-color);
+    /* Was #6366F1 */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cv-add-material-btn:hover {
+    background-color: var(--secondary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+/* Main Layout */
+.cv-content-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 32px;
+    align-items: start;
+}
+
+.cv-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Player Card */
+.cv-player-container {
+    background-color: var(--bg-white);
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+}
+
+.cv-aspect-ratio-box {
+    position: relative;
+    padding-top: 56.25%;
+    /* 16:9 */
+    background-color: black;
+}
+
+.cv-iframe,
+.cv-iframe-fullscreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.cv-non-video-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--text-main) 0%, black 100%);
+}
+
+.cv-large-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 20px currentColor);
+}
+
+.cv-placeholder-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+    /* Warning: dark mode contrast? The bg is dark. */
+    /* Warning: dark mode contrast? The bg is dark. */
+    color: var(--bg-main);
+    /* Overriding to light for dark bg */
+    margin-bottom: 32px;
+}
+
+.cv-primary-btn {
+    padding: 14px 32px;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: transform 0.2s;
+    text-align: center;
+}
+
+.cv-primary-btn:hover {
+    transform: scale(1.05);
+}
+
+.cv-empty-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    background-color: var(--bg-main);
+}
+
+/* PPT Preview styles */
+.cv-ppt-preview-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-hover);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cv-slide-frame {
+    width: 60%;
+    aspect-ratio: 16/9;
+    background: var(--bg-white);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.cv-slide-mockup {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cv-slide-header {
+    height: 24px;
+    background: var(--bg-active);
+    border-bottom: 1px solid var(--border-hover);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+}
+
+.cv-slide-header-bar {
+    display: flex;
+    gap: 6px;
+}
+
+.cv-slide-window-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--error-color);
+}
+
+.cv-slide-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cv-slide-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.cv-slide-mockup-content {
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+}
+
+.cv-slide-icon {
+    font-size: 3rem;
+    margin-bottom: 8px;
+}
+
+.cv-slide-title-mock {
+    font-size: 1.2rem;
+    margin: 0 0 4px 0;
+    color: var(--text-main);
+}
+
+.cv-slide-sub-mock {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin: 0 0 16px 0;
+}
+
+.cv-slide-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    opacity: 0.3;
+}
+
+.cv-slide-bar {
+    height: 6px;
+    background: var(--text-secondary);
+    border-radius: 3px;
+}
+
+.cv-no-preview-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 12px;
+}
+
+.cv-ppt-actions {
+    margin-top: 10px;
+}
+
+.cv-ppt-download-btn {
+    background: var(--warning-color);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: transform 0.2s;
+}
+
+.cv-ppt-download-btn:hover {
+    transform: translateY(-2px);
+}
+
+
+/* Info Area */
+.cv-selection-info {
+    padding: 32px;
+}
+
+.cv-info-top-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.cv-status-tag {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid currentColor;
+}
+
+/* Material Type Modifiers */
+.cv-type-youtube {
+    --type-color: var(--error-color);
+}
+
+.cv-type-pdf {
+    --type-color: var(--secondary-color);
+}
+
+.cv-type-ppt {
+    --type-color: var(--warning-color);
+}
+
+.cv-type-video {
+    --type-color: var(--primary-color);
+}
+
+.cv-type-default {
+    --type-color: var(--secondary-color);
+}
+
+.cv-status-tag {
+    color: var(--type-color);
+    background-color: color-mix(in srgb, var(--type-color), transparent 90%);
+    border-color: color-mix(in srgb, var(--type-color), transparent 70%);
+}
+
+
+.cv-upload-time {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.cv-selected-title {
+    color: var(--text-main);
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.01em;
+}
+
+.cv-selected-desc {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 800px;
+}
+
+/* Related Materials */
+.cv-related-section {
+    margin-top: 8px;
+}
+
+.cv-section-heading {
+    color: var(--text-main);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cv-count-badge {
+    margin-left: 12px;
+    background-color: var(--bg-hover);
+    color: var(--text-secondary);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.cv-related-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.cv-attachment-card {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 20px;
+    transition: background-color 0.2s;
+}
+
+.cv-attachment-card:hover {
+    background-color: var(--bg-hover);
+}
+
+.cv-attachment-core {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.cv-attachment-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    flex-shrink: 0;
+    background-color: color-mix(in srgb, var(--type-color), transparent 90%);
+}
+
+.cv-attachment-meta {
+    flex: 1;
+}
+
+.cv-attachment-name {
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.cv-attachment-type {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--type-color);
+}
+
+.cv-action-btn-outline {
+    padding: 8px 20px;
+    border-radius: 10px;
+    border: 1px solid;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    color: var(--type-color);
+    border-color: color-mix(in srgb, var(--type-color), transparent 60%);
+}
+
+.cv-attachment-body {
+    margin-top: 16px;
+    padding-left: 76px;
+}
+
+.cv-attachment-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Assignments Section */
+.cv-assignment-section {
+    margin-top: 2rem;
+}
+
+.cv-assignment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.cv-add-btn {
+    background: none;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+.cv-add-btn:hover {
+    background: var(--primary-light);
+}
+
+.cv-empty-assignments {
+    padding: 32px;
+    text-align: center;
+    background: var(--bg-hover);
+    border-radius: 12px;
+    color: var(--text-secondary);
+}
+
+.cv-assignment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cv-assignment-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+}
+
+.cv-assignment-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.cv-assignment-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.cv-assignment-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+
+.cv-assignment-meta {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 16px;
+}
+
+.cv-view-submissions-btn {
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.cv-view-submissions-btn:hover {
+    background: var(--secondary-hover);
+}
+
+.cv-assignment-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.cv-download-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.cv-download-link:hover {
+    text-decoration: underline;
+}
+
+/* Quiz Section */
+.cv-quiz-section {
+    margin-top: 32px;
+    background: linear-gradient(to right, var(--bg-white), var(--bg-main));
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+}
+
+.cv-quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.cv-quiz-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.cv-quiz-info-text {
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 600px;
+}
+
+.cv-view-questions-btn {
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.cv-view-questions-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Sidebar */
+.cv-sidebar {
+    position: sticky;
+    top: 24px;
+    height: calc(100vh - 48px);
+}
+
+.cv-sidebar-frame {
+    background-color: var(--bg-white);
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.cv-sidebar-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-main);
+}
+
+.cv-sidebar-title {
+    color: var(--text-main);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.cv-sidebar-stats {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cv-scrollable-list {
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.cv-empty-sidebar {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.cv-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    cursor: pointer;
+    margin-bottom: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    background: transparent;
+}
+
+.cv-nav-item:hover {
+    background-color: var(--bg-hover);
+}
+
+.cv-nav-item.active {
+    background-color: var(--secondary-color);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+}
+
+.cv-nav-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    background-color: color-mix(in srgb, var(--type-color), transparent 90%);
+    color: var(--type-color);
+}
+
+.cv-nav-item.active .cv-nav-icon {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.cv-nav-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.cv-nav-label {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-main);
+}
+
+.cv-nav-item.active .cv-nav-label {
+    color: white;
+}
+
+.cv-nav-sub {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cv-nav-item.active .cv-nav-sub {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.cv-inline-count {
+    color: var(--secondary-color);
+}
+
+.cv-nav-item.active .cv-inline-count {
+    color: white;
+}
+
+.cv-nav-delete {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 4px;
+    opacity: 0;
+    transition: opacity 0.2s, color 0.2s;
+}
+
+.cv-nav-item:hover .cv-nav-delete {
+    opacity: 1;
+}
+
+.cv-nav-delete:hover {
+    color: var(--error-color);
+}
+
+@media (max-width: 1024px) {
+    .cv-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cv-sidebar {
+        position: static;
+        height: auto;
+        max-height: 500px;
+    }
+}

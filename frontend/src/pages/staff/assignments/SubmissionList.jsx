@@ -17,7 +17,9 @@ const SubmissionList = () => {
 
     const [courses, setCourses] = useState([]);
     const [selectedCourseId, setSelectedCourseId] = useState('');
-    const [scope, setScope] = useState('assignment'); // 'assignment' | 'course'
+    // If we are in dashboard mode (no assignmentId), default to 'course' scope to show filtered logic correctly
+    const [scope, setScope] = useState(assignmentId ? 'assignment' : 'course');
+    const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'evaluated', 'pending'
 
     const staffId = Number(localStorage.getItem('userId') || 1);
 
@@ -29,11 +31,19 @@ const SubmissionList = () => {
         try {
             setLoading(true);
 
-            const [assignmentData, allocations, allCourses] = await Promise.all([
-                assignmentApi.getOne(assignmentId),
+            // If we have an assignmentId, fetch it. Otherwise just courses.
+            const promises = [
                 staffCourseApi.getAll(),
                 courseApi.getAll()
-            ]);
+            ];
+            if (assignmentId) {
+                promises.unshift(assignmentApi.getOne(assignmentId));
+            }
+
+            const results = await Promise.all(promises);
+            const assignmentData = assignmentId ? results[0] : null;
+            const allocations = assignmentId ? results[1] : results[0];
+            const allCourses = assignmentId ? results[2] : results[1];
 
             // Courses this staff is assigned to
             const myCourseIds = allocations
@@ -53,12 +63,24 @@ const SubmissionList = () => {
                 setSelectedCourseId(String(assignmentCourseId));
             }
 
-            // Default scope: show this assignment's submissions
-            if (scope === 'assignment') {
+            // Determine data fetching strategy
+            // If explicit assignmentId, start with 'assignment' scope mostly, but logic below handles it
+
+            // If dashboard mode (no assignmentId), force course scope or all staff submissions
+            let currentScope = scope;
+            if (!assignmentId && currentScope === 'assignment') {
+                // Fallback if component mounted in dashboard mode with default 'assignment' state 
+                // but we really want to see all or course-filtered
+                currentScope = 'course';
+                setScope('course');
+            }
+
+            if (currentScope === 'assignment' && assignmentId) {
                 const submissionData = await submissionApi.getAll(assignmentId);
                 setSubmissions(submissionData);
             } else {
-                const courseId = Number(selectedCourseId || assignmentCourseId);
+                // Course scope or All (if course selected or not)
+                const courseId = Number(selectedCourseId || assignmentCourseId || 0); // 0 means all
                 const submissionData = courseId
                     ? await submissionApi.getForStaffCourse(staffId, courseId)
                     : await submissionApi.getForStaff(staffId);
@@ -106,31 +128,46 @@ const SubmissionList = () => {
         }
     };
 
+    const getFilteredSubmissions = () => {
+        if (statusFilter === 'all') return submissions;
+        return submissions.filter(s => {
+            if (statusFilter === 'evaluated') return s.status === 'evaluated';
+            if (statusFilter === 'pending') return s.status !== 'evaluated';
+            return true;
+        });
+    };
+
     if (loading) return <div className="card"><p>Loading submissions...</p></div>;
+
+    const displayedSubmissions = getFilteredSubmissions();
 
     return (
         <div className="card">
             <div className="page-header" style={{ display: 'block' }}>
-                <button onClick={() => navigate('/staff/assignments')} style={{ background: 'none', border: 'none', color: '#8b5cf6', cursor: 'pointer', marginBottom: '0.5rem' }}>
-                    ← Back to Assignments
-                </button>
+                {assignmentId && (
+                    <button onClick={() => navigate('/staff/assignments')} style={{ background: 'none', border: 'none', color: '#8b5cf6', cursor: 'pointer', marginBottom: '0.5rem' }}>
+                        ← Back to Assignments
+                    </button>
+                )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h2>Submissions: {assignment?.title}</h2>
-                    <span style={{ fontSize: '1.2rem', fontWeight: 600 }}>Total: {submissions.length}</span>
+                    <h2>{assignment ? `Submissions: ${assignment.title}` : 'All Submissions'}</h2>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 600 }}>Total: {displayedSubmissions.length}</span>
                 </div>
 
                 <div style={{ display: 'flex', gap: '12px', marginTop: '12px', flexWrap: 'wrap' }}>
-                    <div>
-                        <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>Scope</label>
-                        <select
-                            value={scope}
-                            onChange={(e) => setScope(e.target.value)}
-                            style={{ background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '8px 10px', borderRadius: '8px' }}
-                        >
-                            <option value="assignment">This assignment</option>
-                            <option value="course">All assignments in course</option>
-                        </select>
-                    </div>
+                    {assignmentId && (
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>Scope</label>
+                            <select
+                                value={scope}
+                                onChange={(e) => setScope(e.target.value)}
+                                style={{ background: 'white', border: '1px solid #e5e7eb', color: '#1f2937', padding: '8px 10px', borderRadius: '8px' }}
+                            >
+                                <option value="assignment">This assignment</option>
+                                <option value="course">All assignments in course</option>
+                            </select>
+                        </div>
+                    )}
 
                     <div>
                         <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>Course</label>
@@ -138,12 +175,25 @@ const SubmissionList = () => {
                             value={selectedCourseId}
                             onChange={(e) => setSelectedCourseId(e.target.value)}
                             disabled={scope !== 'course'}
-                            style={{ background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '8px 10px', borderRadius: '8px', minWidth: '260px', opacity: scope === 'course' ? 1 : 0.6 }}
+                            style={{ background: 'white', border: '1px solid #e5e7eb', color: '#1f2937', padding: '8px 10px', borderRadius: '8px', minWidth: '260px', opacity: scope === 'course' ? 1 : 0.6 }}
                         >
                             <option value="">All my courses</option>
                             {courses.map(c => (
                                 <option key={c.id} value={String(c.id)}>{c.course_code} - {c.course_name}</option>
                             ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>Status</label>
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            style={{ background: 'white', border: '1px solid #e5e7eb', color: '#1f2937', padding: '8px 10px', borderRadius: '8px' }}
+                        >
+                            <option value="all">All</option>
+                            <option value="pending">Pending Grading</option>
+                            <option value="evaluated">Graded</option>
                         </select>
                     </div>
                 </div>
@@ -153,7 +203,7 @@ const SubmissionList = () => {
                 <thead>
                     <tr>
                         <th>Student</th>
-                        {scope === 'course' && <th>Assignment</th>}
+                        {(scope === 'course' || !assignmentId) && <th>Assignment</th>}
                         <th>Submitted At</th>
                         <th>Work</th>
                         <th>Status</th>
@@ -162,9 +212,9 @@ const SubmissionList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {submissions.length === 0 ? (
-                        <tr><td colSpan={scope === 'course' ? 7 : 6} style={{ textAlign: 'center' }}>No submissions received yet</td></tr>
-                    ) : submissions.map((s) => (
+                    {displayedSubmissions.length === 0 ? (
+                        <tr><td colSpan={(scope === 'course' || !assignmentId) ? 7 : 6} style={{ textAlign: 'center' }}>No submissions found</td></tr>
+                    ) : displayedSubmissions.map((s) => (
                         <tr key={s.id}>
                             <td>
                                 {s.student?.full_name || `Student #${s.student_id}`}
@@ -172,7 +222,7 @@ const SubmissionList = () => {
                                     <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{s.student.student_code}</div>
                                 ) : null}
                             </td>
-                            {scope === 'course' && (
+                            {(scope === 'course' || !assignmentId) && (
                                 <td>{s.assignment?.title || '-'}</td>
                             )}
                             <td>{new Date(s.submitted_at).toLocaleString()}</td>

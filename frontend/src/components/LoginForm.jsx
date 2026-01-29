@@ -3,7 +3,12 @@ import InputField from './InputField';
 import Button from './Button';
 import { authApi } from '../services/api';
 
+import { useAuth } from '../context/AuthContext';
+
+// ... existing imports ...
+
 const LoginForm = ({ onLogin }) => {
+    const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('admin');
@@ -19,12 +24,8 @@ const LoginForm = ({ onLogin }) => {
             const response = await authApi.login(email, password, role);
 
             if (response.success) {
-                // Store user data in localStorage
-                localStorage.setItem('user', JSON.stringify(response.user));
-                localStorage.setItem('userId', response.user.id);
-                localStorage.setItem('role', response.user.role);
-                localStorage.setItem('email', response.user.email);
-                localStorage.setItem('isLoggedIn', 'true');
+                // Use global auth context
+                login(response.user, response.access_token || response.token || 'session-token');
 
                 if (onLogin) {
                     onLogin(response.user);
@@ -121,7 +122,14 @@ const LoginForm = ({ onLogin }) => {
             </div>
 
             <div className="form-footer">
-                <button type="button" className="forgot-password" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>Forgot password?</button>
+                <button
+                    type="button"
+                    className="forgot-password"
+                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                    onClick={() => alert('Password reset functionality is not yet implemented.')}
+                >
+                    Forgot password?
+                </button>
             </div>
         </form>
     );

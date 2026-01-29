@@ -24,7 +24,7 @@ class TestSecurity(BaseTestCase):
         
         for payload in payloads:
             response = self.client.post('/api/auth/login', json={
-                'username': payload,
+                'email': payload,
                 'password': 'password123',
                 'role': 'admin'
             })
@@ -84,7 +84,7 @@ class TestSecurity(BaseTestCase):
         # Try 10 rapid failed login attempts
         for _ in range(10):
             response = self.client.post('/api/auth/login', json={
-                'username': 'admin',
+                'email': 'admin@test.com',
                 'password': 'wrongpassword',
                 'role': 'admin'
             })
@@ -93,7 +93,7 @@ class TestSecurity(BaseTestCase):
         # The 11th attempt with CORRECT password should still work
         # (If rate limiting existed, this might fail or be delayed)
         response = self.client.post('/api/auth/login', json={
-            'username': 'admin',
+            'email': 'admin@test.com',
             'password': 'password123',
             'role': 'admin'
         })
@@ -110,7 +110,7 @@ class TestSecurity(BaseTestCase):
         This confirms the system relies on client-side state only (Vulnerable).
         """
         response = self.client.post('/api/auth/login', json={
-            'username': 'admin',
+            'email': 'admin@test.com',
             'password': 'password123',
             'role': 'admin'
         })
@@ -181,7 +181,7 @@ class TestSecurity(BaseTestCase):
         """
         # Login
         response = self.client.post('/api/auth/login', json={
-            'username': 'admin',
+            'email': 'admin@test.com',
             'password': 'password123',
             'role': 'admin'
         })

@@ -23,7 +23,7 @@ const StudentAssignmentList = () => {
             // Ideally we'd fetch assignments for courses the student is enrolled in
             // For now, let's fetch all and filter or just show all available
             const [assignmentData, submissionData] = await Promise.all([
-                assignmentApi.getAll(),
+                assignmentApi.getByStudent(studentId),
                 submissionApi.getByStudent(studentId)
             ]);
 
@@ -100,13 +100,18 @@ const StudentAssignmentList = () => {
                                 </td>
                                 <td>
                                     {!submission ? (
-                                        <Button
-                                            size="small"
-                                            onClick={() => navigate(`/student/assignments/submit/${a.id}`)}
-                                            disabled={isOverdue}
-                                        >
-                                            Submit
-                                        </Button>
+                                        isOverdue ? (
+                                            <span style={{ color: '#ef4444', fontWeight: 500, fontSize: '0.9rem' }}>
+                                                Deadline Missed
+                                            </span>
+                                        ) : (
+                                            <Button
+                                                size="small"
+                                                onClick={() => navigate(`/student/assignments/submit/${a.id}`)}
+                                            >
+                                                Submit
+                                            </Button>
+                                        )
                                     ) : (
                                         <button
                                             className="btn-secondary"

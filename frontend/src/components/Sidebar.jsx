@@ -10,19 +10,23 @@ import {
     UserCircle,
     ClipboardList,
     Award,
+    BarChart3,
+    PieChart,
     LogOut,
     Menu,
     X
 } from 'lucide-react';
 import '../styles/Sidebar.css';
 
+import { useAuth } from '../context/AuthContext';
+
 const Sidebar = () => {
     const navigate = useNavigate();
+    const { logout } = useAuth();
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userRole');
+        logout();
         navigate('/');
     };
 
@@ -88,6 +92,14 @@ const Sidebar = () => {
                     <NavLink to="/admin/certificates" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={closeMobileMenu}>
                         <Award className="nav-icon" size={20} />
                         Certificates
+                    </NavLink>
+                    <NavLink to="/admin/staff-report" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={closeMobileMenu}>
+                        <BarChart3 className="nav-icon" size={20} />
+                        Staff Report
+                    </NavLink>
+                    <NavLink to="/admin/course-report" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={closeMobileMenu}>
+                        <PieChart className="nav-icon" size={20} />
+                        Course Report
                     </NavLink>
                 </nav>
                 <div className="sidebar-footer">

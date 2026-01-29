@@ -8,7 +8,7 @@ const CertificateDesigner = () => {
     const navigate = useNavigate();
     const canvasRef = useRef(null);
     const fabricCanvasRef = useRef(null);
-    
+
     const [layoutName, setLayoutName] = useState('');
     const [selectedProgram, setSelectedProgram] = useState('');
     const [programs, setPrograms] = useState([]);
@@ -16,7 +16,7 @@ const CertificateDesigner = () => {
     const [selectedElement, setSelectedElement] = useState(null);
     const [templates, setTemplates] = useState([]);
     const [showTemplates, setShowTemplates] = useState(false);
-    
+
     // Text properties
     const [textContent, setTextContent] = useState('');
     const [fontSize, setFontSize] = useState(24);
@@ -24,24 +24,63 @@ const CertificateDesigner = () => {
     const [fontColor, setFontColor] = useState('#000000');
     const [fontWeight, setFontWeight] = useState('normal');
     const [fontStyle, setFontStyle] = useState('normal');
-    
-    useEffect(() => {
-        loadPrograms();
-        loadTemplates();
-        initCanvas();
-        
-        return () => {
-            if (fabricCanvasRef.current) {
-                fabricCanvasRef.current.dispose();
-            }
-        };
-    }, []);
 
-    useEffect(() => {
-        if (id) {
-            loadLayout(id);
+    // --- Helper Functions ---
+
+    const loadBackgroundImage = (url) => {
+        if (!url || !fabricCanvasRef.current) return;
+
+        // Handle data URLs or regular URLs
+        fabric.Image.fromURL(url, (img) => {
+            if (!img) return;
+
+            // scale to fit canvas width (assuming standard width)
+            img.scaleToWidth(1000);
+
+            // If image is too tall, scale to height maybe? 
+            // For now, mirroring logic from handleBackgroundUpload roughly
+
+            fabricCanvasRef.current.setBackgroundImage(img, fabricCanvasRef.current.renderAll.bind(fabricCanvasRef.current), {
+                originX: 'left',
+                originY: 'top',
+            });
+        }, { crossOrigin: 'anonymous' });
+    };
+
+    const updateElementProperties = () => {
+        if (fabricCanvasRef.current) {
+            fabricCanvasRef.current.renderAll();
         }
-    }, [id]);
+    };
+
+    const handleSelection = (e) => {
+        const obj = e.selected[0];
+        setSelectedElement(obj);
+
+        if (obj.type === 'i-text' || obj.type === 'text') {
+            setTextContent(obj.text);
+            setFontSize(obj.fontSize);
+            setFontFamily(obj.fontFamily);
+            setFontColor(obj.fill);
+            setFontWeight(obj.fontWeight);
+            setFontStyle(obj.fontStyle);
+        }
+    };
+
+    const initCanvas = () => {
+        const canvas = new fabric.Canvas(canvasRef.current, {
+            width: 1000,
+            height: 700,
+            backgroundColor: '#ffffff',
+        });
+
+        fabricCanvasRef.current = canvas;
+
+        canvas.on('selection:created', handleSelection);
+        canvas.on('selection:updated', handleSelection);
+        canvas.on('selection:cleared', () => setSelectedElement(null));
+        canvas.on('object:modified', updateElementProperties);
+    };
 
     const loadPrograms = async () => {
         try {
@@ -63,41 +102,22 @@ const CertificateDesigner = () => {
         }
     };
 
-    const loadTemplate = (template) => {
-        if (window.confirm(`Load template "${template.layout_name}"? This will replace your current design.`)) {
-            setLayoutName(template.layout_name + ' (Copy)');
-            
-            if (template.template_content) {
-                const templateData = JSON.parse(template.template_content);
-                fabricCanvasRef.current.loadFromJSON(templateData, () => {
-                    fabricCanvasRef.current.renderAll();
-                });
-            }
-            
-            if (template.background_image) {
-                loadBackgroundImage(template.background_image);
-            }
-            
-            setShowTemplates(false);
-        }
-    };
-
     const loadLayout = async (layoutId) => {
         try {
             const response = await fetch(`/api/certificate-layouts/${layoutId}`);
             const data = await response.json();
-            
+
             setLayoutName(data.layout_name);
             setSelectedProgram(data.program_id);
             setIsDefault(data.is_default);
-            
+
             if (data.template_content) {
                 const templateData = JSON.parse(data.template_content);
                 fabricCanvasRef.current.loadFromJSON(templateData, () => {
                     fabricCanvasRef.current.renderAll();
                 });
             }
-            
+
             if (data.background_image) {
                 loadBackgroundImage(data.background_image);
             }
@@ -106,42 +126,53 @@ const CertificateDesigner = () => {
         }
     };
 
-    const initCanvas = () => {
-        const canvas = new fabric.Canvas(canvasRef.current, {
-            width: 1000,
-            height: 700,
-            backgroundColor: '#ffffff',
-        });
+    const loadTemplate = (template) => {
+        if (window.confirm(`Load template "${template.layout_name}"? This will replace your current design.`)) {
+            setLayoutName(template.layout_name + ' (Copy)');
 
-        fabricCanvasRef.current = canvas;
+            if (template.template_content) {
+                const templateData = JSON.parse(template.template_content);
+                fabricCanvasRef.current.loadFromJSON(templateData, () => {
+                    fabricCanvasRef.current.renderAll();
+                });
+            }
 
-        canvas.on('selection:created', handleSelection);
-        canvas.on('selection:updated', handleSelection);
-        canvas.on('selection:cleared', () => setSelectedElement(null));
-        canvas.on('object:modified', updateElementProperties);
-    };
+            if (template.background_image) {
+                loadBackgroundImage(template.background_image);
+            }
 
-    const handleSelection = (e) => {
-        const obj = e.selected[0];
-        setSelectedElement(obj);
-        
-        if (obj.type === 'i-text' || obj.type === 'text') {
-            setTextContent(obj.text);
-            setFontSize(obj.fontSize);
-            setFontFamily(obj.fontFamily);
-            setFontColor(obj.fill);
-            setFontWeight(obj.fontWeight);
-            setFontStyle(obj.fontStyle);
+            setShowTemplates(false);
         }
     };
 
-    const updateElementProperties = () => {
-        fabricCanvasRef.current.renderAll();
-    };
+    // --- Effects ---
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        loadPrograms();
+        loadTemplates();
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        initCanvas();
+
+        return () => {
+            if (fabricCanvasRef.current) {
+                fabricCanvasRef.current.dispose();
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        if (id) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            loadLayout(id);
+        }
+    }, [id]);
+
+    // --- Action Functions ---
 
     const addText = (type = 'normal') => {
         let text;
-        
+
         const options = {
             left: 100,
             top: 100,
@@ -199,7 +230,7 @@ const CertificateDesigner = () => {
 
     const addShape = (type) => {
         let shape;
-        
+
         switch (type) {
             case 'rectangle':
                 shape = new fabric.Rect({
@@ -273,20 +304,6 @@ const CertificateDesigner = () => {
         reader.readAsDataURL(file);
     };
 
-    const updateTextProperties = () => {
-        if (selectedElement && (selectedElement.type === 'i-text' || selectedElement.type === 'text')) {
-            selectedElement.set({
-                text: textContent,
-                fontSize: parseInt(fontSize),
-                fontFamily: fontFamily,
-                fill: fontColor,
-                fontWeight: fontWeight,
-                fontStyle: fontStyle,
-            });
-            fabricCanvasRef.current.renderAll();
-        }
-    };
-
     const deleteSelected = () => {
         const activeObjects = fabricCanvasRef.current.getActiveObjects();
         if (activeObjects.length) {
@@ -327,7 +344,7 @@ const CertificateDesigner = () => {
         }
 
         const templateContent = JSON.stringify(fabricCanvasRef.current.toJSON());
-        const backgroundImage = fabricCanvasRef.current.backgroundImage ? 
+        const backgroundImage = fabricCanvasRef.current.backgroundImage ?
             fabricCanvasRef.current.backgroundImage.getSrc() : null;
 
         const data = {
@@ -382,8 +399,8 @@ const CertificateDesigner = () => {
                     <h3>Choose a Template</h3>
                     <div className="template-grid">
                         {templates.map(template => (
-                            <div 
-                                key={template.id} 
+                            <div
+                                key={template.id}
                                 className="template-card"
                                 onClick={() => loadTemplate(template)}
                             >
@@ -444,18 +461,18 @@ const CertificateDesigner = () => {
                         <h4>Images</h4>
                         <label className="tool-btn">
                             🖼️ Background
-                            <input 
-                                type="file" 
-                                accept="image/*" 
+                            <input
+                                type="file"
+                                accept="image/*"
                                 onChange={handleBackgroundUpload}
                                 style={{ display: 'none' }}
                             />
                         </label>
                         <label className="tool-btn">
                             🖼️ Logo/Image
-                            <input 
-                                type="file" 
-                                accept="image/*" 
+                            <input
+                                type="file"
+                                accept="image/*"
                                 onChange={handleImageUpload}
                                 style={{ display: 'none' }}
                             />
@@ -492,8 +509,8 @@ const CertificateDesigner = () => {
                         <h4>Layout Settings</h4>
                         <div className="form-group">
                             <label>Layout Name</label>
-                            <input 
-                                type="text" 
+                            <input
+                                type="text"
                                 value={layoutName}
                                 onChange={(e) => setLayoutName(e.target.value)}
                                 placeholder="Enter layout name"
@@ -501,7 +518,7 @@ const CertificateDesigner = () => {
                         </div>
                         <div className="form-group">
                             <label>Program</label>
-                            <select 
+                            <select
                                 value={selectedProgram}
                                 onChange={(e) => setSelectedProgram(e.target.value)}
                             >
@@ -515,8 +532,8 @@ const CertificateDesigner = () => {
                         </div>
                         <div className="form-group">
                             <label>
-                                <input 
-                                    type="checkbox" 
+                                <input
+                                    type="checkbox"
                                     checked={isDefault}
                                     onChange={(e) => setIsDefault(e.target.checked)}
                                 />
@@ -530,8 +547,8 @@ const CertificateDesigner = () => {
                             <h4>Text Properties</h4>
                             <div className="form-group">
                                 <label>Text Content</label>
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     value={textContent}
                                     onChange={(e) => {
                                         setTextContent(e.target.value);
@@ -542,7 +559,7 @@ const CertificateDesigner = () => {
                             </div>
                             <div className="form-group">
                                 <label>Font Family</label>
-                                <select 
+                                <select
                                     value={fontFamily}
                                     onChange={(e) => {
                                         setFontFamily(e.target.value);
@@ -560,8 +577,8 @@ const CertificateDesigner = () => {
                             </div>
                             <div className="form-group">
                                 <label>Font Size</label>
-                                <input 
-                                    type="number" 
+                                <input
+                                    type="number"
                                     value={fontSize}
                                     onChange={(e) => {
                                         setFontSize(e.target.value);
@@ -574,8 +591,8 @@ const CertificateDesigner = () => {
                             </div>
                             <div className="form-group">
                                 <label>Color</label>
-                                <input 
-                                    type="color" 
+                                <input
+                                    type="color"
                                     value={fontColor}
                                     onChange={(e) => {
                                         setFontColor(e.target.value);
@@ -587,7 +604,7 @@ const CertificateDesigner = () => {
                             <div className="form-group">
                                 <label>Style</label>
                                 <div className="button-group">
-                                    <button 
+                                    <button
                                         className={`style-btn ${fontWeight === 'bold' ? 'active' : ''}`}
                                         onClick={() => {
                                             const newWeight = fontWeight === 'bold' ? 'normal' : 'bold';
@@ -598,7 +615,7 @@ const CertificateDesigner = () => {
                                     >
                                         <strong>B</strong>
                                     </button>
-                                    <button 
+                                    <button
                                         className={`style-btn ${fontStyle === 'italic' ? 'active' : ''}`}
                                         onClick={() => {
                                             const newStyle = fontStyle === 'italic' ? 'normal' : 'italic';

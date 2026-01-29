@@ -3,21 +3,26 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/Button';
 import { assignmentApi, courseApi } from '../../../services/api';
+import { useAuth } from '../../../context/AuthContext';
 import '../../../styles/Table.css';
 
 const AssignmentList = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const staffId = user?.id;
     const [assignments, setAssignments] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadData();
-    }, []);
+        if (staffId) {
+            loadData();
+        }
+    }, [staffId]);
 
     const loadData = async () => {
         try {
             const [assignmentData, courseData] = await Promise.all([
-                assignmentApi.getAll(),
+                assignmentApi.getByStaff(staffId),
                 courseApi.getAll()
             ]);
 

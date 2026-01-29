@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import db, Communication, Student, Staff
+from models import db, Communication, Student, Staff, Notification
 from datetime import datetime
 
 communication_bp = Blueprint('communication', __name__)
@@ -19,6 +19,10 @@ def send_message():
         valid_types = ['student', 'staff', 'admin']
         if data['sender_type'] not in valid_types or data['receiver_type'] not in valid_types:
             return jsonify({'error': 'Invalid sender or receiver type'}), 400
+            
+        # Permission Check: Students can ONLY send to Staff
+        if data['sender_type'] == 'student' and data['receiver_type'] != 'staff':
+            return jsonify({'error': 'Students can only send messages to staff members'}), 403
         
         communication = Communication(
             sender_type=data['sender_type'],
@@ -31,6 +35,35 @@ def send_message():
         )
         
         db.session.add(communication)
+        db.session.flush() # Get ID
+
+        # Create Notification for receiver
+        # Resolve sender name for notification title? 
+        # For simplicity, we'll use a generic title or partial info, 
+        # as getting the full name requires a query which we can do if needed.
+        # But let's try to do it properly.
+        
+        sender_name = "Someone"
+        if data['sender_type'] == 'student':
+            s = Student.query.get(data['sender_id'])
+            if s: sender_name = s.full_name
+        elif data['sender_type'] == 'staff':
+            s = Staff.query.get(data['sender_id'])
+            if s: sender_name = s.full_name
+        elif data['sender_type'] == 'admin':
+            sender_name = "Administrator"
+
+        notification = Notification(
+            user_type=data['receiver_type'],
+            user_id=data['receiver_id'],
+            title=f"New Message from {sender_name}",
+            message=f"Subject: {data.get('subject', '(No Subject)')}",
+            notification_type='message',
+            reference_type='message',
+            reference_id=communication.id
+        )
+        db.session.add(notification)
+        
         db.session.commit()
         
         return jsonify({

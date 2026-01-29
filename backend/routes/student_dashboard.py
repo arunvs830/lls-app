@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify
-from models import db, Student, Course, StaffCourse, StudyMaterial, Assignment, Submission, Result, MCQ
+from models import db, Student, Course, StudentCourse, StaffCourse, StudyMaterial, Assignment, Submission, Result, MCQ
+from datetime import datetime, timezone
 
 student_dashboard_bp = Blueprint('student_dashboard', __name__)
 
@@ -27,9 +28,10 @@ def get_dashboard(student_id):
     student = Student.query.get_or_404(student_id)
     
     # Get courses for student's program and semester
-    courses = Course.query.filter_by(
-        program_id=student.program_id,
-        semester_id=student.semester_id
+    # Get enrolled courses
+    courses = Course.query.join(StudentCourse).filter(
+        StudentCourse.student_id == student_id,
+        StudentCourse.status == 'active'
     ).all()
     
     # Get all assignments for these courses
@@ -41,8 +43,26 @@ def get_dashboard(student_id):
     submitted_assignment_ids = [s.assignment_id for s in submissions]
     
     # Calculate pending vs completed
-    pending = [a for a in assignments if a.id not in submitted_assignment_ids]
+    pending = [a for a in assignments if a.id not in submitted_assignment_ids and a.due_date]
     
+    # Sort pending by due_date
+    pending.sort(key=lambda x: x.due_date)
+
+    # Filter for strictly upcoming assignments (future due date)
+    now = datetime.utcnow()
+    upcoming_pending = [a for a in pending if a.due_date and a.due_date.replace(tzinfo=None) > now]
+    
+    # Serialize upcoming assignments (next 5)
+    upcoming_data = []
+    for a in upcoming_pending[:5]:
+        upcoming_data.append({
+            'id': a.id,
+            'title': a.title,
+            'due_date': a.due_date.isoformat() if a.due_date else None,
+            'course_name': a.course.course_name if a.course else 'Unknown Course',
+            'course_id': a.course_id
+        })
+
     return jsonify({
         'student': {
             'id': student.id,
@@ -53,10 +73,11 @@ def get_dashboard(student_id):
         },
         'stats': {
             'enrolled_courses': len(courses),
-            'pending_assignments': len(pending),
+            'pending_assignments': len(upcoming_pending),
             'completed_assignments': len(submissions),
             'total_assignments': len(assignments)
-        }
+        },
+        'upcoming_assignments': upcoming_data
     })
 
 @student_dashboard_bp.route('/api/student/<int:student_id>/courses', methods=['GET'])
@@ -65,9 +86,10 @@ def get_courses(student_id):
     student = Student.query.get_or_404(student_id)
     
     # Get courses for student's program and semester
-    courses = Course.query.filter_by(
-        program_id=student.program_id,
-        semester_id=student.semester_id
+    # Get enrolled courses
+    courses = Course.query.join(StudentCourse).filter(
+        StudentCourse.student_id == student_id,
+        StudentCourse.status == 'active'
     ).all()
     
     result = []

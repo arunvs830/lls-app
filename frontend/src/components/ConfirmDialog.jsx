@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/ConfirmDialog.css';
 
 /**
  * ConfirmDialog - A reusable modal component to replace window.confirm()
@@ -40,124 +41,57 @@ const ConfirmDialog = ({
 }) => {
     if (!isOpen) return null;
 
-    const variantStyles = {
-        primary: {
-            background: 'linear-gradient(135deg, #14BF96, #0D8B6B)',
-            hoverBg: '#10A37E',
-        },
-        danger: {
-            background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-            hoverBg: '#dc2626',
-        },
-        warning: {
-            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-            hoverBg: '#d97706',
-        },
+    const getVariantClass = () => {
+        switch (confirmVariant) {
+            case 'danger': return 'btn-danger';
+            case 'warning': return 'btn-warning'; // Assuming you might have this or use primary
+            default: return 'btn-primary';
+        }
     };
 
-    const variant = variantStyles[confirmVariant] || variantStyles.primary;
-
     return (
-        <>
-            {/* Overlay */}
+        <div className="modal-overlay" onClick={onCancel} aria-hidden="true">
             <div
-                style={styles.overlay}
-                onClick={onCancel}
-                aria-hidden="true"
-            />
-
-            {/* Dialog */}
-            <div
+                className="modal-content"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="confirm-dialog-title"
                 aria-describedby="confirm-dialog-message"
-                style={styles.dialog}
+                onClick={e => e.stopPropagation()}
+                style={{ maxWidth: '400px' }}
             >
-                <h2 id="confirm-dialog-title" style={styles.title}>
-                    {title}
-                </h2>
-                <p id="confirm-dialog-message" style={styles.message}>
-                    {message}
-                </p>
-                <div style={styles.actions}>
+                <div className="modal-header">
+                    <h3 id="confirm-dialog-title">{title}</h3>
+                    <button className="modal-close" onClick={onCancel} aria-label="Close">
+                        &times;
+                    </button>
+                </div>
+
+                <div className="modal-body">
+                    <p id="confirm-dialog-message" style={{ color: 'var(--text-secondary)' }}>
+                        {message}
+                    </p>
+                </div>
+
+                <div className="modal-footer">
                     <button
                         type="button"
+                        className="btn btn-secondary"
                         onClick={onCancel}
-                        style={styles.cancelBtn}
                     >
                         {cancelText}
                     </button>
                     <button
                         type="button"
+                        className={`btn ${getVariantClass()}`}
                         onClick={onConfirm}
-                        style={{
-                            ...styles.confirmBtn,
-                            background: variant.background,
-                        }}
                     >
                         {confirmText}
                     </button>
                 </div>
             </div>
-        </>
+        </div>
     );
-};
-
-const styles = {
-    overlay: {
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(0, 0, 0, 0.5)',
-        backdropFilter: 'blur(4px)',
-        zIndex: 1000,
-    },
-    dialog: {
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        background: '#FFFFFF',
-        borderRadius: '16px',
-        padding: '24px',
-        maxWidth: '400px',
-        width: '90%',
-        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3)',
-        zIndex: 1001,
-    },
-    title: {
-        margin: '0 0 12px 0',
-        fontSize: '1.25rem',
-        fontWeight: '600',
-        color: '#21272A',
-    },
-    message: {
-        margin: '0 0 24px 0',
-        color: '#5C6873',
-        lineHeight: '1.5',
-    },
-    actions: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        gap: '12px',
-    },
-    cancelBtn: {
-        padding: '10px 20px',
-        borderRadius: '8px',
-        border: '1px solid #E3E5E8',
-        background: '#F5F7FA',
-        color: '#21272A',
-        cursor: 'pointer',
-        fontWeight: '500',
-    },
-    confirmBtn: {
-        padding: '10px 20px',
-        borderRadius: '8px',
-        border: 'none',
-        color: 'white',
-        cursor: 'pointer',
-        fontWeight: '600',
-    },
 };
 
 export default ConfirmDialog;

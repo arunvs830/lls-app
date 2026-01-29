@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/Button';
+import ConfirmDialog from '../../../components/ConfirmDialog';
 import { courseApi, programApi, semesterApi } from '../../../services/api';
 import '../../../styles/Table.css';
 
@@ -10,6 +11,8 @@ const CourseList = () => {
     const [programs, setPrograms] = useState([]);
     const [semesters, setSemesters] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -35,26 +38,35 @@ const CourseList = () => {
     const getProgramName = (id) => programs.find(p => p.id === id)?.program_name || 'N/A';
     const getSemesterName = (id) => semesters.find(s => s.id === id)?.semester_name || 'N/A';
 
-    const handleDelete = async (id) => {
-        if (confirm('Are you sure?')) {
-            try {
-                await courseApi.delete(id);
-                loadData();
-            } catch (error) {
-                console.error('Error deleting:', error);
-            }
+    const handleDeleteClick = (id) => {
+        setDeleteId(id);
+        setShowConfirm(true);
+    };
+
+    const confirmDelete = async () => {
+        try {
+            await courseApi.delete(deleteId);
+            loadData();
+        } catch (error) {
+            console.error('Error deleting:', error);
+        } finally {
+            setShowConfirm(false);
+            setDeleteId(null);
         }
     };
 
-    if (loading) return <div className="card"><p>Loading...</p></div>;
+    if (loading) return (
+        <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p className="loading-text">Loading courses...</p>
+        </div>
+    );
 
     return (
         <div className="card">
             <div className="page-header">
                 <h2>Language Courses</h2>
-                <div style={{ width: '200px' }}>
-                    <Button onClick={() => navigate('/admin/courses/new')}>Add Course</Button>
-                </div>
+                <Button className="btn-lg-width" onClick={() => navigate('/admin/courses/new')}>Add Course</Button>
             </div>
 
             <table className="data-table">
@@ -69,7 +81,7 @@ const CourseList = () => {
                 </thead>
                 <tbody>
                     {courses.length === 0 ? (
-                        <tr><td colSpan="5" style={{ textAlign: 'center' }}>No courses found</td></tr>
+                        <tr><td colSpan="5" className="empty-row">No courses found</td></tr>
                     ) : courses.map((course) => (
                         <tr key={course.id}>
                             <td>{course.course_code}</td>
@@ -78,16 +90,14 @@ const CourseList = () => {
                             <td>{getSemesterName(course.semester_id)}</td>
                             <td>
                                 <button
-                                    className="btn-secondary action-btn"
+                                    className="action-btn edit"
                                     onClick={() => navigate(`/admin/courses/edit/${course.id}`)}
-                                    style={{ color: '#3b82f6', marginRight: '8px' }}
                                 >
                                     Edit
                                 </button>
                                 <button
-                                    className="btn-secondary action-btn"
-                                    onClick={() => handleDelete(course.id)}
-                                    style={{ color: '#ef4444' }}
+                                    className="action-btn danger"
+                                    onClick={() => handleDeleteClick(course.id)}
                                 >
                                     Delete
                                 </button>
@@ -96,6 +106,16 @@ const CourseList = () => {
                     ))}
                 </tbody>
             </table>
+
+            <ConfirmDialog
+                isOpen={showConfirm}
+                title="Delete Course"
+                message="Are you sure you want to delete this course? This action cannot be undone."
+                onConfirm={confirmDelete}
+                onCancel={() => setShowConfirm(false)}
+                confirmText="Delete"
+                confirmVariant="danger"
+            />
         </div>
     );
 };

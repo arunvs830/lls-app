@@ -1,0 +1,125 @@
+
+> frontend@0.0.0 lint
+> eslint .
+
+
+/Users/macbook/Documents/lls app/frontend/src/components/NotificationBell.jsx
+  22:8  warning  React Hook useEffect has a missing dependency: 'fetchUnreadCount'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/context/AuthContext.jsx
+   1:54  error  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                no-unused-vars
+  18:21  error  'setLoading' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                      no-unused-vars
+  59:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/macbook/Documents/lls app/frontend/src/context/NotificationContext.jsx
+  7:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/macbook/Documents/lls app/frontend/src/pages/admin/certificates/CertificateDesigner.jsx
+  151:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  149 |
+  150 |     useEffect(() => {
+> 151 |         loadPrograms();
+      |         ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  152 |         loadTemplates();
+  153 |         initCanvas();
+  154 |   react-hooks/set-state-in-effect
+  160:8   warning  React Hook useEffect has a missing dependency: 'initCanvas'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/exhaustive-deps
+  164:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  162 |     useEffect(() => {
+  163 |         if (id) {
+> 164 |             loadLayout(id);
+      |             ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  165 |         }
+  166 |     }, [id]);
+  167 |  react-hooks/set-state-in-effect
+  166:8   warning  React Hook useEffect has a missing dependency: 'loadLayout'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/messages/Compose.jsx
+  30:8  warning  React Hook useEffect has a missing dependency: 'loadRecipients'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/messages/Inbox.jsx
+  20:8  warning  React Hook useEffect has a missing dependency: 'loadMessages'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/messages/MessageDetail.jsx
+  20:8  warning  React Hook useEffect has a missing dependency: 'loadMessage'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/staff/assignments/AssignmentForm.jsx
+  40:8  warning  React Hook useEffect has a missing dependency: 'loadInitialData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/staff/assignments/AssignmentList.jsx
+  20:8  warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/staff/assignments/SubmissionList.jsx
+  26:8  warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/staff/courses/AddVideoForm.jsx
+  24:8  warning  React Hook useEffect has a missing dependency: 'loadCourse'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/staff/courses/CourseVideos.jsx
+  24:8  warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/staff/courses/MyCourseList.jsx
+  31:8  warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/staff/materials/MaterialForm.jsx
+  29:8  warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/staff/materials/MaterialList.jsx
+  25:8  warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/staff/mcq/MCQForm.jsx
+  42:8  warning  React Hook useEffect has missing dependencies: 'isEdit', 'loadCourses', and 'loadMCQ'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/staff/mcq/MCQList.jsx
+  22:8  warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  38:8  warning  React Hook useEffect has a missing dependency: 'loadMCQs'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/student/Dashboard.jsx
+  26:8  warning  React Hook useEffect has a missing dependency: 'loadDashboard'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/student/assignments/StudentAssignmentList.jsx
+  19:8  warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/student/assignments/SubmissionForm.jsx
+  23:8  warning  React Hook useEffect has a missing dependency: 'loadAssignment'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/student/courses/CourseEnrollment.jsx
+  27:8  warning  React Hook useEffect has missing dependencies: 'loadCourses' and 'navigate'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/student/courses/CourseList.jsx
+  15:8  warning  React Hook useEffect has a missing dependency: 'loadCourses'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/student/courses/CourseMaterials.jsx
+  21:8  warning  React Hook useEffect has a missing dependency: 'loadMaterials'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/student/quiz/MaterialQuizPlayer.jsx
+  22:8  warning  React Hook useEffect has a missing dependency: 'loadQuiz'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/student/quiz/QuizList.jsx
+  18:8  warning  React Hook useEffect has a missing dependency: 'loadCourses'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/student/quiz/QuizPlayer.jsx
+  23:8  warning  React Hook useEffect has a missing dependency: 'loadQuiz'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/student/quiz/QuizResults.jsx
+  15:8  warning  React Hook useEffect has a missing dependency: 'loadResults'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/macbook/Documents/lls app/frontend/src/pages/student/results/ResultList.jsx
+  15:8  warning  React Hook useEffect has a missing dependency: 'loadResults'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 34 problems (6 errors, 28 warnings)
+

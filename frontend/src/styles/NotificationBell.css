@@ -211,6 +211,7 @@
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -227,4 +228,99 @@
         width: calc(100vw - 32px);
         right: -8px;
     }
+}
+
+/* Notification Modal */
+.notification-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.notification-modal {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+.notification-modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #E5E7EB;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-modal-header h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    color: #111827;
+}
+
+.notification-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #6B7280;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.notification-close-btn:hover {
+    background-color: #F3F4F6;
+    color: #111827;
+}
+
+.notification-modal-content {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.notification-modal-time {
+    color: #6B7280;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.notification-modal-message {
+    color: #374151;
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+
+.notification-modal-footer {
+    padding: 16px 20px;
+    border-top: 1px solid #E5E7EB;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.notification-modal-btn {
+    padding: 8px 16px;
+    background-color: #3B82F6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.notification-modal-btn:hover {
+    background-color: #2563EB;
 }

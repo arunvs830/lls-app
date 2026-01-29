@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { mcqApi } from '../../../services/api';
+import { useAuth } from '../../../context/AuthContext';
+import '../../../styles/MaterialQuizPlayer.css';
 
 const MaterialQuizPlayer = () => {
     const { materialId } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -12,7 +15,7 @@ const MaterialQuizPlayer = () => {
     const [score, setScore] = useState({ correct: 0, total: 0, marks: 0 });
     const [loading, setLoading] = useState(true);
 
-    const studentId = localStorage.getItem('userId') || 1;
+    const studentId = user?.id || 1;
 
     useEffect(() => {
         loadQuiz();
@@ -78,20 +81,20 @@ const MaterialQuizPlayer = () => {
 
     if (loading) {
         return (
-            <div style={styles.loadingContainer}>
-                <div style={styles.loadingSpinner}></div>
-                <p style={styles.loadingText}>Loading quiz...</p>
+            <div className="quiz-loading-container">
+                <div className="quiz-loading-spinner"></div>
+                <p className="quiz-loading-text">Loading quiz...</p>
             </div>
         );
     }
 
     if (questions.length === 0) {
         return (
-            <div style={styles.container}>
-                <div style={styles.emptyState}>
-                    <span style={styles.emptyIcon}>📝</span>
+            <div className="quiz-player-container">
+                <div className="quiz-empty-state">
+                    <span className="quiz-empty-icon">📝</span>
                     <h3>No questions in this quiz</h3>
-                    <button onClick={() => navigate(-1)} style={styles.backBtn}>
+                    <button onClick={() => navigate(-1)} className="quiz-back-btn">
                         ← Back to Material
                     </button>
                 </div>
@@ -104,39 +107,39 @@ const MaterialQuizPlayer = () => {
     const allCompleted = questions.every(q => q.attempted) || (feedback && isLastQuestion);
 
     return (
-        <div style={styles.container}>
+        <div className="quiz-player-container">
             {/* Header */}
-            <header style={styles.header}>
-                <button onClick={() => navigate(-1)} style={styles.exitBtn}>
+            <header className="quiz-header">
+                <button onClick={() => navigate(-1)} className="quiz-exit-btn">
                     ← Back to Material
                 </button>
-                <div style={styles.scoreDisplay}>
-                    Score: <span style={styles.scoreValue}>{score.correct}/{score.total}</span>
+                <div className="quiz-score-display">
+                    Score: <span className="quiz-score-value">{score.correct}/{score.total}</span>
                 </div>
             </header>
 
             {/* Progress */}
-            <div style={styles.progressSection}>
-                <div style={styles.progressText}>
+            <div className="quiz-progress-section">
+                <div className="quiz-progress-text">
                     Question {currentIndex + 1} of {questions.length}
                 </div>
-                <div style={styles.progressBar}>
-                    <div style={{
-                        ...styles.progressFill,
-                        width: `${((currentIndex + 1) / questions.length) * 100}%`
-                    }}></div>
+                <div className="quiz-progress-bar">
+                    <div
+                        className="quiz-progress-fill"
+                        style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
+                    ></div>
                 </div>
             </div>
 
             {/* Question Card */}
-            <div style={styles.questionCard}>
+            <div className="quiz-question-card">
                 {currentQuestion.attempted && (
-                    <div style={styles.attemptedBadge}>✓ Answered</div>
+                    <div className="quiz-attempted-badge">✓ Answered</div>
                 )}
 
-                <h2 style={styles.questionText}>{currentQuestion.question_text}</h2>
+                <h2 className="quiz-question-text">{currentQuestion.question_text}</h2>
 
-                <div style={styles.optionsList}>
+                <div className="quiz-options-list">
                     {['A', 'B', 'C', 'D'].map(opt => {
                         const optValue = currentQuestion[`option_${opt.toLowerCase()}`];
                         if (!optValue) return null;
@@ -146,43 +149,21 @@ const MaterialQuizPlayer = () => {
                         const isCorrect = feedback?.correct_answer === opt;
                         const isWrong = showResult && isSelected && !feedback.is_correct;
 
-                        // Explicit border and background for each state
-                        let border = '2px solid #E3E5E8';
-                        let background = '#F5F7FA';
-
-                        if (isSelected && !showResult) {
-                            border = '2px solid #8b5cf6';
-                            background = 'rgba(139, 92, 246, 0.1)';
-                        } else if (showResult && isCorrect) {
-                            border = '2px solid #10b981';
-                            background = 'rgba(16, 185, 129, 0.1)';
-                        } else if (isWrong) {
-                            border = '2px solid #ef4444';
-                            background = 'rgba(239, 68, 68, 0.1)';
-                        }
+                        let itemClass = 'quiz-option-item';
+                        if (isSelected && !showResult) itemClass += ' selected';
+                        if (showResult && isCorrect) itemClass += ' correct';
+                        if (isWrong) itemClass += ' wrong';
 
                         return (
                             <div
                                 key={`${currentIndex}-${opt}`}
                                 onClick={() => !feedback && !currentQuestion.attempted && setSelectedAnswer(opt)}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '16px',
-                                    padding: '16px 20px',
-                                    background: background,
-                                    border: border,
-                                    borderRadius: '12px',
-                                    color: '#21272A',
-                                    cursor: 'pointer',
-                                    textAlign: 'left',
-                                    transition: 'all 0.2s',
-                                }}
+                                className={itemClass}
                             >
-                                <span style={styles.optionLabel}>{opt}</span>
-                                <span style={styles.optionText}>{optValue}</span>
-                                {showResult && isCorrect && <span style={styles.checkmark}>✓</span>}
-                                {isWrong && <span style={styles.xmark}>✗</span>}
+                                <span className="quiz-option-input-label">{opt}</span>
+                                <span className="quiz-option-text">{optValue}</span>
+                                {showResult && isCorrect && <span className="quiz-checkmark">✓</span>}
+                                {isWrong && <span className="quiz-xmark">✗</span>}
                             </div>
                         );
                     })}
@@ -190,7 +171,7 @@ const MaterialQuizPlayer = () => {
 
                 {/* Feedback */}
                 {feedback && !feedback.error && (
-                    <div style={feedback.is_correct ? styles.correctFeedback : styles.wrongFeedback}>
+                    <div className={`quiz-feedback ${feedback.is_correct ? 'correct' : 'wrong'}`}>
                         {feedback.is_correct ? '🎉 Correct!' : '❌ Incorrect'}
                         {!feedback.is_correct && (
                             <span> The correct answer is {feedback.correct_answer}</span>
@@ -199,11 +180,11 @@ const MaterialQuizPlayer = () => {
                 )}
 
                 {/* Actions */}
-                <div style={styles.actions}>
+                <div className="quiz-actions">
                     <button
                         onClick={goToPrev}
                         disabled={currentIndex === 0}
-                        style={currentIndex === 0 ? styles.disabledBtn : styles.navBtn}
+                        className="quiz-nav-btn"
                     >
                         ← Previous
                     </button>
@@ -212,14 +193,14 @@ const MaterialQuizPlayer = () => {
                         <button
                             onClick={handleSubmitAnswer}
                             disabled={!selectedAnswer}
-                            style={!selectedAnswer ? styles.disabledBtn : styles.submitBtn}
+                            className="quiz-submit-btn"
                         >
                             Submit Answer
                         </button>
                     ) : (
                         <button
                             onClick={allCompleted ? () => navigate('/student/quiz/results') : goToNext}
-                            style={styles.submitBtn}
+                            className="quiz-submit-btn"
                         >
                             {allCompleted ? 'View Results →' : 'Next Question →'}
                         </button>
@@ -228,189 +209,6 @@ const MaterialQuizPlayer = () => {
             </div>
         </div>
     );
-};
-
-const styles = {
-    container: { padding: '24px', maxWidth: '800px', margin: '0 auto' },
-    loadingContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '60vh',
-    },
-    loadingSpinner: {
-        width: '48px',
-        height: '48px',
-        border: '4px solid rgba(139, 92, 246, 0.2)',
-        borderTop: '4px solid #8b5cf6',
-        borderRadius: '50%',
-        animation: 'spin 1s linear infinite',
-    },
-    loadingText: { marginTop: '16px', color: '#5C6873' },
-    emptyState: {
-        textAlign: 'center',
-        padding: '80px 20px',
-        color: '#5C6873',
-    },
-    emptyIcon: { fontSize: '4rem', display: 'block', marginBottom: '16px' },
-
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '24px',
-    },
-    exitBtn: {
-        background: '#F5F7FA',
-        border: '1px solid #E3E5E8',
-        color: '#21272A',
-        padding: '8px 16px',
-        borderRadius: '8px',
-        cursor: 'pointer',
-    },
-    scoreDisplay: { color: '#5C6873' },
-    scoreValue: { color: '#10b981', fontWeight: '700' },
-
-    progressSection: { marginBottom: '24px' },
-    progressText: { color: '#5C6873', marginBottom: '8px', fontSize: '0.9rem' },
-    progressBar: {
-        height: '8px',
-        background: '#E3E5E8',
-        borderRadius: '4px',
-        overflow: 'hidden',
-    },
-    progressFill: {
-        height: '100%',
-        background: 'linear-gradient(90deg, #8b5cf6, #6366f1)',
-        transition: 'width 0.3s ease',
-    },
-
-    questionCard: {
-        background: '#FFFFFF',
-        borderRadius: '20px',
-        padding: '32px',
-        border: '1px solid #E3E5E8',
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
-    },
-    attemptedBadge: {
-        display: 'inline-block',
-        background: 'rgba(16, 185, 129, 0.15)',
-        color: '#10b981',
-        padding: '6px 12px',
-        borderRadius: '8px',
-        fontSize: '0.85rem',
-        marginBottom: '16px',
-    },
-    questionText: {
-        color: '#21272A',
-        fontSize: '1.4rem',
-        lineHeight: '1.5',
-        marginBottom: '24px',
-    },
-    optionsList: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
-        marginBottom: '24px',
-    },
-    optionBtn: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        padding: '16px 20px',
-        background: '#F5F7FA',
-        border: '2px solid #E3E5E8',
-        borderRadius: '12px',
-        color: '#21272A',
-        cursor: 'pointer',
-        textAlign: 'left',
-        transition: 'all 0.2s',
-        outline: 'none',
-        boxShadow: 'none',
-    },
-    selectedOption: {
-        borderColor: '#8b5cf6',
-        background: 'rgba(139, 92, 246, 0.1)',
-    },
-    correctOption: {
-        borderColor: '#10b981',
-        background: 'rgba(16, 185, 129, 0.1)',
-    },
-    wrongOption: {
-        borderColor: '#ef4444',
-        background: 'rgba(239, 68, 68, 0.1)',
-    },
-    optionLabel: {
-        background: '#E3E5E8',
-        padding: '6px 12px',
-        borderRadius: '6px',
-        fontWeight: '700',
-        color: '#21272A',
-    },
-    optionText: { flex: 1 },
-    checkmark: { color: '#10b981', fontWeight: 'bold', fontSize: '1.2rem' },
-    xmark: { color: '#ef4444', fontWeight: 'bold', fontSize: '1.2rem' },
-
-    correctFeedback: {
-        padding: '16px',
-        background: 'rgba(16, 185, 129, 0.1)',
-        border: '1px solid rgba(16, 185, 129, 0.3)',
-        borderRadius: '12px',
-        color: '#10b981',
-        marginBottom: '24px',
-        textAlign: 'center',
-        fontWeight: '600',
-    },
-    wrongFeedback: {
-        padding: '16px',
-        background: 'rgba(239, 68, 68, 0.1)',
-        border: '1px solid rgba(239, 68, 68, 0.3)',
-        borderRadius: '12px',
-        color: '#ef4444',
-        marginBottom: '24px',
-        textAlign: 'center',
-    },
-
-    actions: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        gap: '16px',
-    },
-    navBtn: {
-        background: '#F5F7FA',
-        border: '1px solid #E3E5E8',
-        color: '#21272A',
-        padding: '14px 24px',
-        borderRadius: '10px',
-        cursor: 'pointer',
-    },
-    submitBtn: {
-        background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
-        border: 'none',
-        color: 'white',
-        padding: '14px 32px',
-        borderRadius: '10px',
-        cursor: 'pointer',
-        fontWeight: '600',
-    },
-    disabledBtn: {
-        background: '#F5F7FA',
-        border: '1px solid #E3E5E8',
-        color: '#8F96A1',
-        padding: '14px 24px',
-        borderRadius: '10px',
-        cursor: 'not-allowed',
-    },
-    backBtn: {
-        marginTop: '16px',
-        background: 'rgba(139, 92, 246, 0.2)',
-        border: '1px solid rgba(139, 92, 246, 0.4)',
-        color: '#7c3aed',
-        padding: '10px 20px',
-        borderRadius: '8px',
-        cursor: 'pointer',
-    },
 };
 
 export default MaterialQuizPlayer;

@@ -1,30 +1,64 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mcqApi, courseApi } from '../../../services/api';
+import { useAuth } from '../../../context/AuthContext';
+import { mcqApi, courseApi, staffCourseApi } from '../../../services/api';
+import '../../../styles/MCQList.css';
 
 const MCQList = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const staffId = user?.id;
     const [mcqs, setMcqs] = useState([]);
     const [courses, setCourses] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState('');
+    const [studyMaterials, setStudyMaterials] = useState([]);
+    const [selectedMaterial, setSelectedMaterial] = useState('');
     const [loading, setLoading] = useState(true);
 
-    const staffId = localStorage.getItem('userId') || 1;
+    useEffect(() => {
+        if (staffId) {
+            loadData();
+        }
+    }, [staffId]);
 
     useEffect(() => {
-        loadData();
-    }, []);
-
-    useEffect(() => {
-        loadMCQs();
+        if (selectedCourse) {
+            loadStudyMaterials(selectedCourse);
+            setSelectedMaterial(''); // Reset material when course changes
+        } else {
+            setStudyMaterials([]);
+            setSelectedMaterial('');
+        }
     }, [selectedCourse]);
+
+    useEffect(() => {
+        if (staffId) {
+            loadMCQs();
+        }
+    }, [selectedCourse, selectedMaterial, staffId]);
 
     const loadData = async () => {
         try {
-            const coursesData = await courseApi.getAll();
-            setCourses(coursesData);
+            const [allocations, allCourses] = await Promise.all([
+                staffCourseApi.getByStaff(staffId),
+                courseApi.getAll()
+            ]);
+
+            const staffCourseIds = new Set(allocations.map(a => a.course_id));
+            const myCourses = allCourses.filter(c => staffCourseIds.has(c.id));
+            setCourses(myCourses);
         } catch (error) {
             console.error('Error loading courses:', error);
+        }
+    };
+
+    const loadStudyMaterials = async (courseId) => {
+        try {
+            const response = await fetch(`/api/courses/${courseId}/materials`);
+            const data = await response.json();
+            setStudyMaterials(data);
+        } catch (error) {
+            console.error('Error loading study materials:', error);
         }
     };
 
@@ -33,6 +67,8 @@ const MCQList = () => {
         try {
             const filters = { staff_id: staffId };
             if (selectedCourse) filters.course_id = selectedCourse;
+            if (selectedMaterial) filters.study_material_id = selectedMaterial;
+
             const data = await mcqApi.getAll(filters);
             setMcqs(data);
         } catch (error) {
@@ -52,54 +88,72 @@ const MCQList = () => {
         }
     };
 
+
+
     return (
-        <div style={styles.container}>
-            <header style={styles.header}>
+        <div className="mcq-list-container">
+            <header className="mcq-list-header">
                 <div>
-                    <h1 style={styles.title}>Quiz Questions</h1>
-                    <p style={styles.subtitle}>{mcqs.length} questions created</p>
+                    <h1 className="mcq-list-title">Quiz Questions</h1>
+                    <p className="mcq-list-subtitle">{mcqs.length} questions created</p>
                 </div>
-                <button onClick={() => navigate('/staff/mcqs/new')} style={styles.addBtn}>
-                    + Add Question
-                </button>
+                <div className="mcq-list-actions">
+                    <button onClick={() => navigate('/staff/mcqs/new')} className="mcq-list-add-btn">
+                        + Add Question
+                    </button>
+                </div>
             </header>
 
             {/* Filter */}
-            <div style={styles.filterBar}>
+            <div className="mcq-list-filter-bar">
                 <select
                     value={selectedCourse}
                     onChange={(e) => setSelectedCourse(e.target.value)}
-                    style={styles.select}
+                    className="mcq-list-select"
                 >
                     <option value="">All Courses</option>
                     {courses.map(c => (
                         <option key={c.id} value={c.id}>{c.course_name}</option>
                     ))}
                 </select>
+
+                {selectedCourse && (
+                    <select
+                        value={selectedMaterial}
+                        onChange={(e) => setSelectedMaterial(e.target.value)}
+                        className="mcq-list-select"
+                        style={{ marginLeft: '10px' }}
+                    >
+                        <option value="">All Materials</option>
+                        {studyMaterials.map(m => (
+                            <option key={m.id} value={m.id}>{m.title}</option>
+                        ))}
+                    </select>
+                )}
             </div>
 
             {loading ? (
-                <div style={styles.loading}>Loading questions...</div>
+                <div className="mcq-list-loading">Loading questions...</div>
             ) : mcqs.length === 0 ? (
-                <div style={styles.emptyState}>
-                    <span style={styles.emptyIcon}>❓</span>
+                <div className="mcq-list-empty-state">
+                    <span className="mcq-list-empty-icon">❓</span>
                     <h3>No questions yet</h3>
                     <p>Create your first quiz question to get started!</p>
-                    <button onClick={() => navigate('/staff/mcqs/new')} style={styles.addBtnSecondary}>
+                    <button onClick={() => navigate('/staff/mcqs/new')} className="mcq-list-add-btn-secondary">
                         Create Question
                     </button>
                 </div>
             ) : (
-                <div style={styles.questionList}>
+                <div className="mcq-question-list">
                     {mcqs.map((mcq, index) => (
-                        <div key={mcq.id} style={styles.questionCard}>
-                            <div style={styles.questionHeader}>
-                                <span style={styles.questionNumber}>Q{index + 1}</span>
-                                <span style={styles.courseBadge}>{mcq.course_name}</span>
-                                <span style={styles.marks}>{mcq.marks} marks</span>
+                        <div key={mcq.id} className="mcq-question-card">
+                            <div className="mcq-question-header">
+                                <span className="mcq-question-number">Q{index + 1}</span>
+                                <span className="mcq-course-badge">{mcq.course_name}</span>
+                                <span className="mcq-marks">{mcq.marks} marks</span>
                             </div>
-                            <p style={styles.questionText}>{mcq.question_text}</p>
-                            <div style={styles.optionsGrid}>
+                            <p className="mcq-question-text">{mcq.question_text}</p>
+                            <div className="mcq-options-grid">
                                 {['A', 'B', 'C', 'D'].map(opt => {
                                     const optValue = mcq[`option_${opt.toLowerCase()}`];
                                     if (!optValue) return null;
@@ -107,28 +161,25 @@ const MCQList = () => {
                                     return (
                                         <div
                                             key={opt}
-                                            style={{
-                                                ...styles.option,
-                                                ...(isCorrect ? styles.correctOption : {})
-                                            }}
+                                            className={`mcq-option ${isCorrect ? 'correct' : ''}`}
                                         >
-                                            <span style={styles.optionLabel}>{opt}</span>
+                                            <span className="mcq-option-label">{opt}</span>
                                             <span>{optValue}</span>
-                                            {isCorrect && <span style={styles.checkmark}>✓</span>}
+                                            {isCorrect && <span className="mcq-checkmark">✓</span>}
                                         </div>
                                     );
                                 })}
                             </div>
-                            <div style={styles.actions}>
+                            <div className="mcq-actions">
                                 <button
                                     onClick={() => navigate(`/staff/mcqs/edit/${mcq.id}`)}
-                                    style={styles.editBtn}
+                                    className="mcq-edit-btn"
                                 >
                                     Edit
                                 </button>
                                 <button
                                     onClick={() => handleDelete(mcq.id)}
-                                    style={styles.deleteBtn}
+                                    className="mcq-delete-btn"
                                 >
                                     Delete
                                 </button>
@@ -139,160 +190,6 @@ const MCQList = () => {
             )}
         </div>
     );
-};
-
-const styles = {
-    container: { padding: '24px' },
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '24px',
-    },
-    title: { color: '#1F2937', fontSize: '2rem', fontWeight: '700', margin: 0 },
-    subtitle: { color: '#6B7280', marginTop: '8px' },
-    addBtn: {
-        background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
-        border: 'none',
-        color: 'white',
-        padding: '12px 24px',
-        borderRadius: '10px',
-        cursor: 'pointer',
-        fontWeight: '600',
-    },
-    filterBar: {
-        marginBottom: '24px',
-    },
-    select: {
-        background: 'white',
-        border: '1px solid #E5E7EB',
-        color: '#374151',
-        padding: '12px 16px',
-        borderRadius: '10px',
-        minWidth: '200px',
-    },
-    loading: {
-        textAlign: 'center',
-        padding: '40px',
-        color: '#6B7280',
-    },
-    emptyState: {
-        textAlign: 'center',
-        padding: '80px 20px',
-        background: '#F9FAFB',
-        borderRadius: '20px',
-        color: '#6B7280',
-    },
-    emptyIcon: { fontSize: '4rem', display: 'block', marginBottom: '16px' },
-    addBtnSecondary: {
-        marginTop: '16px',
-        background: '#F3F4F6',
-        border: '1px solid #E5E7EB',
-        color: '#8b5cf6',
-        padding: '10px 20px',
-        borderRadius: '8px',
-        cursor: 'pointer',
-    },
-    questionList: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-    },
-    questionCard: {
-        background: 'white',
-        borderRadius: '16px',
-        padding: '20px',
-        border: '1px solid #E5E7EB',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-    },
-    questionHeader: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        marginBottom: '12px',
-    },
-    questionNumber: {
-        background: '#F3F4F6',
-        color: '#8b5cf6',
-        padding: '4px 10px',
-        borderRadius: '6px',
-        fontWeight: '700',
-        fontSize: '0.85rem',
-    },
-    courseBadge: {
-        background: '#EFF6FF',
-        color: '#3b82f6',
-        padding: '4px 10px',
-        borderRadius: '6px',
-        fontSize: '0.8rem',
-    },
-    marks: {
-        color: '#6B7280',
-        fontSize: '0.85rem',
-        marginLeft: 'auto',
-    },
-    questionText: {
-        color: '#1F2937',
-        fontSize: '1.1rem',
-        lineHeight: '1.5',
-        marginBottom: '16px',
-    },
-    optionsGrid: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '10px',
-        marginBottom: '16px',
-    },
-    option: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        padding: '12px',
-        background: '#F9FAFB',
-        borderRadius: '8px',
-        color: '#4B5563',
-        fontSize: '0.9rem',
-        border: '1px solid #F3F4F6'
-    },
-    correctOption: {
-        background: '#ECFDF5',
-        border: '1px solid #10B981',
-        color: '#065F46'
-    },
-    optionLabel: {
-        background: '#E5E7EB',
-        padding: '2px 8px',
-        borderRadius: '4px',
-        fontWeight: '600',
-        color: '#374151'
-    },
-    checkmark: {
-        marginLeft: 'auto',
-        color: '#10b981',
-        fontWeight: 'bold',
-    },
-    actions: {
-        display: 'flex',
-        gap: '10px',
-        paddingTop: '16px',
-        borderTop: '1px solid #E5E7EB',
-    },
-    editBtn: {
-        background: '#EFF6FF',
-        border: '1px solid #BFDBFE',
-        color: '#3b82f6',
-        padding: '8px 16px',
-        borderRadius: '8px',
-        cursor: 'pointer',
-    },
-    deleteBtn: {
-        background: '#FEF2F2',
-        border: '1px solid #FECACA',
-        color: '#ef4444',
-        padding: '8px 16px',
-        borderRadius: '8px',
-        cursor: 'pointer',
-    },
 };
 
 export default MCQList;

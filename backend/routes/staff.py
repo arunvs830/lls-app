@@ -30,9 +30,17 @@ def get_all():
 def create():
     data = request.get_json()
     
+    # Validate required fields
+    if not data or not data.get('email') or not data.get('full_name') or not data.get('password'):
+        return jsonify({'error': 'Email, full name, and password are required'}), 400
+    
     # Use email as username
     email = data['email']
     username = email  # Use email as username
+    
+    # Check if email already exists
+    if Staff.query.filter_by(email=email).first():
+        return jsonify({'error': 'Email already exists'}), 400
     
     staff = Staff(
         staff_code=generate_staff_code(),  # Auto-generate staff code

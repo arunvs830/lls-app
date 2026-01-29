@@ -9,13 +9,15 @@ const NotificationBell = ({ userType, userId }) => {
     const [loading, setLoading] = useState(false);
     const dropdownRef = useRef(null);
 
+    const [selectedNotification, setSelectedNotification] = useState(null);
+
     // Fetch unread count on mount and periodically
     useEffect(() => {
         if (!userType || !userId) return;
-        
+
         fetchUnreadCount();
         const interval = setInterval(fetchUnreadCount, 30000); // Check every 30 seconds
-        
+
         return () => clearInterval(interval);
     }, [userType, userId]);
 
@@ -59,16 +61,25 @@ const NotificationBell = ({ userType, userId }) => {
         setIsOpen(!isOpen);
     };
 
-    const handleMarkAsRead = async (notificationId) => {
-        try {
-            await notificationApi.markAsRead(notificationId);
-            setNotifications(notifications.map(n => 
-                n.id === notificationId ? { ...n, is_read: true } : n
-            ));
-            setUnreadCount(prev => Math.max(0, prev - 1));
-        } catch (error) {
-            console.error('Error marking notification as read:', error);
+    const handleNotificationClick = async (notification) => {
+        setSelectedNotification(notification);
+        setIsOpen(false); // Close the dropdown
+
+        if (!notification.is_read) {
+            try {
+                await notificationApi.markAsRead(notification.id);
+                setNotifications(notifications.map(n =>
+                    n.id === notification.id ? { ...n, is_read: true } : n
+                ));
+                setUnreadCount(prev => Math.max(0, prev - 1));
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+            }
         }
+    };
+
+    const handleCloseModal = () => {
+        setSelectedNotification(null);
     };
 
     const handleMarkAllAsRead = async () => {
@@ -111,20 +122,20 @@ const NotificationBell = ({ userType, userId }) => {
 
     return (
         <div className="notification-bell-container" ref={dropdownRef}>
-            <button 
-                className="notification-bell-button" 
+            <button
+                className="notification-bell-button"
                 onClick={handleBellClick}
                 aria-label="Notifications"
             >
-                <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    width="20" 
-                    height="20" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
                     strokeLinejoin="round"
                 >
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -142,7 +153,7 @@ const NotificationBell = ({ userType, userId }) => {
                     <div className="notification-header">
                         <h3>Notifications</h3>
                         {unreadCount > 0 && (
-                            <button 
+                            <button
                                 className="mark-all-read"
                                 onClick={handleMarkAllAsRead}
                             >
@@ -161,10 +172,10 @@ const NotificationBell = ({ userType, userId }) => {
                             </div>
                         ) : (
                             notifications.map(notification => (
-                                <div 
+                                <div
                                     key={notification.id}
                                     className={`notification-item ${!notification.is_read ? 'unread' : ''}`}
-                                    onClick={() => !notification.is_read && handleMarkAsRead(notification.id)}
+                                    onClick={() => handleNotificationClick(notification)}
                                 >
                                     <span className="notification-icon">
                                         {getNotificationIcon(notification.notification_type)}
@@ -182,6 +193,29 @@ const NotificationBell = ({ userType, userId }) => {
                                 </div>
                             ))
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* Notification Detail Modal */}
+            {selectedNotification && (
+                <div className="notification-modal-overlay" onClick={handleCloseModal}>
+                    <div className="notification-modal" onClick={e => e.stopPropagation()}>
+                        <div className="notification-modal-header">
+                            <h3>{selectedNotification.title}</h3>
+                            <button className="notification-close-btn" onClick={handleCloseModal}>&times;</button>
+                        </div>
+                        <div className="notification-modal-content">
+                            <span className="notification-modal-time">
+                                {new Date(selectedNotification.created_at).toLocaleString()}
+                            </span>
+                            <div className="notification-modal-message">
+                                {selectedNotification.message}
+                            </div>
+                        </div>
+                        <div className="notification-modal-footer">
+                            <button className="notification-modal-btn" onClick={handleCloseModal}>Close</button>
+                        </div>
                     </div>
                 </div>
             )}

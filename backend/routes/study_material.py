@@ -1,7 +1,7 @@
 import os
 from flask import Blueprint, request, jsonify, current_app, send_from_directory
 from werkzeug.utils import secure_filename
-from models import db, StudyMaterial
+from models import db, StudyMaterial, StaffCourse
 from services.notification_service import NotificationService
 from datetime import datetime
 
@@ -56,12 +56,15 @@ def _process_file_upload(file, file_type):
 @study_material_bp.route('/api/study-materials', methods=['GET'])
 def get_all():
     staff_course_id = request.args.get('staff_course_id')
+    staff_id = request.args.get('staff_id')
     file_type = request.args.get('file_type')
     parent_only = request.args.get('parent_only')
     
     query = StudyMaterial.query
     if staff_course_id:
         query = query.filter_by(staff_course_id=staff_course_id)
+    if staff_id:
+        query = query.join(StaffCourse).filter(StaffCourse.staff_id == int(staff_id))
     if file_type:
         query = query.filter_by(file_type=file_type)
     if parent_only == 'true':

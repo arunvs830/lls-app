@@ -31,3 +31,24 @@
 .input-element::placeholder {
     color: var(--text-muted);
 }
+
+/* Error State */
+.input-element.error {
+    border-color: #ef4444;
+}
+
+.input-element.error:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.input-label.error {
+    color: #ef4444;
+}
+
+.input-error-message {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 0.375rem;
+    font-weight: 500;
+}

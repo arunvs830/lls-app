@@ -12,6 +12,7 @@ from models import (
     MCQAttempt,
     Student,
     Submission,
+    StudentCourse
 )
 
 
@@ -171,20 +172,15 @@ def get_student_course_results(student_id: int):
 
     student = Student.query.get_or_404(student_id)
 
-    if student.program_id is None or student.semester_id is None:
-        return jsonify(
-            {
-                'student': {
-                    'id': student.id,
-                    'full_name': student.full_name,
-                    'student_code': student.student_code,
-                },
-                'courses': [],
-                'message': 'Student is not assigned to a program/semester; no enrolled courses found.'
-            }
-        )
+    courses = []
+    enrollments = StudentCourse.query.filter_by(student_id=student.id, status='active').all()
+    for enrollment in enrollments:
+        courses.append(enrollment.course)
 
-    courses = Course.query.filter_by(program_id=student.program_id, semester_id=student.semester_id).all()
+    if not courses:
+        # Fallback for legacy data (optional, but safer to just return empty if no enrollments)
+        # Or better yet, we just return what we found. If list is empty, so be it.
+        pass
 
     course_results = [_compute_course_result(student_id, c.id) for c in courses]
 

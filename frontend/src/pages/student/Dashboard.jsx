@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, ClipboardList, CheckCircle, BarChart, Trophy } from 'lucide-react';
-import { studentDashboardApi, assignmentApi } from '../../services/api';
+import { studentDashboardApi } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
+import '../../styles/StudentDashboard.css';
 
 const StudentDashboard = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [dashboardData, setDashboardData] = useState(null);
     const [upcomingAssignments, setUpcomingAssignments] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const studentId = localStorage.getItem('userId') || JSON.parse(localStorage.getItem('user') || '{}')?.id;
+    const studentId = user?.id;
 
     // Redirect to login if not authenticated
     useEffect(() => {
@@ -24,20 +27,9 @@ const StudentDashboard = () => {
 
     const loadDashboard = async () => {
         try {
-            const [dashboard, assignments] = await Promise.all([
-                studentDashboardApi.getDashboard(studentId),
-                assignmentApi.getAll()
-            ]);
-
+            const dashboard = await studentDashboardApi.getDashboard(studentId);
             setDashboardData(dashboard);
-
-            // Get upcoming assignments (due in the future)
-            const now = new Date();
-            const upcoming = assignments
-                .filter(a => a.due_date && new Date(a.due_date) > now)
-                .sort((a, b) => new Date(a.due_date) - new Date(b.due_date))
-                .slice(0, 3);
-            setUpcomingAssignments(upcoming);
+            setUpcomingAssignments(dashboard.upcoming_assignments || []);
         } catch (error) {
             console.error('Error loading dashboard:', error);
         } finally {
@@ -53,117 +45,112 @@ const StudentDashboard = () => {
 
     if (loading) {
         return (
-            <div style={styles.loadingContainer}>
-                <div style={styles.loadingSpinner}></div>
-                <p style={styles.loadingText}>Loading your dashboard...</p>
+            <div className="student-dashboard-loading">
+                <div className="student-dashboard-spinner"></div>
+                <p className="student-dashboard-loading-text">Loading your dashboard...</p>
             </div>
         );
     }
 
     const stats = dashboardData?.stats || {};
     const student = dashboardData?.student || {};
+    const progressPercent = stats.total_assignments > 0
+        ? Math.round((stats.completed_assignments / stats.total_assignments) * 100)
+        : 0;
 
     return (
-        <div style={styles.container}>
+        <div className="student-dashboard-container">
             {/* Welcome Header */}
-            <header style={styles.header}>
-                <div style={styles.welcomeSection}>
-                    <h1 style={styles.welcomeTitle}>Welcome back, {student.full_name || 'Student'}! </h1>
-                    <p style={styles.welcomeSubtitle}>
+            <header className="student-dashboard-header">
+                <div className="student-dashboard-welcome-section">
+                    <h1 className="student-dashboard-welcome-title">Welcome back, {student.full_name || 'Student'}!</h1>
+                    <p className="student-dashboard-welcome-subtitle">
                         {student.program} • {student.semester}
                     </p>
                 </div>
-                <div style={styles.studentBadge}>
-                    <span style={styles.studentCode}>{student.student_code}</span>
+                <div className="student-dashboard-badge">
+                    <span className="student-dashboard-code">{student.student_code}</span>
                 </div>
             </header>
 
             {/* Stats Grid */}
-            <section style={styles.statsGrid}>
-                <div style={{ ...styles.statCard, ...styles.statPurple }}>
-                    <div style={styles.statIcon}><BookOpen size={24} /></div>
-                    <div style={styles.statContent}>
-                        <span style={styles.statNumber}>{stats.enrolled_courses || 0}</span>
-                        <span style={styles.statLabel}>Enrolled Courses</span>
+            <section className="student-dashboard-stats-grid">
+                <div className="student-dashboard-stat-card purple">
+                    <div className="student-dashboard-stat-icon"><BookOpen size={24} /></div>
+                    <div className="student-dashboard-stat-content">
+                        <span className="student-dashboard-stat-number">{stats.enrolled_courses || 0}</span>
+                        <span className="student-dashboard-stat-label">Enrolled Courses</span>
                     </div>
-                    <button onClick={() => navigate('/student/courses')} style={styles.statLink}>
+                    <button onClick={() => navigate('/student/courses')} className="student-dashboard-stat-link">
                         View All →
                     </button>
                 </div>
 
-                <div style={{ ...styles.statCard, ...styles.statOrange }}>
-                    <div style={styles.statIcon}><ClipboardList size={24} /></div>
-                    <div style={styles.statContent}>
-                        <span style={styles.statNumber}>{stats.pending_assignments || 0}</span>
-                        <span style={styles.statLabel}>Pending Tasks</span>
+                <div className="student-dashboard-stat-card orange">
+                    <div className="student-dashboard-stat-icon"><ClipboardList size={24} /></div>
+                    <div className="student-dashboard-stat-content">
+                        <span className="student-dashboard-stat-number">{stats.pending_assignments || 0}</span>
+                        <span className="student-dashboard-stat-label">Pending Tasks</span>
                     </div>
-                    <button onClick={() => navigate('/student/assignments')} style={styles.statLink}>
+                    <button onClick={() => navigate('/student/assignments')} className="student-dashboard-stat-link">
                         Review →
                     </button>
                 </div>
 
-                <div style={{ ...styles.statCard, ...styles.statGreen }}>
-                    <div style={styles.statIcon}><CheckCircle size={24} /></div>
-                    <div style={styles.statContent}>
-                        <span style={styles.statNumber}>{stats.completed_assignments || 0}</span>
-                        <span style={styles.statLabel}>Completed</span>
+                <div className="student-dashboard-stat-card green">
+                    <div className="student-dashboard-stat-icon"><CheckCircle size={24} /></div>
+                    <div className="student-dashboard-stat-content">
+                        <span className="student-dashboard-stat-number">{stats.completed_assignments || 0}/{stats.total_assignments || 0}</span>
+                        <span className="student-dashboard-stat-label">Submitted</span>
                     </div>
-                    <button onClick={() => navigate('/student/results')} style={styles.statLink}>
+                    <button onClick={() => navigate('/student/results')} className="student-dashboard-stat-link">
                         Results →
                     </button>
                 </div>
 
-                <div style={{ ...styles.statCard, ...styles.statBlue }}>
-                    <div style={styles.statIcon}><BarChart size={24} /></div>
-                    <div style={styles.statContent}>
-                        <span style={styles.statNumber}>
-                            {stats.total_assignments > 0
-                                ? Math.round((stats.completed_assignments / stats.total_assignments) * 100)
-                                : 0}%
-                        </span>
-                        <span style={styles.statLabel}>Progress</span>
+                <div className="student-dashboard-stat-card blue">
+                    <div className="student-dashboard-stat-icon"><BarChart size={24} /></div>
+                    <div className="student-dashboard-stat-content">
+                        <span className="student-dashboard-stat-number">{progressPercent}%</span>
+                        <span className="student-dashboard-stat-label">Progress</span>
                     </div>
-                    <div style={styles.progressBar}>
+                    <div className="student-dashboard-progress-bar">
                         <div
-                            style={{
-                                ...styles.progressFill,
-                                width: `${stats.total_assignments > 0
-                                    ? (stats.completed_assignments / stats.total_assignments) * 100
-                                    : 0}%`
-                            }}
+                            className="student-dashboard-progress-fill"
+                            style={{ width: `${progressPercent}%` }}
                         ></div>
                     </div>
                 </div>
             </section>
 
             {/* Main Content Grid */}
-            <div className="responsive-grid-2-1">
+            <div className="student-dashboard-content-grid">
                 {/* Upcoming Assignments */}
-                <section style={styles.contentCard}>
-                    <div style={styles.cardHeader}>
-                        <h2 style={styles.cardTitle}>📅 Upcoming Deadlines</h2>
-                        <button onClick={() => navigate('/student/assignments')} style={styles.viewAllBtn}>
+                <section className="student-dashboard-content-card">
+                    <div className="student-dashboard-card-header">
+                        <h2 className="student-dashboard-card-title">📅 Upcoming Deadlines</h2>
+                        <button onClick={() => navigate('/student/assignments')} className="student-dashboard-view-all-btn">
                             View All
                         </button>
                     </div>
-                    <div style={styles.assignmentList}>
+                    <div className="student-dashboard-assignment-list">
                         {upcomingAssignments.length === 0 ? (
-                            <div style={styles.emptyState}>
-                                <span style={styles.emptyIcon}>🎉</span>
+                            <div className="student-dashboard-empty-state">
+                                <span className="student-dashboard-empty-icon">🎉</span>
                                 <p>No upcoming deadlines!</p>
                             </div>
                         ) : (
                             upcomingAssignments.map(assignment => (
-                                <div key={assignment.id} style={styles.assignmentItem}>
-                                    <div style={styles.assignmentInfo}>
-                                        <h4 style={styles.assignmentTitle}>{assignment.title}</h4>
-                                        <span style={styles.assignmentCourse}>{assignment.course_name}</span>
+                                <div key={assignment.id} className="student-dashboard-assignment-item">
+                                    <div className="student-dashboard-assignment-info">
+                                        <h4 className="student-dashboard-assignment-title">{assignment.title}</h4>
+                                        <span className="student-dashboard-assignment-course">{assignment.course_name}</span>
                                     </div>
-                                    <div style={styles.assignmentMeta}>
-                                        <span style={styles.dueDate}>{formatDate(assignment.due_date)}</span>
+                                    <div className="student-dashboard-assignment-meta">
+                                        <span className="student-dashboard-due-date">{formatDate(assignment.due_date)}</span>
                                         <button
                                             onClick={() => navigate(`/student/assignments/submit/${assignment.id}`)}
-                                            style={styles.submitBtn}
+                                            className="student-dashboard-submit-btn"
                                         >
                                             Submit
                                         </button>
@@ -175,19 +162,19 @@ const StudentDashboard = () => {
                 </section>
 
                 {/* Quick Actions */}
-                <section style={styles.contentCard}>
-                    <h2 style={styles.cardTitle}>⚡ Quick Actions</h2>
-                    <div style={styles.quickActions}>
-                        <button onClick={() => navigate('/student/courses')} style={styles.actionButton}>
-                            <span style={styles.actionIcon}>📖</span>
+                <section className="student-dashboard-content-card">
+                    <h2 className="student-dashboard-card-title">⚡ Quick Actions</h2>
+                    <div className="student-dashboard-quick-actions">
+                        <button onClick={() => navigate('/student/courses')} className="student-dashboard-action-button">
+                            <span className="student-dashboard-action-icon">📖</span>
                             <span>My Courses</span>
                         </button>
-                        <button onClick={() => navigate('/student/assignments')} style={styles.actionButton}>
-                            <span style={styles.actionIcon}><ClipboardList size={24} /></span>
+                        <button onClick={() => navigate('/student/assignments')} className="student-dashboard-action-button">
+                            <span className="student-dashboard-action-icon"><ClipboardList size={24} /></span>
                             <span>Assignments</span>
                         </button>
-                        <button onClick={() => navigate('/student/results')} style={styles.actionButton}>
-                            <span style={styles.actionIcon}><Trophy size={24} /></span>
+                        <button onClick={() => navigate('/student/results')} className="student-dashboard-action-button">
+                            <span className="student-dashboard-action-icon"><Trophy size={24} /></span>
                             <span>View Results</span>
                         </button>
                     </div>
@@ -195,247 +182,6 @@ const StudentDashboard = () => {
             </div>
         </div>
     );
-};
-
-const styles = {
-    container: {
-        padding: '24px',
-        minHeight: '100vh',
-    },
-    loadingContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '60vh',
-    },
-    loadingSpinner: {
-        width: '48px',
-        height: '48px',
-        border: '4px solid rgba(139, 92, 246, 0.2)',
-        borderTop: '4px solid #8b5cf6',
-        borderRadius: '50%',
-        animation: 'spin 1s linear infinite',
-    },
-    loadingText: {
-        marginTop: '16px',
-        color: '#5C6873',
-        fontSize: '1rem',
-    },
-
-    // Header
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '32px',
-    },
-    welcomeSection: {},
-    welcomeTitle: {
-        fontSize: '2rem',
-        fontWeight: '700',
-        color: '#21272A',
-        margin: 0,
-    },
-    welcomeSubtitle: {
-        color: '#5C6873',
-        fontSize: '1rem',
-        marginTop: '8px',
-    },
-    studentBadge: {
-        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.08))',
-        border: '1px solid rgba(139, 92, 246, 0.3)',
-        borderRadius: '12px',
-        padding: '12px 24px',
-    },
-    studentCode: {
-        color: '#7c3aed',
-        fontWeight: '600',
-        fontSize: '0.9rem',
-        letterSpacing: '0.05em',
-    },
-
-    // Stats
-    statsGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: '20px',
-        marginBottom: '32px',
-    },
-    statCard: {
-        background: '#FFFFFF',
-        borderRadius: '20px',
-        padding: '24px',
-        border: '1px solid #E3E5E8',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-        transition: 'transform 0.2s, box-shadow 0.2s',
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
-    },
-    statPurple: { borderLeft: '4px solid #8b5cf6' },
-    statOrange: { borderLeft: '4px solid #f59e0b' },
-    statGreen: { borderLeft: '4px solid #10b981' },
-    statBlue: { borderLeft: '4px solid #3b82f6' },
-    statIcon: {
-        fontSize: '2rem',
-        color: '#5C6873',
-    },
-    statContent: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    statNumber: {
-        fontSize: '2.5rem',
-        fontWeight: '700',
-        color: '#21272A',
-    },
-    statLabel: {
-        color: '#5C6873',
-        fontSize: '0.9rem',
-    },
-    statLink: {
-        background: 'none',
-        border: 'none',
-        color: '#14BF96',
-        cursor: 'pointer',
-        padding: 0,
-        fontSize: '0.85rem',
-        textAlign: 'left',
-        transition: 'color 0.2s',
-        fontWeight: '500',
-    },
-    progressBar: {
-        height: '8px',
-        background: '#E3E5E8',
-        borderRadius: '4px',
-        overflow: 'hidden',
-    },
-    progressFill: {
-        height: '100%',
-        background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
-        borderRadius: '4px',
-        transition: 'width 0.5s ease',
-    },
-
-    // Content Grid
-    contentGrid: {
-        display: 'grid',
-        gridTemplateColumns: '2fr 1fr',
-        gap: '24px',
-    },
-    contentCard: {
-        background: '#FFFFFF',
-        borderRadius: '20px',
-        padding: '24px',
-        border: '1px solid #E3E5E8',
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)',
-    },
-    cardHeader: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '20px',
-    },
-    cardTitle: {
-        color: '#21272A',
-        fontSize: '1.25rem',
-        fontWeight: '600',
-        margin: 0,
-    },
-    viewAllBtn: {
-        background: 'rgba(139, 92, 246, 0.1)',
-        border: '1px solid rgba(139, 92, 246, 0.3)',
-        color: '#7c3aed',
-        padding: '8px 16px',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        fontSize: '0.85rem',
-        fontWeight: '500',
-    },
-
-    // Assignments
-    assignmentList: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
-    },
-    assignmentItem: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '16px',
-        background: '#F5F7FA',
-        borderRadius: '12px',
-        border: '1px solid #E3E5E8',
-    },
-    assignmentInfo: {},
-    assignmentTitle: {
-        color: '#21272A',
-        margin: 0,
-        fontSize: '1rem',
-        fontWeight: '500',
-    },
-    assignmentCourse: {
-        color: '#5C6873',
-        fontSize: '0.85rem',
-    },
-    assignmentMeta: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-    },
-    dueDate: {
-        color: '#d97706',
-        fontSize: '0.85rem',
-        fontWeight: '500',
-    },
-    submitBtn: {
-        background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
-        border: 'none',
-        color: 'white',
-        padding: '8px 16px',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        fontSize: '0.85rem',
-        fontWeight: '500',
-    },
-    emptyState: {
-        textAlign: 'center',
-        padding: '40px 20px',
-        color: '#5C6873',
-    },
-    emptyIcon: {
-        fontSize: '3rem',
-        display: 'block',
-        marginBottom: '12px',
-    },
-
-    // Quick Actions
-    quickActions: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
-        marginTop: '16px',
-    },
-    actionButton: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        padding: '16px',
-        background: '#F5F7FA',
-        border: '1px solid #E3E5E8',
-        borderRadius: '12px',
-        color: '#21272A',
-        cursor: 'pointer',
-        fontSize: '1rem',
-        fontWeight: '500',
-        transition: 'all 0.2s',
-    },
-    actionIcon: {
-        fontSize: '1.5rem',
-        color: '#5C6873',
-    },
 };
 
 export default StudentDashboard;

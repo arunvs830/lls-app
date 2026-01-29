@@ -3,27 +3,26 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { communicationApi, staffApi, studentApi } from '../../services/api';
 import InputField from '../../components/InputField';
 import Button from '../../components/Button';
+import { useAuth } from '../../context/AuthContext';
 import { Send, ArrowLeft } from 'lucide-react';
 
 const Compose = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { user } = useAuth();
     const replyTo = location.state?.replyTo;
-    
-    // Get user info from localStorage
-    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-    const userType = storedUser.role || localStorage.getItem('role') || 'student';
-    const userId = storedUser.id || localStorage.getItem('userId');
+
+    const userType = user?.role || 'student';
+    const userId = user?.id;
 
     const [formData, setFormData] = useState({
         receiver_type: replyTo?.receiver_type || (userType === 'staff' ? 'student' : 'staff'),
         receiver_id: replyTo?.receiver_id || '',
         subject: replyTo?.subject || '',
-        message: ''
+        message: replyTo?.original_message ? `\n\n\n--- Original Message ---\nFrom: ${replyTo.original_sender}\nSent: ${new Date(replyTo.original_date).toLocaleString()}\nSubject: ${replyTo.subject}\n\n${replyTo.original_message}` : ''
     });
 
     const [recipients, setRecipients] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [sending, setSending] = useState(false);
 
     useEffect(() => {
@@ -32,7 +31,6 @@ const Compose = () => {
 
     const loadRecipients = async () => {
         if (!userType) return;
-        setLoading(true);
         try {
             let data = [];
             if (formData.receiver_type === 'staff') {
@@ -43,8 +41,6 @@ const Compose = () => {
             setRecipients(data);
         } catch (error) {
             console.error('Error loading recipients:', error);
-        } finally {
-            setLoading(false);
         }
     };
 
