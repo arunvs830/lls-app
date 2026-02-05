@@ -28,6 +28,7 @@ import CertificateDesigner from './pages/admin/certificates/CertificateDesigner'
 // Staff imports
 import StaffDashboard from './pages/staff/Dashboard';
 import MyCourseList from './pages/staff/courses/MyCourseList';
+import CreateCourseForm from './pages/staff/courses/CreateCourseForm';
 import CourseVideos from './pages/staff/courses/CourseVideos';
 import AddVideoForm from './pages/staff/courses/AddVideoForm';
 import MaterialList from './pages/staff/materials/MaterialList';
@@ -38,6 +39,9 @@ import SubmissionList from './pages/staff/assignments/SubmissionList';
 import MCQList from './pages/staff/mcq/MCQList';
 import MCQForm from './pages/staff/mcq/MCQForm';
 import ReportDashboard from './pages/staff/reports/ReportDashboard';
+import ExamCourseList from './pages/staff/exam/ExamCourseList';
+import ExamStudentList from './pages/staff/exam/ExamStudentList';
+import StudentExamForm from './pages/staff/exam/StudentExamForm';
 
 // Student imports
 import StudentDashboard from './pages/student/Dashboard';
@@ -95,6 +99,7 @@ function App() {
 
             <Route path="/staff" element={<StaffLayout><StaffDashboard /></StaffLayout>} />
             <Route path="/staff/my-courses" element={<StaffLayout><MyCourseList /></StaffLayout>} />
+            <Route path="/staff/courses/new" element={<StaffLayout><CreateCourseForm /></StaffLayout>} />
             <Route path="/staff/course/:courseId/videos" element={<StaffLayout><CourseVideos /></StaffLayout>} />
             <Route path="/staff/course/:courseId/videos/new" element={<StaffLayout><AddVideoForm /></StaffLayout>} />
             <Route path="/staff/materials" element={<StaffLayout><MaterialList /></StaffLayout>} />
@@ -112,6 +117,9 @@ function App() {
             <Route path="/staff/messages/new" element={<StaffLayout><Compose /></StaffLayout>} />
             <Route path="/staff/messages/:id" element={<StaffLayout><MessageDetail /></StaffLayout>} />
             <Route path="/staff/reports" element={<StaffLayout><ReportDashboard /></StaffLayout>} />
+            <Route path="/staff/exam" element={<StaffLayout><ExamCourseList /></StaffLayout>} />
+            <Route path="/staff/exam/:courseId/students" element={<StaffLayout><ExamStudentList /></StaffLayout>} />
+            <Route path="/staff/exam/:courseId/student/:studentId" element={<StaffLayout><StudentExamForm /></StaffLayout>} />
 
             <Route path="/student" element={<StudentLayout><StudentDashboard /></StudentLayout>} />
             <Route path="/student/courses" element={<StudentLayout><StudentCourseList /></StudentLayout>} />

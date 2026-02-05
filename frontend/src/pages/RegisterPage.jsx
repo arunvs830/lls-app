@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { programApi, semesterApi, courseApi, authApi } from '../services/api';
 import '../styles/RegisterPage.css';
 
-const API_BASE = import.meta.env.DEV ? '/api' : 'http://127.0.0.1:6000/api';
+const API_BASE = import.meta.env.DEV ? '/api' : 'http://127.0.0.1:5001/api';
 
 const RegisterPage = () => {
     const navigate = useNavigate();

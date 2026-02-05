@@ -1,550 +1,329 @@
  * Serving Flask app 'app'
  * Debug mode: on
 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on http://127.0.0.1:6000
+ * Running on http://127.0.0.1:5001
 [33mPress CTRL+C to quit[0m
- * Restarting with watchdog (fsevents)
+ * Restarting with stat
  * Debugger is active!
- * Debugger PIN: 406-498-356
-127.0.0.1 - - [29/Jan/2026 23:10:06] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:10:09] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:10:09] "GET /api/certificate-layouts HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:10:09] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:10:09] "GET /api/certificate-layouts HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:10:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:10:39] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:11:09] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:11:28] "[35m[1mGET /api/admin/course-report HTTP/1.1[0m" 500 -
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2215, in _entity_namespace_key
-    return getattr(ns, key)  # type: ignore
-AttributeError: type object 'StudyMaterial' has no attribute 'course_id'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1536, in __call__
-    return self.wsgi_app(environ, start_response)
-           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1514, in wsgi_app
-    response = self.handle_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "/Users/macbook/Documents/lls app/backend/routes/admin_report.py", line 63, in get_course_report
-    materials_count = StudyMaterial.query.filter_by(course_id=course.id).count()
-                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/orm/query.py", line 1992, in filter_by
-    _entity_namespace_key(from_entity, key) == value
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2217, in _entity_namespace_key
-    raise exc.InvalidRequestError(
-    ^^^^^^^^^^
-sqlalchemy.exc.InvalidRequestError: Entity namespace for "study_material" has no property "course_id"
-127.0.0.1 - - [29/Jan/2026 23:11:28] "[35m[1mGET /api/admin/course-report HTTP/1.1[0m" 500 -
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2215, in _entity_namespace_key
-    return getattr(ns, key)  # type: ignore
-AttributeError: type object 'StudyMaterial' has no attribute 'course_id'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1536, in __call__
-    return self.wsgi_app(environ, start_response)
-           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1514, in wsgi_app
-    response = self.handle_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "/Users/macbook/Documents/lls app/backend/routes/admin_report.py", line 63, in get_course_report
-    materials_count = StudyMaterial.query.filter_by(course_id=course.id).count()
-                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/orm/query.py", line 1992, in filter_by
-    _entity_namespace_key(from_entity, key) == value
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2217, in _entity_namespace_key
-    raise exc.InvalidRequestError(
-    ^^^^^^^^^^
-sqlalchemy.exc.InvalidRequestError: Entity namespace for "study_material" has no property "course_id"
-127.0.0.1 - - [29/Jan/2026 23:11:30] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:11:30] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:11:30] "[35m[1mGET /api/admin/course-report HTTP/1.1[0m" 500 -
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2215, in _entity_namespace_key
-    return getattr(ns, key)  # type: ignore
-AttributeError: type object 'StudyMaterial' has no attribute 'course_id'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1536, in __call__
-    return self.wsgi_app(environ, start_response)
-           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1514, in wsgi_app
-    response = self.handle_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "/Users/macbook/Documents/lls app/backend/routes/admin_report.py", line 63, in get_course_report
-    materials_count = StudyMaterial.query.filter_by(course_id=course.id).count()
-                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/orm/query.py", line 1992, in filter_by
-    _entity_namespace_key(from_entity, key) == value
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2217, in _entity_namespace_key
-    raise exc.InvalidRequestError(
-    ^^^^^^^^^^
-sqlalchemy.exc.InvalidRequestError: Entity namespace for "study_material" has no property "course_id"
-127.0.0.1 - - [29/Jan/2026 23:11:30] "[35m[1mGET /api/admin/course-report HTTP/1.1[0m" 500 -
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2215, in _entity_namespace_key
-    return getattr(ns, key)  # type: ignore
-AttributeError: type object 'StudyMaterial' has no attribute 'course_id'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1536, in __call__
-    return self.wsgi_app(environ, start_response)
-           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1514, in wsgi_app
-    response = self.handle_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "/Users/macbook/Documents/lls app/backend/routes/admin_report.py", line 63, in get_course_report
-    materials_count = StudyMaterial.query.filter_by(course_id=course.id).count()
-                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/orm/query.py", line 1992, in filter_by
-    _entity_namespace_key(from_entity, key) == value
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2217, in _entity_namespace_key
-    raise exc.InvalidRequestError(
-    ^^^^^^^^^^
-sqlalchemy.exc.InvalidRequestError: Entity namespace for "study_material" has no property "course_id"
-127.0.0.1 - - [29/Jan/2026 23:11:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:11:54] "[35m[1mGET /api/admin/course-report HTTP/1.1[0m" 500 -
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2215, in _entity_namespace_key
-    return getattr(ns, key)  # type: ignore
-AttributeError: type object 'StudyMaterial' has no attribute 'course_id'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1536, in __call__
-    return self.wsgi_app(environ, start_response)
-           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1514, in wsgi_app
-    response = self.handle_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "/Users/macbook/Documents/lls app/backend/routes/admin_report.py", line 63, in get_course_report
-    materials_count = StudyMaterial.query.filter_by(course_id=course.id).count()
-                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/orm/query.py", line 1992, in filter_by
-    _entity_namespace_key(from_entity, key) == value
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2217, in _entity_namespace_key
-    raise exc.InvalidRequestError(
-    ^^^^^^^^^^
-sqlalchemy.exc.InvalidRequestError: Entity namespace for "study_material" has no property "course_id"
-127.0.0.1 - - [29/Jan/2026 23:12:01] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:09] "[35m[1mGET /api/admin/course-report HTTP/1.1[0m" 500 -
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2215, in _entity_namespace_key
-    return getattr(ns, key)  # type: ignore
-AttributeError: type object 'StudyMaterial' has no attribute 'course_id'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1536, in __call__
-    return self.wsgi_app(environ, start_response)
-           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1514, in wsgi_app
-    response = self.handle_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
-    return cors_after_request(app.make_response(f(*args, **kwargs)))
-                                                ~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "/Users/macbook/Documents/lls app/backend/routes/admin_report.py", line 63, in get_course_report
-    materials_count = StudyMaterial.query.filter_by(course_id=course.id).count()
-                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/orm/query.py", line 1992, in filter_by
-    _entity_namespace_key(from_entity, key) == value
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/sqlalchemy/sql/base.py", line 2217, in _entity_namespace_key
-    raise exc.InvalidRequestError(
-    ^^^^^^^^^^
-sqlalchemy.exc.InvalidRequestError: Entity namespace for "study_material" has no property "course_id"
-127.0.0.1 - - [29/Jan/2026 23:12:19] "GET /api/admin/staff-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:19] "GET /api/admin/staff-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:19] "GET /api/certificate-layouts HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:19] "GET /api/certificate-layouts HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:20] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:20] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:20] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:20] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:20] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:20] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:20] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:20] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:20] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:20] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:21] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:21] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:21] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:21] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:21] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:21] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:21] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:21] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:22] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:22] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:23] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:23] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:23] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:23] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:23] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:23] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:23] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:23] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:24] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:24] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:24] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:24] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:25] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:25] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:25] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:25] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:25] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:25] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:30] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:12:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
- * Detected change in '/Users/macbook/Documents/lls app/backend/routes/admin_report.py', reloading
- * Detected change in '/Users/macbook/Documents/lls app/backend/routes/admin_report.py', reloading
- * Restarting with watchdog (fsevents)
- * Debugger is active!
- * Debugger PIN: 406-498-356
-127.0.0.1 - - [29/Jan/2026 23:13:01] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:07] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:07] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:07] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:07] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:07] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:07] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:07] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:07] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:07] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:07] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:17] "GET /api/admin/staff-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:17] "GET /api/admin/staff-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:17] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:17] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:18] "GET /api/admin/staff-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:18] "GET /api/admin/staff-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:18] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:19] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:37] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:42] "GET /api/certificate-layouts HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:42] "GET /api/certificate-layouts HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:42] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:42] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:42] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:42] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:42] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:42] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:42] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:42] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:46] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:13:46] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:14:07] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:14:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:14:37] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:15:07] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:15:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:15:37] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:16:07] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:16:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:16:37] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:17:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:17:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:18:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:18:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:19:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:19:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:19:34] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:19:34] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:19:34] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:19:34] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:19:34] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:19:34] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:19:34] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:19:34] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:19:37] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:20:07] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:20:19] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:20:20] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:20:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:20:37] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:21:07] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:21:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:22:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:22:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
- * Detected change in '/Users/macbook/Documents/lls app/backend/routes/admin_report.py', reloading
- * Detected change in '/Users/macbook/Documents/lls app/backend/routes/admin_report.py', reloading
- * Restarting with watchdog (fsevents)
- * Debugger is active!
- * Debugger PIN: 406-498-356
-127.0.0.1 - - [29/Jan/2026 23:23:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:23:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:24:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:24:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:25:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:25:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:25:57] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:25:57] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:26:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:26:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:10] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:18] "GET /api/admin/course-report?academic_year_id=2 HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:27] "GET /api/admin/course-report?academic_year_id=1 HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:34] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:34] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:35] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:35] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:36] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:36] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:37] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:44] "GET /api/admin/staff-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:44] "GET /api/admin/staff-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:44] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:44] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:44] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:44] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:47] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:47] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:47] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:47] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:47] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:47] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:47] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:47] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:48] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:48] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:48] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:48] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:49] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:49] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:49] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:49] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:49] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:49] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:58] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:27:58] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:01] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:01] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:02] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:02] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:02] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:02] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:02] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:02] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:02] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:02] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:07] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:28:37] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:29:07] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:29:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
- * Detected change in '/Users/macbook/Documents/lls app/backend/routes/admin_report.py', reloading
- * Detected change in '/Users/macbook/Documents/lls app/backend/routes/admin_report.py', reloading
- * Restarting with watchdog (fsevents)
- * Debugger is active!
- * Debugger PIN: 406-498-356
-127.0.0.1 - - [29/Jan/2026 23:30:19] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:20] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:20] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:20] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:20] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:20] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:20] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:20] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:20] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:20] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:20] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:24] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:24] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:25] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:25] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:25] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:25] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:25] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:25] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:25] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:25] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:25] "GET /api/certificate-layouts HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:25] "GET /api/certificate-layouts HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:26] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:26] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:26] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:26] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:26] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:26] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:26] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:26] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:27] "GET /api/admin/staff-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:27] "GET /api/admin/staff-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:27] "GET /api/certificate-layouts HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:27] "GET /api/certificate-layouts HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:39] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:39] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:39] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:39] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:39] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:39] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:39] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:39] "GET /api/admin/course-report HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:43] "GET /api/admin/course-report?program_id=3 HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:46] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:46] "GET /api/students HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:46] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:46] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:46] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:46] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:47] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:47] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:47] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:47] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:30:50] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:31:21] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:31:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:31:40] "GET /api/staff-courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:31:40] "GET /api/staff HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:31:40] "GET /api/academic-years HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:31:40] "GET /api/semesters HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:31:40] "GET /api/programs HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:31:40] "GET /api/courses HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:31:51] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:32:21] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:32:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:32:51] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:33:21] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:33:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:34:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:34:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:35:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:35:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:35:51] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:36:21] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:36:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:37:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:37:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:38:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:38:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:39:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:39:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:40:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:40:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:41:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:41:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:42:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:42:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:43:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:43:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:44:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:44:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:45:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:45:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:46:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:46:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
- * Detected change in '/Users/macbook/Documents/lls app/backend/app.py', reloading
- * Detected change in '/Users/macbook/Documents/lls app/backend/app.py', reloading
- * Restarting with watchdog (fsevents)
- * Debugger is active!
- * Debugger PIN: 406-498-356
- * Detected change in '/Users/macbook/Documents/lls app/backend/config.py', reloading
- * Detected change in '/Users/macbook/Documents/lls app/backend/config.py', reloading
- * Restarting with watchdog (fsevents)
- * Debugger is active!
- * Debugger PIN: 406-498-356
-127.0.0.1 - - [29/Jan/2026 23:47:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
-127.0.0.1 - - [29/Jan/2026 23:47:32] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+ * Debugger PIN: 734-101-420
+127.0.0.1 - - [05/Feb/2026 21:17:46] "POST /api/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/staff-courses?staff_id=1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/study-materials?staff_id=1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/assignments?staff_id=1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/staff-courses?staff_id=1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/study-materials?staff_id=1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/submissions?staff_id=1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/assignments?staff_id=1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:47] "GET /api/submissions?staff_id=1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:49] "GET /api/staff-courses?staff_id=1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:49] "GET /api/staff-courses?staff_id=1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:49] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:49] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:51] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:51] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:51] "GET /api/exams/course/3/students HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:51] "GET /api/exams/course/3/students HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:55] "GET /api/exams/student/1/course/3 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:17:55] "GET /api/exams/student/1/course/3 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:11] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:11] "GET /api/exams/course/3/students HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:11] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:11] "GET /api/exams/course/3/students HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:17] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:17] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:17] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:47] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:47] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:18:47] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:19:17] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:19:17] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:19:17] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:19:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:19:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:19:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:19:47] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:19:47] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:19:47] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:20:17] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:20:17] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:20:17] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:20:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:20:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:20:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:20:47] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:20:47] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:20:47] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:21:17] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:21:17] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:21:17] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:21:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:21:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:21:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:21:47] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:21:47] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:21:47] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:22:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:22:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:22:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:22:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:22:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:22:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:23:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:23:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:23:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:23:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:23:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:23:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:24:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:24:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:24:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:24:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:24:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:24:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:25:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:25:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:25:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:25:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:25:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:25:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:26:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:26:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:26:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:26:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:26:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:26:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:26:47] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:26:47] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:26:47] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:27:17] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:27:17] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:27:17] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:27:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:27:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:27:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:28:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:28:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:28:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:28:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:28:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:28:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:29:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:29:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:29:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:29:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:29:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:29:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:30:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:30:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:30:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:30:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:30:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:30:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:31:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:31:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:31:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:31:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:31:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:31:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:32:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:32:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:32:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:32:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:32:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:32:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:33:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:33:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:33:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:33:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:33:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:33:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:34:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:34:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:34:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:34:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:34:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:34:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:35:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:35:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:35:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:35:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:35:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:35:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:36:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:36:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:36:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:36:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:36:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:36:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:37:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:37:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:37:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:37:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:37:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:37:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:38:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:38:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:38:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:38:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:38:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:38:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:39:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:39:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:39:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:39:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:39:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:39:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:40:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:40:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:40:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:40:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:40:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:40:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:41:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:41:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:41:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:41:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:41:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:41:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:42:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:42:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:42:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:42:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:42:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:42:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:43:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:43:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:43:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:43:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:43:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:43:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:44:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:44:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:44:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:44:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:44:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:44:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:45:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:45:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:45:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:45:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:45:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:45:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:46:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:46:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:46:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:46:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:46:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:46:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:47:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:47:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:47:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:47:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:47:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:47:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:48:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:48:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:48:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:48:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:48:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:48:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:49:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:49:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:49:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:49:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:49:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:49:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:50:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:50:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:50:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:50:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:50:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:50:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:51:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:51:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:51:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:51:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:51:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:51:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:52:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:52:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:52:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:52:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:52:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:52:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:53:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:53:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:53:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:53:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:53:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:53:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:54:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:54:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:54:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:54:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:54:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:54:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:51] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:51] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:51] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:51] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:51] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:51] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:51] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:51] "GET /api/courses HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:51] "GET /api/exams/course/3/students HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:55:51] "GET /api/exams/course/3/students HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:56:21] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:56:21] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:56:21] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:56:25] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:56:25] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:56:25] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:57:15] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:57:15] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:57:15] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:58:31] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:58:31] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:58:31] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:58:36] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:58:36] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:58:36] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:59:01] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:59:01] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:59:01] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:59:30] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:59:30] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:59:31] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:59:35] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:59:35] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 21:59:35] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:00:00] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:00:00] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:00:01] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:00:35] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:00:35] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:00:35] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:00:35] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:00:35] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:00:35] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:01:35] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:01:35] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:01:35] "GET /api/communications/unread-count/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:01:35] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:01:35] "GET /api/notifications/staff/1/count HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 22:01:35] "GET /api/submissions/pending-count/1 HTTP/1.1" 200 -

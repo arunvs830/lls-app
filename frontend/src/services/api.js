@@ -1,4 +1,4 @@
-const DEFAULT_BACKEND_ORIGIN = import.meta.env.VITE_API_ORIGIN || 'http://127.0.0.1:6000';
+const DEFAULT_BACKEND_ORIGIN = import.meta.env.VITE_API_ORIGIN || 'http://127.0.0.1:5001';
 
 // In dev, call the Vite dev server (6001) and let it proxy /api to the backend.
 // This avoids browser restrictions on port 6000 (ERR_UNSAFE_PORT).

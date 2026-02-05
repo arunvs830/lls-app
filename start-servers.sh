@@ -14,25 +14,28 @@ echo ""
 
 # Kill any existing servers
 echo -e "${YELLOW}Stopping any existing servers...${NC}"
-lsof -ti:6000 | xargs kill -9 2>/dev/null
+lsof -ti:5001 | xargs kill -9 2>/dev/null
 lsof -ti:6001 | xargs kill -9 2>/dev/null
 sleep 2
 
 # Start backend
-echo -e "${GREEN}Starting Backend Server (Port 6000)...${NC}"
+echo -e "${GREEN}Starting Backend Server (Port 5001)...${NC}"
 cd backend
-PORT=6000 python3 app.py > ../backend.log 2>&1 &
+source venv/bin/activate
+PORT=5001 python3 app.py > ../backend.log 2>&1 &
 BACKEND_PID=$!
 cd ..
 sleep 3
 
 # Check if backend started
-if lsof -ti:6000 > /dev/null; then
+if lsof -ti:5001 > /dev/null; then
     echo -e "${GREEN}✅ Backend server started successfully (PID: $BACKEND_PID)${NC}"
 else
     echo -e "${RED}❌ Backend failed to start. Check backend.log for errors.${NC}"
     exit 1
 fi
+
+
 
 # Start frontend
 echo -e "${GREEN}Starting Frontend Server (Port 6001)...${NC}"
@@ -55,7 +58,7 @@ echo -e "${BLUE}╔════════════════════�
 echo -e "${BLUE}║           ✅ All Servers Running Successfully! ✅            ║${NC}"
 echo -e "${BLUE}╚══════════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${GREEN}Backend:  http://127.0.0.1:6000${NC} (PID: $BACKEND_PID)"
+echo -e "${GREEN}Backend:  http://127.0.0.1:5001${NC} (PID: $BACKEND_PID)"
 echo -e "${GREEN}Frontend: http://localhost:6001${NC} (PID: $FRONTEND_PID)"
 echo ""
 echo -e "${YELLOW}Logs:${NC}"

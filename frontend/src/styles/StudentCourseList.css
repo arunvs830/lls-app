@@ -53,8 +53,23 @@
 
 .scl-course-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 24px;
+}
+
+@media (max-width: 480px) {
+    .student-course-list-container {
+        padding: 16px;
+    }
+
+    .scl-course-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .scl-title {
+        font-size: 1.5rem;
+    }
 }
 
 .scl-course-card {

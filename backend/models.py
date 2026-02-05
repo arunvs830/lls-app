@@ -338,3 +338,36 @@ class StudentCourse(db.Model):
     course = db.relationship('Course', backref=db.backref('enrolled_students', lazy=True))
     
     __table_args__ = (db.UniqueConstraint('student_id', 'course_id', name='unique_student_course_enrollment'),)
+
+
+# -----------------------------------------------------
+# Exam Models
+# -----------------------------------------------------
+
+class StudentExam(db.Model):
+    """
+    Stores CCA1 and CCA2 exam answer papers and marks for each student per course.
+    """
+    __tablename__ = 'student_exam'
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey('staff.id'))
+    
+    # CCA1
+    cca1_file_path = db.Column(db.String(500))
+    cca1_marks = db.Column(db.Numeric(5,2))
+    
+    # CCA2
+    cca2_file_path = db.Column(db.String(500))
+    cca2_marks = db.Column(db.Numeric(5,2))
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
+    
+    # Relationships
+    student = db.relationship('Student', backref=db.backref('exams', lazy=True))
+    course = db.relationship('Course', backref=db.backref('student_exams', lazy=True))
+    staff = db.relationship('Staff', backref=db.backref('graded_exams', lazy=True))
+    
+    __table_args__ = (db.UniqueConstraint('student_id', 'course_id', name='unique_student_exam'),)

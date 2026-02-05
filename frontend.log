@@ -3,15 +3,22 @@
 > vite
 
 
-  VITE v7.3.1  ready in 250 ms
+  VITE v7.3.1  ready in 294 ms
 
   ➜  Local:   http://localhost:6001/
   ➜  Network: use --host to expose
-11:25:56 pm [vite] (client) hmr update /src/pages/admin/course/CourseReport.jsx
-11:26:11 pm [vite] (client) hmr update /src/pages/RegisterPage.jsx, /src/pages/admin/academic-year/AcademicYearList.jsx, /src/pages/admin/semester/SemesterList.jsx, /src/pages/admin/Dashboard.jsx, /src/pages/admin/academic-year/AcademicYearForm.jsx, /src/pages/admin/program/ProgramList.jsx, /src/pages/admin/program/ProgramForm.jsx, /src/pages/admin/semester/SemesterForm.jsx, /src/pages/admin/course/CourseReport.jsx, /src/pages/admin/course/CourseList.jsx, /src/pages/admin/staff/StaffList.jsx, /src/pages/admin/course/CourseForm.jsx, /src/pages/admin/staff/StaffReport.jsx, /src/pages/admin/staff/StaffForm.jsx, /src/pages/admin/student/StudentList.jsx, /src/pages/admin/staff-course/StaffCourseList.jsx, /src/pages/admin/staff-course/StaffCourseForm.jsx, /src/pages/admin/student/StudentForm.jsx, /src/pages/staff/courses/MyCourseList.jsx, /src/pages/staff/Dashboard.jsx, /src/pages/staff/courses/CourseVideos.jsx, /src/pages/staff/materials/MaterialForm.jsx, /src/pages/staff/assignments/AssignmentList.jsx, /src/pages/staff/courses/AddVideoForm.jsx, /src/pages/staff/materials/MaterialList.jsx, /src/pages/staff/assignments/SubmissionList.jsx, /src/pages/staff/mcq/MCQList.jsx, /src/pages/staff/assignments/AssignmentForm.jsx, /src/pages/staff/reports/ReportDashboard.jsx, /src/pages/student/Dashboard.jsx, /src/pages/student/courses/CourseMaterials.jsx, /src/pages/staff/mcq/MCQForm.jsx, /src/pages/student/courses/CourseList.jsx, /src/pages/student/assignments/SubmissionForm.jsx, /src/pages/student/results/ResultList.jsx, /src/pages/student/assignments/SubmissionView.jsx, /src/pages/student/assignments/StudentAssignmentList.jsx, /src/pages/student/quiz/QuizResults.jsx, /src/pages/student/quiz/QuizPlayer.jsx, /src/pages/student/quiz/MaterialQuizPlayer.jsx, /src/pages/student/quiz/QuizList.jsx, /src/pages/messages/Inbox.jsx, /src/pages/messages/Compose.jsx, /src/pages/messages/MessageDetail.jsx, /src/components/StaffSidebar.jsx, /src/components/LoginForm.jsx, /src/components/NotificationBell.jsx
-11:26:35 pm [vite] (client) hmr update /src/styles/AdminCourseReport.css
-11:29:07 pm [vite] (client) hmr update /src/pages/admin/course/CourseReport.jsx
-11:29:22 pm [vite] (client) hmr update /src/pages/RegisterPage.jsx, /src/pages/admin/academic-year/AcademicYearList.jsx, /src/pages/admin/semester/SemesterList.jsx, /src/pages/admin/Dashboard.jsx, /src/pages/admin/academic-year/AcademicYearForm.jsx, /src/pages/admin/program/ProgramList.jsx, /src/pages/admin/program/ProgramForm.jsx, /src/pages/admin/semester/SemesterForm.jsx, /src/pages/admin/course/CourseReport.jsx, /src/pages/admin/course/CourseList.jsx, /src/pages/admin/staff/StaffList.jsx, /src/pages/admin/course/CourseForm.jsx, /src/pages/admin/staff/StaffReport.jsx, /src/pages/admin/staff/StaffForm.jsx, /src/pages/admin/student/StudentList.jsx, /src/pages/admin/staff-course/StaffCourseList.jsx, /src/pages/admin/staff-course/StaffCourseForm.jsx, /src/pages/admin/student/StudentForm.jsx, /src/pages/staff/courses/MyCourseList.jsx, /src/pages/staff/Dashboard.jsx, /src/pages/staff/courses/CourseVideos.jsx, /src/pages/staff/materials/MaterialForm.jsx, /src/pages/staff/assignments/AssignmentList.jsx, /src/pages/staff/courses/AddVideoForm.jsx, /src/pages/staff/materials/MaterialList.jsx, /src/pages/staff/assignments/SubmissionList.jsx, /src/pages/staff/mcq/MCQList.jsx, /src/pages/staff/assignments/AssignmentForm.jsx, /src/pages/staff/reports/ReportDashboard.jsx, /src/pages/student/Dashboard.jsx, /src/pages/student/courses/CourseMaterials.jsx, /src/pages/staff/mcq/MCQForm.jsx, /src/pages/student/courses/CourseList.jsx, /src/pages/student/assignments/SubmissionForm.jsx, /src/pages/student/results/ResultList.jsx, /src/pages/student/assignments/SubmissionView.jsx, /src/pages/student/assignments/StudentAssignmentList.jsx, /src/pages/student/quiz/QuizResults.jsx, /src/pages/student/quiz/QuizPlayer.jsx, /src/pages/student/quiz/MaterialQuizPlayer.jsx, /src/pages/student/quiz/QuizList.jsx, /src/pages/messages/Inbox.jsx, /src/pages/messages/Compose.jsx, /src/pages/messages/MessageDetail.jsx, /src/components/StaffSidebar.jsx, /src/components/LoginForm.jsx, /src/components/NotificationBell.jsx
-11:30:02 pm [vite] (client) hmr update /src/styles/AdminCourseReport.css
-11:31:39 pm [vite] (client) hmr update /src/pages/admin/staff-course/StaffCourseList.jsx
-11:32:43 pm [vite] (client) hmr update /src/pages/admin/staff-course/StaffCourseList.jsx
+12:41:56 PM [vite] (client) hmr update /src/pages/staff/exam/ExamStudentList.jsx
+12:41:58 PM [vite] (client) hmr update /src/pages/staff/exam/StudentExamForm.jsx
+12:42:00 PM [vite] (client) hmr update /src/pages/RegisterPage.jsx
+12:42:12 PM [vite] (client) hmr update /src/pages/student/courses/CourseEnrollment.jsx
+12:42:16 PM [vite] vite.config.js changed, restarting server...
+12:42:16 PM [vite] server restarted.
+12:42:44 PM [vite] http proxy error: /api/communications/unread-count/staff/1
+Error: connect ECONNREFUSED 127.0.0.1:5001
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+12:42:44 PM [vite] http proxy error: /api/notifications/staff/1/count
+Error: connect ECONNREFUSED 127.0.0.1:5001
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+12:43:05 PM [vite] http proxy error: /api/auth/login
+Error: connect ECONNREFUSED 127.0.0.1:5001
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)

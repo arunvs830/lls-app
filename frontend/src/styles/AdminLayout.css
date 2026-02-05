@@ -21,13 +21,10 @@
 }
 
 /* Responsive layout */
-@media (max-width: 768px) {
-    .admin-layout {
-        flex-direction: column;
-    }
-
+@media (max-width: 1024px) {
     .main-content {
         margin-left: 0;
+        width: 100%;
     }
 
     .content-area,

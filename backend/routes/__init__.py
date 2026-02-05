@@ -19,6 +19,7 @@ from .communication import communication_bp
 from .certificate_templates import template_bp as certificate_templates_bp
 from .report import report_bp
 from .admin_report import admin_report_bp
+from .exam import exam_bp
 
 def register_routes(app):
     app.register_blueprint(academic_year_bp)
@@ -41,3 +42,4 @@ def register_routes(app):
     app.register_blueprint(certificate_templates_bp)
     app.register_blueprint(report_bp)
     app.register_blueprint(admin_report_bp)
+    app.register_blueprint(exam_bp)

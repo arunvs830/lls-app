@@ -10,6 +10,7 @@ import {
     Mail,
     Menu,
     TrendingUp,
+    GraduationCap,
     X
 } from 'lucide-react';
 import '../styles/Sidebar.css';
@@ -99,6 +100,10 @@ const StaffSidebar = () => {
                     <NavLink to="/staff/mcqs" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={closeMobileMenu}>
                         <HelpCircle className="nav-icon" size={20} />
                         Quiz Questions
+                    </NavLink>
+                    <NavLink to="/staff/exam" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={closeMobileMenu}>
+                        <GraduationCap className="nav-icon" size={20} />
+                        Exam
                     </NavLink>
                     <NavLink to="/staff/submissions" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={closeMobileMenu}>
                         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '100%' }}>

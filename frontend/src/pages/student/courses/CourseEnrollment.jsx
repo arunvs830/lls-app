@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../../styles/CourseEnrollment.css';
 
-const API_BASE = import.meta.env.DEV ? '/api' : 'http://127.0.0.1:6000/api';
+const API_BASE = import.meta.env.DEV ? '/api' : 'http://127.0.0.1:5001/api';
 
 const CourseEnrollment = () => {
     const navigate = useNavigate();
